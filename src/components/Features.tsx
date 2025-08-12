@@ -1,6 +1,7 @@
 import React from 'react'
 import Card from './ui/Card'
 import { Brain, MessageCircle, BarChart3, Target, Shield, Clock } from 'lucide-react'
+import { ShimmerText, ShimmerButton } from 'shimmer-effects-react'
 
 const Features: React.FC = () => {
   const features = [
@@ -70,10 +71,17 @@ const Features: React.FC = () => {
                 key={feature.title}
                 className="group relative transform transition-all duration-500 hover:scale-105 hover:-translate-y-2"
               >
+                {/* Shimmer Border Effect */}
+                <div className="absolute inset-0 rounded-2xl md:rounded-3xl p-[2px] bg-gradient-to-r from-primary-start via-secondary-start to-accent-start opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="w-full h-full rounded-2xl md:rounded-3xl bg-gradient-to-r from-primary-start via-secondary-start to-accent-start animate-pulse"></div>
+                </div>
+                
+                {/* Hover Glow Effect */}
                 <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl blur-xl scale-110 group-hover:scale-100"
                      style={{ background: `linear-gradient(135deg, ${feature.cardGradient})` }}>
                 </div>
                 
+                {/* Main Card Content */}
                 <div className="relative bg-gradient-to-br from-black/60 via-black/40 to-black/20 backdrop-blur-xl border border-white/20 rounded-2xl md:rounded-3xl p-6 md:p-8 h-full shadow-2xl group-hover:shadow-3xl group-hover:shadow-primary-start/20 transition-all duration-500">
                   <div className="space-y-4 md:space-y-6">
                     <div className={`w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r ${feature.gradient} rounded-xl md:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-2xl group-hover:shadow-white/20 relative overflow-hidden`}>

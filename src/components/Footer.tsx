@@ -2,6 +2,18 @@ import React from 'react'
 import { Brain, Mail, Phone, MapPin, Twitter, Facebook, Instagram, Linkedin, Github } from 'lucide-react'
 
 const Footer: React.FC = () => {
+  const handleLinkClick = (href: string) => {
+    if (href === '#features') {
+      document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      // Scroll to the Coming Soon section in the hero
+      const heroSection = document.querySelector('section')
+      if (heroSection) {
+        heroSection.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }
+
   return (
     <footer className="bg-gradient-to-br from-black/80 via-black/60 to-black/80 border-t border-white/10 relative overflow-hidden">
       {/* Background Orbs */}
@@ -47,11 +59,11 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-base md:text-lg font-semibold text-white mb-4 md:mb-6">Quick Links</h4>
             <ul className="space-y-2 md:space-y-3">
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base">Home</a></li>
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base">About</a></li>
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base">Features</a></li>
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base">Products</a></li>
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base">Contact</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Home</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">About</a></li>
+              <li><a href="#features" onClick={(e) => { e.preventDefault(); handleLinkClick('#features'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Features</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Products</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Contact</a></li>
             </ul>
           </div>
 
@@ -103,8 +115,8 @@ const Footer: React.FC = () => {
         <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-white/10 text-center">
           <p className="text-white/50 text-xs md:text-sm">
             © 2024 Morpheus Den. All rights reserved. | 
-            <a href="#" className="text-white/70 hover:text-white transition-colors duration-300 ml-1 md:ml-2">Privacy Policy</a> | 
-            <a href="#" className="text-white/70 hover:text-white transition-colors duration-300 ml-1 md:ml-2">Terms of Service</a>
+            <a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 ml-1 md:ml-2 cursor-pointer">Privacy Policy</a> | 
+            <a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 ml-1 md:ml-2 cursor-pointer">Terms of Service</a>
           </p>
         </div>
       </div>

@@ -6,11 +6,24 @@ const Header: React.FC = () => {
 
   const navItems = [
     { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
+    { label: 'About', href: '#home' },
     { label: 'Features', href: '#features' },
-    { label: 'Products', href: '#products' },
-    { label: 'Contact', href: '#contact' }
+    { label: 'Products', href: '#home' },
+    { label: 'Contact', href: '#home' }
   ]
+
+  const handleLinkClick = (href: string) => {
+    setIsMenuOpen(false)
+    if (href === '#features') {
+      document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      // Scroll to the Coming Soon section in the hero
+      const heroSection = document.querySelector('section')
+      if (heroSection) {
+        heroSection.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10">
@@ -30,7 +43,11 @@ const Header: React.FC = () => {
               <a
                 key={item.label}
                 href={item.href}
-                className="text-white/70 hover:text-white transition-colors duration-300 text-sm font-medium"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleLinkClick(item.href)
+                }}
+                className="text-white/70 hover:text-white transition-colors duration-300 text-sm font-medium cursor-pointer"
               >
                 {item.label}
               </a>
@@ -54,8 +71,11 @@ const Header: React.FC = () => {
                 <a
                   key={item.label}
                   href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-white/70 hover:text-white transition-colors duration-300 text-base font-medium py-2 px-3 rounded-lg hover:bg-white/5"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleLinkClick(item.href)
+                  }}
+                  className="text-white/70 hover:text-white transition-colors duration-300 text-base font-medium py-2 px-3 rounded-lg hover:bg-white/5 cursor-pointer"
                 >
                   {item.label}
                 </a>

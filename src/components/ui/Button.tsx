@@ -1,6 +1,7 @@
 import React from 'react'
 import { UI_CONFIG } from '../../config/ui'
 import type { ButtonVariant, ButtonSize } from '../../config/ui'
+import { ShimmerButton } from 'shimmer-effects-react'
 
 interface ButtonProps {
   children: React.ReactNode
@@ -46,24 +47,35 @@ const Button: React.FC<ButtonProps> = ({
     after:absolute after:inset-[2px] after:rounded-xl after:bg-black after:z-10
   `
 
-  return (
-    <button
-      type={type}
-      className={`
-        ${baseClasses} 
-        ${sizeClasses[size]} 
-        ${variantClasses[variant]} 
-        ${luminousBorderClasses}
-        ${className}
-      `}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      <span className="relative z-20 bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent group-hover:from-primary-end group-hover:via-secondary-end group-hover:to-accent-end transition-all duration-500">
-        {children}
-      </span>
-    </button>
+  // Shimmer effect wrapper
+  const shimmerWrapper = (
+    <div className="relative">
+      {/* Shimmer Border Effect */}
+      <div className="absolute inset-0 rounded-xl p-[2px] bg-gradient-to-r from-primary-start via-secondary-start to-accent-start opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="w-full h-full rounded-xl bg-gradient-to-r from-primary-start via-secondary-start to-accent-start animate-pulse"></div>
+      </div>
+      
+      {/* Main Button Content */}
+      <button
+        type={type}
+        className={`
+          ${baseClasses} 
+          ${sizeClasses[size]} 
+          ${variantClasses[variant]} 
+          ${luminousBorderClasses}
+          ${className}
+        `}
+        onClick={onClick}
+        disabled={disabled}
+      >
+        <span className="relative z-20 bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent group-hover:from-primary-end group-hover:via-secondary-end group-hover:to-accent-end transition-all duration-500">
+          {children}
+        </span>
+      </button>
+    </div>
   )
+
+  return shimmerWrapper
 }
 
 export default Button 

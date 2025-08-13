@@ -1,7 +1,5 @@
 import React from 'react'
-import Card from './ui/Card'
 import { Brain, MessageCircle, BarChart3, Target, Shield, Clock } from 'lucide-react'
-import { ShimmerText, ShimmerButton } from 'shimmer-effects-react'
 
 const Features: React.FC = () => {
   const features = [
@@ -64,7 +62,7 @@ const Features: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {features.map((feature, index) => {
+          {features.map((feature) => {
             const IconComponent = feature.icon
             return (
               <div 

@@ -1,7 +1,5 @@
 import React from 'react'
-import { UI_CONFIG } from '../../config/ui'
 import type { ButtonVariant, ButtonSize } from '../../config/ui'
-import { ShimmerButton } from 'shimmer-effects-react'
 
 interface ButtonProps {
   children: React.ReactNode

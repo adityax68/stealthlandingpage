@@ -80,19 +80,19 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
               
               {/* Battery Fill - Cyberpunk style */}
               <div 
-                className="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 transition-all duration-300 ease-out relative overflow-hidden"
+                className="h-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 transition-all duration-300 ease-out relative overflow-hidden"
                 style={{ width: `${batteryLevel}%` }}
               >
                 {/* Circuit lines in fill */}
                 <div className="absolute inset-0 opacity-30">
-                  <div className="absolute top-1/4 left-0 w-full h-px bg-cyan-300/50"></div>
-                  <div className="absolute top-3/4 left-0 w-full h-px bg-cyan-300/50"></div>
-                  <div className="absolute top-0 left-1/3 w-px h-full bg-cyan-300/50"></div>
-                  <div className="absolute top-0 left-2/3 w-px h-full bg-cyan-300/50"></div>
+                  <div className="absolute top-1/4 left-0 w-full h-px bg-green-300/50"></div>
+                  <div className="absolute top-3/4 left-0 w-full h-px bg-green-300/50"></div>
+                  <div className="absolute top-0 left-1/3 w-px h-full bg-green-300/50"></div>
+                  <div className="absolute top-0 left-2/3 w-px h-full bg-green-300/50"></div>
                 </div>
                 
                 {/* Scanning line effect */}
-                <div className="absolute top-0 left-0 w-full h-0.5 bg-cyan-300 animate-pulse"></div>
+                <div className="absolute top-0 left-0 w-full h-0.5 bg-green-300 animate-pulse"></div>
               </div>
               
               {/* Battery Level Text - Robotic font style */}
@@ -125,18 +125,18 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
           {/* Progress Bar - Centered with battery */}
           <div className="w-64 md:w-80">
-            <div className="w-full bg-black/50 border border-cyan-400/30 h-2 relative">
+            <div className="w-full bg-black/50 border border-green-400/30 h-2 relative">
               <div 
-                className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 h-full transition-all duration-300 ease-out relative overflow-hidden"
+                className="bg-gradient-to-r from-green-400 via-green-500 to-green-600 h-full transition-all duration-300 ease-out relative overflow-hidden"
                 style={{ width: `${batteryLevel}%` }}
               >
                 {/* Scanning effect */}
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-cyan-300/50 to-transparent animate-pulse"></div>
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-green-300/50 to-transparent animate-pulse"></div>
               </div>
               {/* Progress markers */}
-              <div className="absolute top-0 left-1/4 w-px h-full bg-cyan-400/30"></div>
-              <div className="absolute top-0 left-1/2 w-px h-full bg-cyan-400/30"></div>
-              <div className="absolute top-0 left-3/4 w-px h-full bg-cyan-400/30"></div>
+              <div className="absolute top-0 left-1/4 w-px h-full bg-green-400/30"></div>
+              <div className="absolute top-0 left-1/2 w-px h-full bg-green-400/30"></div>
+              <div className="absolute top-0 left-3/4 w-px h-full bg-green-400/30"></div>
             </div>
           </div>
 

@@ -1,0 +1,17 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MA logo">
+  <defs>
+    <!-- Left-to-right gradient sampled from your image -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#62C2C8"></stop>
+      <stop offset="100%" stop-color="#2E1367"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="8" y="8" width="112" height="112" rx="18" fill="url(#bgGradient)"></rect>
+
+  <!-- “MA” text -->
+  <text x="50%" y="52%" fill="#FFFFFF" font-size="56" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif" letter-spacing="2">
+    MA
+  </text>
+</svg>

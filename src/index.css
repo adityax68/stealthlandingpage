@@ -47,7 +47,97 @@
     }
   }
   
+  @keyframes float-delayed {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+      opacity: 0.2;
+    }
+    50% {
+      transform: translateY(-30px) rotate(90deg);
+      opacity: 0.6;
+    }
+  }
+  
+  @keyframes float-slow {
+    0%, 100% {
+      transform: translateY(0px) scale(1);
+      opacity: 0.1;
+    }
+    33% {
+      transform: translateY(-15px) scale(1.1) rotate(120deg);
+      opacity: 0.4;
+    }
+    66% {
+      transform: translateY(-25px) scale(0.9) rotate(240deg);
+      opacity: 0.3;
+    }
+  }
+  
+  @keyframes waterFlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  @keyframes waterRipple {
+    0% {
+      transform: scale(0);
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes rippleEffect {
+    0% {
+      transform: scale(0);
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes glowPulse {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.2);
+    }
+  }
+  
   .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float-delayed 8s ease-in-out infinite;
+  }
+  
+  .animate-float-slow {
+    animation: float-slow 12s ease-in-out infinite;
+  }
+  
+  .animate-water-flow {
+    animation: waterFlow 8s ease-in-out infinite;
+  }
+  
+  .animate-glow-pulse {
+    animation: glowPulse 4s ease-in-out infinite;
   }
 }

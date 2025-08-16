@@ -118,9 +118,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             <h2 className="text-cyan-300 text-xl md:text-2xl font-mono font-bold mb-2 tracking-wider">
               {loadingText}
             </h2>
-            <p className="text-cyan-400/60 text-sm md:text-base font-mono">
-              INITIALIZING AI DOC SYSTEM
-            </p>
+
           </div>
 
           {/* Progress Bar - Centered with battery */}

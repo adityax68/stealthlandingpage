@@ -53,7 +53,7 @@ const Features: React.FC = () => {
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6">
             <span className="block gradient-text">Why Choose</span>
-            <span className="block gradient-text">Morpheus Den?</span>
+            <span className="block gradient-text">Mind Acuity?</span>
           </h2>
           <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto px-4">
             Experience the next generation of mental health technology designed to understand, 

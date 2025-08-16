@@ -15,13 +15,15 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
     { label: 'About', href: '#home' },
     { label: 'Features', href: '#features' },
     { label: 'Products', href: '#home' },
-    { label: 'Contact', href: '#home' }
+    { label: 'Contact', href: '#footer' }
   ]
 
   const handleLinkClick = (href: string) => {
     setIsMenuOpen(false)
     if (href === '#features') {
       document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+    } else if (href === '#footer') {
+      document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })
     } else {
       // Scroll to the Coming Soon section in the hero
       const heroSection = document.querySelector('section')
@@ -38,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-sm md:text-base">MD</span>
+              <span className="text-white font-bold text-sm md:text-base">MA</span>
             </div>
             <span className="text-xl md:text-2xl font-bold gradient-text">Mind Acuity</span>
           </div>

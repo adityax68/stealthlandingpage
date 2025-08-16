@@ -1,5 +1,5 @@
 import React from 'react'
-import { Brain, Mail, Phone, MapPin, Twitter, Facebook, Instagram, Linkedin, Github } from 'lucide-react'
+import { Brain, Mail, HelpCircle, Twitter, Facebook, Instagram, Linkedin } from 'lucide-react'
 
 const Footer: React.FC = () => {
   const handleLinkClick = (href: string) => {
@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
   }
 
   return (
-    <footer className="bg-gradient-to-br from-black/80 via-black/60 to-black/80 border-t border-white/10 relative overflow-hidden">
+    <footer id="footer" className="bg-gradient-to-br from-black/80 via-black/60 to-black/80 border-t border-white/10 relative overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-20 -right-20 w-40 h-40 md:w-80 md:h-80 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-full blur-3xl animate-float"></div>
@@ -49,9 +49,7 @@ const Footer: React.FC = () => {
               <a href="#" className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 hover:from-blue-400/40 hover:to-cyan-400/40 border border-white/20 rounded-lg md:rounded-xl flex items-center justify-center text-white hover:text-blue-400 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-400/20">
                 <Linkedin size={16} className="md:w-5 md:h-5" />
               </a>
-              <a href="#" className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-green-400/20 to-teal-400/20 hover:from-green-400/40 hover:to-teal-400/40 border border-white/20 rounded-lg md:rounded-xl flex items-center justify-center text-white hover:text-green-400 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-400/20">
-                <Github size={16} className="md:w-5 md:h-5" />
-              </a>
+
             </div>
           </div>
 
@@ -75,20 +73,16 @@ const Footer: React.FC = () => {
                 <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-primary-start/20 to-primary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail size={12} className="md:w-4 md:h-4 text-primary-start" />
                 </div>
-                <span className="text-white/70 text-sm md:text-base">hello@mindacuity.ai</span>
+                <span className="text-white/70 text-sm md:text-base">contact@mindacuity.ai</span>
               </li>
               <li className="flex items-center space-x-2 md:space-x-3">
                 <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Phone size={12} className="md:w-4 md:h-4 text-secondary-start" />
+                  <HelpCircle size={12} className="md:w-4 md:h-4 text-secondary-start" />
                 </div>
-                <span className="text-white/70 text-sm md:text-base">+1 (555) 123-4567</span>
+                <span className="text-white/70 text-sm md:text-base">support@mindacuity.ai</span>
               </li>
-              <li className="flex items-center space-x-2 md:space-x-3">
-                <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-accent-start/20 to-accent-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin size={12} className="md:w-4 md:h-4 text-accent-start" />
-                </div>
-                <span className="text-white/70 text-sm md:text-base">San Francisco, CA</span>
-              </li>
+
+
             </ul>
           </div>
         </div>

@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
               <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg md:rounded-xl flex items-center justify-center shadow-lg">
                 <Brain size={20} className="md:w-6 md:h-6 text-white drop-shadow-lg" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold gradient-text">Morpheus Den</h3>
+              <h3 className="text-xl md:text-2xl font-bold gradient-text">Mind Acuity</h3>
             </div>
             <p className="text-white/70 mb-6 max-w-md leading-relaxed text-sm md:text-base">
               Revolutionizing mental health through AI-powered assessment, intelligent conversation, 
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
                 <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-primary-start/20 to-primary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail size={12} className="md:w-4 md:h-4 text-primary-start" />
                 </div>
-                <span className="text-white/70 text-sm md:text-base">hello@morpheusden.ai</span>
+                <span className="text-white/70 text-sm md:text-base">hello@mindacuity.ai</span>
               </li>
               <li className="flex items-center space-x-2 md:space-x-3">
                 <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
         {/* Copyright */}
         <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-white/10 text-center">
           <p className="text-white/50 text-xs md:text-sm">
-            © 2024 Morpheus Den. All rights reserved. | 
+            © 2024 Mind Acuity. All rights reserved. | 
             <a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 ml-1 md:ml-2 cursor-pointer">Privacy Policy</a> | 
             <a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 ml-1 md:ml-2 cursor-pointer">Terms of Service</a>
           </p>

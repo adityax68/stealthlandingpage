@@ -1,8 +1,15 @@
 import React, { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, User } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  isAuthenticated?: boolean
+  onLogout?: () => void
+}
+
+const Header: React.FC<HeaderProps> = ({ isAuthenticated = false, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate()
 
   const navItems = [
     { label: 'Home', href: '#home' },
@@ -34,7 +41,7 @@ const Header: React.FC = () => {
             <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-sm md:text-base">MD</span>
             </div>
-            <span className="text-xl md:text-2xl font-bold gradient-text">Morpheus Den</span>
+            <span className="text-xl md:text-2xl font-bold gradient-text">Mind Acuity</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -52,6 +59,23 @@ const Header: React.FC = () => {
                 {item.label}
               </a>
             ))}
+            {isAuthenticated ? (
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
+              >
+                <User className="w-4 h-4" />
+                <span>Get Started</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/auth')}
+                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
+              >
+                <User className="w-4 h-4" />
+                <span>Sign In</span>
+              </button>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -80,6 +104,29 @@ const Header: React.FC = () => {
                   {item.label}
                 </a>
               ))}
+              {isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    navigate('/dashboard')
+                    setIsMenuOpen(false)
+                  }}
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Get Started</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    navigate('/auth')
+                    setIsMenuOpen(false)
+                  }}
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Sign In</span>
+                </button>
+              )}
             </div>
           </nav>
         )}

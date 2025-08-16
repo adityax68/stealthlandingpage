@@ -80,14 +80,14 @@ const Features: React.FC = () => {
                 </div>
                 
                 {/* Main Card Content */}
-                <div className="relative bg-gradient-to-br from-black/60 via-black/40 to-black/20 backdrop-blur-xl border border-white/20 rounded-2xl md:rounded-3xl p-6 md:p-8 h-full shadow-2xl group-hover:shadow-3xl group-hover:shadow-primary-start/20 transition-all duration-500">
-                  <div className="space-y-4 md:space-y-6">
-                    <div className={`w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r ${feature.gradient} rounded-xl md:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-2xl group-hover:shadow-white/20 relative overflow-hidden`}>
+                <div className="relative bg-gradient-to-br from-black/60 via-black/40 to-black/20 backdrop-blur-xl border border-white/20 rounded-2xl md:rounded-3xl p-5 md:p-6 h-full shadow-2xl group-hover:shadow-3xl group-hover:shadow-primary-start/20 transition-all duration-500">
+                  <div className="space-y-3 md:space-y-4">
+                    <div className={`w-10 h-10 md:w-14 md:h-14 bg-gradient-to-r ${feature.gradient} rounded-xl md:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-2xl group-hover:shadow-white/20 relative overflow-hidden`}>
                       {/* 3D Icon Container */}
                       <div className="relative z-10">
                         <IconComponent 
-                          size={24} 
-                          className="md:w-8 md:h-8 text-white drop-shadow-lg group-hover:drop-shadow-2xl transition-all duration-300 group-hover:scale-110" 
+                          size={20} 
+                          className="md:w-7 md:h-7 text-white drop-shadow-lg group-hover:drop-shadow-2xl transition-all duration-300 group-hover:scale-110" 
                         />
                       </div>
                       
@@ -98,34 +98,13 @@ const Features: React.FC = () => {
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/30 rounded-b-xl md:rounded-b-2xl transform scale-x-90 group-hover:scale-x-100 transition-transform duration-300"></div>
                     </div>
                     
-                    <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/80 transition-all duration-300">
+                    <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/80 transition-all duration-300">
                       {feature.title}
                     </h3>
                     
                     <p className="text-white/70 leading-relaxed group-hover:text-white/90 transition-colors duration-300 text-sm md:text-base">
                       {feature.description}
                     </p>
-                    
-                    <div className="pt-3 md:pt-4 border-t border-white/10 group-hover:border-white/20 transition-colors duration-300">
-                      <div className="flex justify-between items-center">
-                        <div className="text-center">
-                          <div className={`text-xl md:text-2xl font-bold bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300`}>
-                            99%
-                          </div>
-                          <div className="text-white/60 group-hover:text-white/80 transition-colors duration-300 text-xs md:text-sm">
-                            Accuracy
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <div className={`text-xl md:text-2xl font-bold bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300`}>
-                            24/7
-                          </div>
-                          <div className="text-white/60 group-hover:text-white/80 transition-colors duration-300 text-xs md:text-sm">
-                            Support
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

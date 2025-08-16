@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Button from './ui/Button'
 
 const Hero: React.FC = () => {
   const [visibleLetters, setVisibleLetters] = useState(0)
@@ -38,8 +37,8 @@ const Hero: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="mb-8 md:mb-12">
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold mb-6 md:mb-8">
-            <span className="block gradient-text">Your AI Doc</span>
+          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold mb-6 md:mb-8">
+            <span className="block text-white rubik-pixels-regular">Mind Acuity</span>
           </h1>
           
           <p className="text-lg sm:text-xl md:text-2xl text-white/70 max-w-4xl mx-auto mb-12 md:mb-16 leading-relaxed px-4">
@@ -108,23 +107,7 @@ const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center px-4">
-          <Button 
-            variant="primary" 
-            size="lg"
-            className="w-full sm:w-auto min-w-[200px]"
-          >
-            Join Waitlist
-          </Button>
-          <Button 
-            variant="outline" 
-            size="lg"
-            className="w-full sm:w-auto min-w-[200px]"
-          >
-            Learn More
-          </Button>
-        </div>
+
 
         {/* Stats */}
         <div className="mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto px-4">

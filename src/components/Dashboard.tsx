@@ -6,7 +6,7 @@ import {
   User, 
   TrendingUp
 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+
 import ComprehensiveAssessment from './assessment/ComprehensiveAssessment'
 import ComprehensiveResults from './assessment/ComprehensiveResults'
 
@@ -23,7 +23,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const [assessmentView, setAssessmentView] = useState<AssessmentView>('main')
   const [assessmentResults, setAssessmentResults] = useState<any>(null)
   const [assessmentHistory, setAssessmentHistory] = useState<any[]>([])
-  const navigate = useNavigate()
+
 
   useEffect(() => {
     // Load assessment history

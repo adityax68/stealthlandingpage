@@ -4,10 +4,9 @@ import { useNavigate } from 'react-router-dom'
 
 interface HeaderProps {
   isAuthenticated?: boolean
-  onLogout?: () => void
 }
 
-const Header: React.FC<HeaderProps> = ({ isAuthenticated = false, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
 

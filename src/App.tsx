@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Features from './components/Features'
@@ -13,7 +13,6 @@ function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const location = useLocation()
   const navigate = useNavigate()
 
 
@@ -108,7 +107,7 @@ function AppContent() {
         } />
         <Route path="/" element={
           <main>
-            <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+            <Header isAuthenticated={isAuthenticated} />
             <Hero />
             <Features />
             <Footer />

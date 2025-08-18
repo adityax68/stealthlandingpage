@@ -28,6 +28,8 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
       formData.append('username', email)
       formData.append('password', password)
       
+      console.log('Login URL:', API_ENDPOINTS.LOGIN)
+      
       const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
         headers: {

@@ -1,6 +1,10 @@
 // API Configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
+// Debug logging
+console.log('Environment VITE_API_URL:', import.meta.env.VITE_API_URL)
+console.log('Final API_BASE_URL:', API_BASE_URL)
+
 export const API_ENDPOINTS = {
   LOGIN: `${API_BASE_URL}/api/v1/auth/login`,
   SIGNUP: `${API_BASE_URL}/api/v1/auth/signup`,

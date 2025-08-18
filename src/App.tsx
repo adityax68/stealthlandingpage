@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Features from './components/Features'
@@ -9,11 +9,12 @@ import AuthPage from './components/auth/AuthPage'
 import Dashboard from './components/Dashboard'
 
 function AppContent() {
-  const [showSplash, setShowSplash] = useState(true)
+  const [showSplash, setShowSplash] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
+  const location = useLocation()
 
 
   useEffect(() => {
@@ -43,6 +44,15 @@ function AppContent() {
     }
   }, [])
 
+  // Show splash screen only on home page
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setShowSplash(true)
+    } else {
+      setShowSplash(false)
+    }
+  }, [location.pathname])
+
   // Simple authentication check on mount
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -64,6 +74,10 @@ function AppContent() {
 
   const handleSplashComplete = () => {
     setShowSplash(false)
+    // Navigate to home page after splash screen completes
+    if (location.pathname !== '/') {
+      navigate('/', { replace: true })
+    }
   }
 
   const handleAuthSuccess = (token: string, userData: any) => {

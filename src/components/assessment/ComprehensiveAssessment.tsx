@@ -202,14 +202,14 @@ const ComprehensiveAssessment: React.FC<ComprehensiveAssessmentProps> = ({
       })
 
       console.log('Response status:', response.status)
-      
+
       if (response.ok) {
         const results = await response.json()
         console.log('Assessment results:', results)
         
         // Validate that results have the expected structure
         if (results.depression && results.anxiety && results.stress) {
-          onComplete(results)
+        onComplete(results)
         } else {
           console.error('Invalid results structure:', results)
           // Fallback to local analysis

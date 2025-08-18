@@ -36,7 +36,15 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
 
         {error && (
           <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
-            <p className="text-red-300 text-sm">{error}</p>
+            <div className="flex items-start space-x-2">
+              <div className="flex-shrink-0 w-5 h-5 bg-red-400 rounded-full flex items-center justify-center mt-0.5">
+                <span className="text-red-900 text-xs font-bold">!</span>
+              </div>
+              <div>
+                <p className="text-red-300 text-sm font-medium">Registration Error</p>
+                <p className="text-red-300/80 text-sm mt-1">{error}</p>
+              </div>
+            </div>
           </div>
         )}
 

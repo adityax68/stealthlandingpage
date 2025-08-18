@@ -26,9 +26,9 @@ function AppContent() {
         const parsedUserData = JSON.parse(userData)
         
         // Set authentication state immediately from localStorage
-        setIsAuthenticated(true)
-        setUser(parsedUserData)
-        setIsLoading(false)
+            setIsAuthenticated(true)
+            setUser(parsedUserData)
+          setIsLoading(false)
       } catch (error) {
         console.error('Error parsing user data from localStorage:', error)
         // Clear invalid data
@@ -106,12 +106,12 @@ function AppContent() {
           )
         } />
         <Route path="/" element={
-          <main>
+            <main>
             <Header isAuthenticated={isAuthenticated} />
-            <Hero />
-            <Features />
-            <Footer />
-          </main>
+              <Hero />
+              <Features />
+              <Footer />
+            </main>
         } />
         <Route path="/dashboard" element={
           isAuthenticated ? (

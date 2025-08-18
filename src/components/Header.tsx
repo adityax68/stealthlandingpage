@@ -68,16 +68,15 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
                 <User className="w-4 h-4" />
                 <span>Get Started</span>
               </button>
-              // ) : (
-              //   <button
-              //     onClick={() => navigate('/auth')}
-              //     className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
-              //   >
-              //     <User className="w-4 h-4" />
-              //     <span>Sign In</span>
-              //   </button>
-              // )}
-            ) : null}
+            ) : (
+              <button
+                onClick={() => navigate('/auth')}
+                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
+              >
+                <User className="w-4 h-4" />
+                <span>Sign In</span>
+              </button>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -117,7 +116,18 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
                   <User className="w-4 h-4" />
                   <span>Get Started</span>
                 </button>
-              ) : null}
+              ) : (
+                <button
+                  onClick={() => {
+                    navigate('/auth')
+                    setIsMenuOpen(false)
+                  }}
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Sign In</span>
+                </button>
+              )}
             </div>
           </nav>
         )}

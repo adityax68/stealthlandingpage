@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
+import { API_ENDPOINTS } from '../../config/api'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -27,7 +28,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
       formData.append('username', email)
       formData.append('password', password)
       
-      const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+      const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -65,7 +66,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
     setError('')
     
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+      const response = await fetch(API_ENDPOINTS.SIGNUP, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

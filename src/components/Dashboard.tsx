@@ -6,6 +6,7 @@ import {
   User, 
   TrendingUp
 } from 'lucide-react'
+import { API_ENDPOINTS } from '../config/api'
 
 import ComprehensiveAssessment from './assessment/ComprehensiveAssessment'
 import ComprehensiveResults from './assessment/ComprehensiveResults'
@@ -33,7 +34,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const loadAssessmentHistory = async () => {
     try {
       console.log('Loading assessment history...')
-      const response = await fetch('http://localhost:8000/api/v1/clinical/my-assessments', {
+      const response = await fetch(API_ENDPOINTS.CLINICAL_ASSESSMENTS, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       })
       

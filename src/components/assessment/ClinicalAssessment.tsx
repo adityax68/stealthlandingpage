@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react'
+import { API_ENDPOINTS } from '../../config/api'
 
 interface QuestionResponse {
   question_id: number
@@ -29,7 +30,7 @@ const ClinicalAssessment: React.FC<ClinicalAssessmentProps> = ({
 
   const loadQuestions = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/clinical/questions/${assessmentType}`, {
+              const response = await fetch(`${API_ENDPOINTS.QUESTIONS}/${assessmentType}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -147,7 +148,7 @@ const ClinicalAssessment: React.FC<ClinicalAssessmentProps> = ({
     setIsSubmitting(true)
     
     try {
-      const response = await fetch('http://localhost:8000/api/v1/clinical/assess', {
+      const response = await fetch(`${API_ENDPOINTS.CLINICAL_ASSESS}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

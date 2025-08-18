@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Brain, Activity, Heart, Zap, AlertTriangle } from 'lucide-react'
+import { API_ENDPOINTS } from '../../config/api'
 
 interface QuestionResponse {
   question_id: number
@@ -33,17 +34,17 @@ const ComprehensiveAssessment: React.FC<ComprehensiveAssessmentProps> = ({
   const loadAllQuestions = async () => {
     try {
       // Load questions from all three assessments
-      const [phq9Response, gad7Response, pss10Response] = await Promise.all([
-        fetch('http://localhost:8000/api/v1/clinical/questions/phq9', {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        }),
-        fetch('http://localhost:8000/api/v1/clinical/questions/gad7', {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        }),
-        fetch('http://localhost:8000/api/v1/clinical/questions/pss10', {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        })
-      ])
+              const [phq9Response, gad7Response, pss10Response] = await Promise.all([
+          fetch(API_ENDPOINTS.QUESTIONS_PHQ9, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          }),
+          fetch(API_ENDPOINTS.QUESTIONS_GAD7, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          }),
+          fetch(API_ENDPOINTS.QUESTIONS_PSS10, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          })
+        ])
 
       const phq9Data = phq9Response.ok ? await phq9Response.json() : getFallbackPHQ9()
       const gad7Data = gad7Response.ok ? await gad7Response.json() : getFallbackGAD7()
@@ -189,8 +190,8 @@ const ComprehensiveAssessment: React.FC<ComprehensiveAssessmentProps> = ({
     try {
       console.log('Submitting assessment with responses:', responses)
       
-      // Submit to comprehensive assessment endpoint
-      const response = await fetch('http://localhost:8000/api/v1/clinical/comprehensive', {
+              // Submit to comprehensive assessment endpoint
+        const response = await fetch(API_ENDPOINTS.CLINICAL_COMPREHENSIVE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

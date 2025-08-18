@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Brain, Activity, Heart, Zap, LogOut, User, Calendar, TrendingUp } from 'lucide-react'
 import ComprehensiveAssessment from '../assessment/ComprehensiveAssessment'
 import ComprehensiveResults from '../assessment/ComprehensiveResults'
+import { API_ENDPOINTS } from '../../config/api'
 
 interface DashboardProps {
   onLogout: () => void
@@ -23,7 +24,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const loadRecentAssessments = async () => {
     try {
       // Load clinical assessments only
-      const response = await fetch('http://localhost:8000/api/v1/clinical/my-assessments', {
+      const response = await fetch(API_ENDPOINTS.CLINICAL_ASSESSMENTS, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       })
       

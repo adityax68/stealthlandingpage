@@ -75,6 +75,7 @@ function AppContent() {
 
   const handleSplashComplete = () => {
     setShowSplash(false)
+    setHasSeenSplash(true)
     // Navigate to home page after splash screen completes
     if (location.pathname !== '/') {
       navigate('/', { replace: true })

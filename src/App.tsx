@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard'
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(false)
+  const [hasSeenSplash, setHasSeenSplash] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -44,14 +45,14 @@ function AppContent() {
     }
   }, [])
 
-  // Show splash screen only on home page
+  // Show splash screen only on first visit to home page
   useEffect(() => {
-    if (location.pathname === '/') {
+    if (location.pathname === '/' && !hasSeenSplash) {
       setShowSplash(true)
     } else {
       setShowSplash(false)
     }
-  }, [location.pathname])
+  }, [location.pathname, hasSeenSplash])
 
   // Simple authentication check on mount
   useEffect(() => {

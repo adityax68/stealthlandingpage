@@ -211,63 +211,63 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex">
-      {/* Sidebar - Responsive width */}
-      <div className="w-64 sm:w-72 lg:w-80 bg-black/40 backdrop-blur-xl border-r border-white/10 flex flex-col">
+      {/* Sidebar - Responsive width and dynamic height */}
+      <div className="w-56 sm:w-64 lg:w-72 bg-black/40 backdrop-blur-xl border-r border-white/10 flex flex-col h-[65vh] max-h-[65vh] overflow-y-auto">
         {/* Header */}
-        <div className="p-4 sm:p-6 border-b border-white/10">
-          <div className="flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-xl flex items-center justify-center">
-              <Brain className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+        <div className="p-3 sm:p-4 border-b border-white/10">
+          <div className="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
+              <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
             </div>
-            <span className="text-lg sm:text-xl font-bold text-white">Mental Health</span>
+            <span className="text-base sm:text-lg font-bold text-white">Mental Health</span>
           </div>
           <div className="flex items-center space-x-2 text-white/70">
             <User className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="text-sm sm:text-base truncate">{user?.full_name || 'User'}</span>
+            <span className="text-xs sm:text-sm truncate">{user?.full_name || 'User'}</span>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex-1 p-3 sm:p-4 space-y-2">
+        <div className="flex-1 p-2 sm:p-3 space-y-1.5">
           <button
             onClick={() => setActiveTab('assessment')}
-            className={`w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 ${
+            className={`w-full flex items-center space-x-2 px-2 sm:px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'assessment'
                 ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
                 : 'text-white/70 hover:text-white hover:bg-white/5'
             }`}
           >
-            <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="font-medium text-sm sm:text-base">Start Assessment</span>
+            <Brain className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="font-medium text-xs sm:text-sm">Start Assessment</span>
           </button>
 
           <button
             onClick={() => setActiveTab('history')}
-            className={`w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 ${
+            className={`w-full flex items-center space-x-2 px-2 sm:px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'history'
                 ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
                 : 'text-white/70 hover:text-white hover:bg-white/5'
             }`}
           >
-            <History className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="font-medium text-sm sm:text-base">Assessment History</span>
+            <History className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="font-medium text-xs sm:text-sm">Assessment History</span>
           </button>
         </div>
 
         {/* Logout Button */}
-        <div className="p-3 sm:p-4 border-t border-white/10">
+        <div className="p-2 sm:p-3 border-t border-white/10">
           <button
             onClick={onLogout}
-            className="w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 bg-red-500/20 border border-red-500/30 text-red-300 rounded-xl hover:bg-red-500/30 transition-all duration-300"
+            className="w-full flex items-center space-x-2 px-2 sm:px-3 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-all duration-300"
           >
-            <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="font-medium text-sm sm:text-base">Logout</span>
+            <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="font-medium text-xs sm:text-sm">Logout</span>
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto min-h-screen">
         {renderMainContent()}
       </div>
     </div>

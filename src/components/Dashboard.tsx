@@ -212,9 +212,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex">
       {/* Sidebar - Responsive width and dynamic height */}
-      <div className="w-56 sm:w-64 lg:w-72 bg-black/40 backdrop-blur-xl border-r border-white/10 flex flex-col h-[65vh] max-h-[65vh] overflow-y-auto">
+      <div className="w-56 sm:w-64 lg:w-72 bg-black/40 backdrop-blur-xl border-r border-white/10 flex flex-col h-[65vh] max-h-[65vh] overflow-y-auto relative">
+        {/* Background overlay to ensure consistent color */}
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-xl pointer-events-none"></div>
         {/* Header */}
-        <div className="p-3 sm:p-4 border-b border-white/10">
+        <div className="p-3 sm:p-4 border-b border-white/10 relative z-10">
           <div className="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
             <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
               <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
@@ -228,7 +230,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex-1 p-2 sm:p-3 space-y-1.5">
+        <div className="flex-1 p-2 sm:p-3 space-y-1.5 relative z-10">
           <button
             onClick={() => setActiveTab('assessment')}
             className={`w-full flex items-center space-x-2 px-2 sm:px-3 py-2 rounded-lg transition-all duration-300 ${
@@ -255,7 +257,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         </div>
 
         {/* Logout Button */}
-        <div className="p-2 sm:p-3 border-t border-white/10">
+        <div className="p-2 sm:p-3 border-t border-white/10 relative z-10">
           <button
             onClick={onLogout}
             className="w-full flex items-center space-x-2 px-2 sm:px-3 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-all duration-300"

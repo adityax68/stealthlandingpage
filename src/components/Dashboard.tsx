@@ -221,7 +221,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
               <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
             </div>
-            <span className="text-base sm:text-lg font-bold text-white">Mental Health</span>
+            <span className="text-base sm:text-lg font-bold text-white">Mind Acuity</span>
           </div>
           <div className="flex items-center space-x-2 text-white/70">
             <User className="w-3 h-3 sm:w-4 sm:h-4" />

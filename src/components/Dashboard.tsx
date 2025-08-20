@@ -91,29 +91,29 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     }
 
     return (
-      <div className="p-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             <span className="gradient-text">Mental Health Assessment</span>
           </h1>
-          <p className="text-xl text-white/70 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto px-4">
             Take a comprehensive mental health assessment to understand your current state and get personalized recommendations.
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/10 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-primary-start/30 transition-all duration-300">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10 hover:border-primary-start/30 transition-all duration-300">
             <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-primary-start to-primary-end rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Brain className="w-10 h-10 text-white" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-primary-start to-primary-end rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-4">Comprehensive Assessment</h3>
-              <p className="text-white/70 mb-8 text-lg">
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Comprehensive Assessment</h3>
+              <p className="text-white/70 mb-6 sm:mb-8 text-base sm:text-lg">
                 Complete evaluation covering depression, anxiety, and stress using validated clinical scales (PHQ-9, GAD-7, PSS-10).
               </p>
               <button
                 onClick={handleStartAssessment}
-                className="px-8 py-4 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-xl hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105 font-semibold text-lg"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-xl hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105 font-semibold text-base sm:text-lg"
               >
                 Start Assessment
               </button>
@@ -210,9 +210,25 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex">
-      {/* Sidebar */}
-      <div className="w-80 bg-black/40 backdrop-blur-xl border-r border-white/10 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex flex-col lg:flex-row">
+      {/* Mobile Header */}
+      <div className="lg:hidden bg-black/40 backdrop-blur-xl border-b border-white/10 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-xl flex items-center justify-center">
+              <Brain className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xl font-bold text-white">Mental Health</span>
+          </div>
+          <div className="flex items-center space-x-2 text-white/70">
+            <User className="w-4 h-4" />
+            <span className="text-sm">{user?.full_name || 'User'}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Sidebar - Hidden on mobile, visible on desktop */}
+      <div className="hidden lg:flex lg:w-80 bg-black/40 backdrop-blur-xl border-r border-white/10 flex-col">
         {/* Header */}
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center space-x-3 mb-4">
@@ -252,12 +268,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             <History className="w-5 h-5" />
             <span className="font-medium">Assessment History</span>
           </button>
-
-          {/* Future tabs can be added here */}
-          {/* <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-white/50 hover:text-white/70 hover:bg-white/5 transition-all duration-300">
-            <Activity className="w-5 h-5" />
-            <span className="font-medium">Progress Tracking</span>
-          </button> */}
         </div>
 
         {/* Logout Button */}
@@ -272,9 +282,48 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         </div>
       </div>
 
+      {/* Mobile Navigation Tabs */}
+      <div className="lg:hidden bg-black/20 backdrop-blur-xl border-b border-white/10">
+        <div className="flex p-2 space-x-2">
+          <button
+            onClick={() => setActiveTab('assessment')}
+            className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-xl transition-all duration-300 ${
+              activeTab === 'assessment'
+                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                : 'text-white/70 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Brain className="w-5 h-5" />
+            <span className="font-medium text-sm">Assessment</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('history')}
+            className={`flex-1 flex items-center space-x-2 px-4 py-3 rounded-xl transition-all duration-300 ${
+              activeTab === 'history'
+                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                : 'text-white/70 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <History className="w-5 h-5" />
+            <span className="font-medium text-sm">History</span>
+          </button>
+        </div>
+      </div>
+
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
         {renderMainContent()}
+      </div>
+
+      {/* Mobile Logout Button - Fixed at bottom */}
+      <div className="lg:hidden fixed bottom-4 right-4 z-50">
+        <button
+          onClick={onLogout}
+          className="w-14 h-14 bg-red-500/80 backdrop-blur-xl border border-red-500/30 text-red-300 rounded-full hover:bg-red-500/90 transition-all duration-300 shadow-lg"
+        >
+          <LogOut className="w-6 h-6" />
+        </button>
       </div>
     </div>
   )

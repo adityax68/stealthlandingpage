@@ -515,19 +515,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         </button>
       </div>
 
-      {/* Sidebar - Full height and mobile responsive */}
-      <div className={`
-        fixed md:relative inset-y-0 left-0 z-40
-        w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 
-        flex flex-col h-screen overflow-hidden
-        transform transition-transform duration-300 ease-in-out
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-      `}>
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex md:relative w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 flex-col h-full overflow-hidden">
         {/* Background overlay to ensure consistent color */}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-xl pointer-events-none"></div>
         
-        {/* Header - Fixed at top */}
-        <div className="p-4 border-b border-white/10 relative z-10 mt-16 md:mt-0 flex-shrink-0">
+        {/* Header */}
+        <div className="p-4 border-b border-white/10 relative z-10 flex-shrink-0">
           <div className="flex items-center space-x-3 mb-3">
             <div className="w-8 h-8 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
               <Brain className="w-4 h-4 text-white" />
@@ -540,13 +534,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           </div>
         </div>
 
-        {/* Navigation Tabs - Scrollable middle section */}
-        <div className="flex-1 p-3 space-y-2 relative z-10 overflow-y-auto">
+        {/* Navigation Tabs */}
+        <div className="flex-1 p-3 space-y-2 relative z-10 overflow-y-auto min-h-0">
           <button
-            onClick={() => {
-              setActiveTab('assessment')
-              setIsSidebarOpen(false) // Close sidebar on mobile after selection
-            }}
+            onClick={() => setActiveTab('assessment')}
             className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'assessment'
                 ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
@@ -558,10 +549,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           </button>
 
           <button
-            onClick={() => {
-              setActiveTab('history')
-              setIsSidebarOpen(false) // Close sidebar on mobile after selection
-            }}
+            onClick={() => setActiveTab('history')}
             className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'history'
                 ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
@@ -575,10 +563,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           {/* Admin Navigation - Only show if user is admin */}
           {user?.role === 'admin' && (
             <button
-              onClick={() => {
-                window.location.href = '/admin'
-                setIsSidebarOpen(false) // Close sidebar on mobile after selection
-              }}
+              onClick={() => window.location.href = '/admin'}
               className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-white/70 hover:text-white hover:bg-white/5"
             >
               <Shield className="w-4 h-4" />
@@ -587,13 +572,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           )}
         </div>
 
-        {/* Logout Button - Fixed at bottom */}
+        {/* Logout Button */}
         <div className="p-3 border-t border-white/10 relative z-10 flex-shrink-0">
           <button
-            onClick={() => {
-              onLogout()
-              setIsSidebarOpen(false) // Close sidebar on mobile after logout
-            }}
+            onClick={onLogout}
             className="w-full flex items-center space-x-2 px-3 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-all duration-300"
           >
             <LogOut className="w-4 h-4" />
@@ -602,12 +584,96 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         </div>
       </div>
 
-      {/* Mobile overlay */}
+      {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black/50 z-30"
-          onClick={() => setIsSidebarOpen(false)}
-        />
+        <div className="md:hidden fixed inset-0 z-40">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+          
+          {/* Sidebar */}
+          <div className="absolute left-0 top-0 h-full w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 flex flex-col">
+            {/* Background overlay */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-xl pointer-events-none"></div>
+            
+            {/* Header */}
+            <div className="p-4 border-b border-white/10 relative z-10 mt-16 flex-shrink-0">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
+                  <Brain className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-lg font-bold text-white">Mind Acuity</span>
+              </div>
+              <div className="flex items-center space-x-2 text-white/70">
+                <User className="w-4 h-4" />
+                <span className="text-sm truncate">{user?.full_name || 'User'}</span>
+              </div>
+            </div>
+
+            {/* Navigation Tabs */}
+            <div className="flex-1 p-3 space-y-2 relative z-10 overflow-y-auto min-h-0">
+              <button
+                onClick={() => {
+                  setActiveTab('assessment')
+                  setIsSidebarOpen(false)
+                }}
+                className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                  activeTab === 'assessment'
+                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Brain className="w-4 h-4" />
+                <span className="font-medium text-sm">Start Assessment</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('history')
+                  setIsSidebarOpen(false)
+                }}
+                className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                  activeTab === 'history'
+                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <History className="w-4 h-4" />
+                <span className="font-medium text-sm">Assessment History</span>
+              </button>
+
+              {/* Admin Navigation - Only show if user is admin */}
+              {user?.role === 'admin' && (
+                <button
+                  onClick={() => {
+                    window.location.href = '/admin'
+                    setIsSidebarOpen(false)
+                  }}
+                  className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-white/70 hover:text-white hover:bg-white/5"
+                >
+                  <Shield className="w-4 h-4" />
+                  <span className="font-medium text-sm">Admin Panel</span>
+                </button>
+              )}
+            </div>
+
+            {/* Logout Button */}
+            <div className="p-3 border-t border-white/10 relative z-10 flex-shrink-0">
+              <button
+                onClick={() => {
+                  onLogout()
+                  setIsSidebarOpen(false)
+                }}
+                className="w-full flex items-center space-x-2 px-3 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-all duration-300"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="font-medium text-sm">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Main Content */}

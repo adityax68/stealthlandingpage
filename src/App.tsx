@@ -8,7 +8,7 @@ import SplashScreen from './components/SplashScreen'
 import AuthPage from './components/auth/AuthPage'
 import Dashboard from './components/Dashboard'
 import AdminDashboard from './components/admin/AdminDashboard'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthContext'
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(false)

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Users, Shield, Settings, BarChart3, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 interface User {
   id: number;
@@ -14,7 +14,7 @@ interface User {
 }
 
 const AdminDashboard: React.FC = () => {
-  const { user, hasPrivilege } = useAuth();
+  const { hasPrivilege } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 

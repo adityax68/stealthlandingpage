@@ -7,6 +7,8 @@ import Footer from './components/Footer'
 import SplashScreen from './components/SplashScreen'
 import AuthPage from './components/auth/AuthPage'
 import Dashboard from './components/Dashboard'
+import AdminDashboard from './components/admin/AdminDashboard'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(false)
@@ -136,6 +138,13 @@ function AppContent() {
             <Navigate to="/" replace />
           )
         } />
+        <Route path="/admin" element={
+          isAuthenticated ? (
+            <AdminDashboard />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
@@ -144,9 +153,11 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
   )
 }
 

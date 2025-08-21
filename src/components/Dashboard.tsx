@@ -4,7 +4,8 @@ import {
   History, 
   LogOut, 
   User, 
-  TrendingUp
+  TrendingUp,
+  Shield
 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 
@@ -254,6 +255,17 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             <History className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="font-medium text-xs sm:text-sm">Assessment History</span>
           </button>
+
+          {/* Admin Navigation - Only show if user is admin */}
+          {user?.role === 'admin' && (
+            <button
+              onClick={() => window.location.href = '/admin'}
+              className="w-full flex items-center space-x-2 px-2 sm:px-3 py-2 rounded-lg transition-all duration-300 text-white/70 hover:text-white hover:bg-white/5"
+            >
+              <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="font-medium text-xs sm:text-sm">Admin Panel</span>
+            </button>
+          )}
         </div>
 
         {/* Logout Button */}

@@ -8,6 +8,8 @@ import SplashScreen from './components/SplashScreen'
 import AuthPage from './components/auth/AuthPage'
 import Dashboard from './components/Dashboard'
 import AdminDashboard from './components/admin/AdminDashboard'
+import ChatBot from './components/ChatBot'
+
 import { AuthProvider } from './contexts/AuthContext'
 
 function AppContent() {
@@ -145,8 +147,12 @@ function AppContent() {
             <Navigate to="/" replace />
           )
         } />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      
+      {/* ChatBot - Always visible when authenticated */}
+      <ChatBot isAuthenticated={isAuthenticated} />
     </div>
   )
 }

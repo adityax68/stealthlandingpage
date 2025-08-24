@@ -18,6 +18,10 @@ export const API_ENDPOINTS = {
   QUESTIONS_PSS10: `${API_BASE_URL}/api/v1/clinical/questions/pss10`,
   CLINICAL_COMPREHENSIVE: `${API_BASE_URL}/api/v1/clinical/comprehensive`,
   CLINICAL_ASSESS: `${API_BASE_URL}/api/v1/clinical/assess`,
+  // Chat endpoints
+  CHAT_SEND: `${API_BASE_URL}/api/v1/chat/send`,
+  CHAT_CONVERSATIONS: `${API_BASE_URL}/api/v1/chat/conversations`,
+  CHAT_MESSAGES: `${API_BASE_URL}/api/v1/chat/conversations`,
 }
 
 export default API_BASE_URL 

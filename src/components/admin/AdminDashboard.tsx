@@ -3,15 +3,6 @@ import { Brain, CheckCircle, XCircle, AlertCircle, Shield, Users, BarChart3 } fr
 
 interface AdminDashboardProps {}
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  full_name: string;
-  created_at: string;
-  role: string;
-}
-
 const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'warning' | 'info'; text: string } | null>(null);
   const [stats, setStats] = useState({
@@ -45,7 +36,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     setTimeout(() => setMessage(null), 8000);
   };
 
-  if (!hasPrivilege('admin_access')) {
+  if (!hasPrivilege()) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
         <div className="text-white text-xl">Access Denied</div>
@@ -208,7 +199,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 };
 
 // Helper function to check admin privileges
-const hasPrivilege = (privilege: string): boolean => {
+const hasPrivilege = (): boolean => {
   // In a real app, this would check the user's actual privileges
   // For now, we'll assume the user has admin access if they can access this component
   return true;

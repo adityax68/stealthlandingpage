@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
-import { Eye, EyeOff, Mail, Lock, User, Building2, Users } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, Building2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-interface SignupFormProps {
-  onSignup: (name: string, email: string, password: string) => void
+interface OrganizationSignupFormProps {
+  onSignup: (companyName: string, hremail: string, password: string) => void
   onSwitchToLogin: () => void
   isLoading?: boolean
   error?: string
 }
 
-const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLoading = false, error }) => {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+const OrganizationSignupForm: React.FC<OrganizationSignupFormProps> = ({ 
+  onSignup, 
+  onSwitchToLogin, 
+  isLoading = false, 
+  error 
+}) => {
+  const [companyName, setCompanyName] = useState('')
+  const [hremail, setHremail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -23,10 +28,10 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
     if (password !== confirmPassword) {
       return
     }
-    onSignup(name, email, password)
+    onSignup(companyName, hremail, password)
   }
 
-  const handleChooseAccountType = () => {
+  const handleBackToChoose = () => {
     navigate('/auth/choose-signup')
   }
 
@@ -36,8 +41,11 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
-          <p className="text-white/70">Join us to start your mental health journey</p>
+          <div className="w-16 h-16 bg-gradient-to-r from-primary-start to-primary-end rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Building2 className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Organization Signup</h2>
+          <p className="text-white/70">Create your company account</p>
         </div>
 
         {error && (
@@ -56,39 +64,40 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-2">
-              Full Name
+            <label htmlFor="companyName" className="block text-sm font-medium text-white/80 mb-2">
+              Company Name
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+              <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
               <input
-                id="name"
+                id="companyName"
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300"
-                placeholder="Enter your full name"
+                placeholder="Enter your company name"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
-              Email Address
+            <label htmlFor="hremail" className="block text-sm font-medium text-white/80 mb-2">
+              HR Email Address
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
               <input
-                id="email"
+                id="hremail"
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={hremail}
+                onChange={(e) => setHremail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300"
-                placeholder="Enter your email"
+                placeholder="Enter HR email address"
                 required
               />
             </div>
+            <p className="mt-1 text-white/50 text-xs">This will be your login email for HR dashboard</p>
           </div>
 
           <div>
@@ -153,38 +162,33 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
             disabled={isLoading || !passwordsMatch}
             className="w-full py-3 px-6 bg-gradient-to-r from-primary-start to-primary-end text-white font-semibold rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
+            {isLoading ? 'Creating Account...' : 'Create Organization Account'}
           </button>
         </form>
 
-        {/* Or create account as Organization / Employee */}
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-3">
           <button
-            onClick={handleChooseAccountType}
-            className="inline-flex items-center space-x-2 text-white/70 hover:text-white transition-colors duration-300 text-sm group"
+            onClick={handleBackToChoose}
+            className="text-white/70 hover:text-white transition-colors duration-300 text-sm"
           >
-            <span>Or create an account as Organization / Employee</span>
-            <div className="flex items-center space-x-1">
-              <Building2 className="w-4 h-4 group-hover:text-primary-start transition-colors duration-300" />
-              <Users className="w-4 h-4 group-hover:text-primary-end transition-colors duration-300" />
-            </div>
+            ← Back to Account Type Selection
           </button>
-        </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-white/70">
-            Already have an account?{' '}
-            <button
-              onClick={onSwitchToLogin}
-              className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300"
-            >
-              Sign in
-            </button>
-          </p>
+          
+          <div className="border-t border-white/10 pt-3">
+            <p className="text-white/70">
+              Already have an organization account?{' '}
+              <button
+                onClick={onSwitchToLogin}
+                className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300"
+              >
+                Sign in
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default SignupForm 
+export default OrganizationSignupForm

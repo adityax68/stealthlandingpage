@@ -1,26 +1,31 @@
 import React, { useState } from 'react'
-import { Eye, EyeOff, Mail, Lock, Building2, Users } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, Building2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-interface LoginFormProps {
-  onLogin: (email: string, password: string) => void
+interface OrganizationLoginFormProps {
+  onLogin: (hremail: string, password: string) => void
   onSwitchToSignup: () => void
   isLoading?: boolean
   error?: string
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, isLoading = false, error }) => {
-  const [email, setEmail] = useState('')
+const OrganizationLoginForm: React.FC<OrganizationLoginFormProps> = ({ 
+  onLogin, 
+  onSwitchToSignup, 
+  isLoading = false, 
+  error 
+}) => {
+  const [hremail, setHremail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onLogin(email, password)
+    onLogin(hremail, password)
   }
 
-  const handleChooseAccountType = () => {
+  const handleBackToChoose = () => {
     navigate('/auth/choose-login')
   }
 
@@ -28,8 +33,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, isLoad
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-          <p className="text-white/70">Sign in to your account</p>
+          <div className="w-16 h-16 bg-gradient-to-r from-primary-start to-primary-end rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Building2 className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Organization Login</h2>
+          <p className="text-white/70">Sign in to your HR dashboard</p>
         </div>
 
         {error && (
@@ -48,18 +56,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, isLoad
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
-              Email Address
+            <label htmlFor="hremail" className="block text-sm font-medium text-white/80 mb-2">
+              HR Email Address
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
               <input
-                id="email"
+                id="hremail"
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={hremail}
+                onChange={(e) => setHremail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300"
-                placeholder="Enter your email"
+                placeholder="Enter your HR email"
                 required
               />
             </div>
@@ -95,38 +103,33 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, isLoad
             disabled={isLoading}
             className="w-full py-3 px-6 bg-gradient-to-r from-primary-start to-primary-end text-white font-semibold rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            {isLoading ? 'Signing In...' : 'Sign In'}
+            {isLoading ? 'Signing In...' : 'Sign In to HR Dashboard'}
           </button>
         </form>
 
-        {/* Or sign in as Organization / Employee */}
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-3">
           <button
-            onClick={handleChooseAccountType}
-            className="inline-flex items-center space-x-2 text-white/70 hover:text-white transition-colors duration-300 text-sm group"
+            onClick={handleBackToChoose}
+            className="text-white/70 hover:text-white transition-colors duration-300 text-sm"
           >
-            <span>Or sign in as Organization / Employee</span>
-            <div className="flex items-center space-x-1">
-              <Building2 className="w-4 h-4 group-hover:text-primary-start transition-colors duration-300" />
-              <Users className="w-4 h-4 group-hover:text-primary-end transition-colors duration-300" />
-            </div>
+            ← Back to Account Type Selection
           </button>
-        </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-white/70">
-            Don't have an account?{' '}
-            <button
-              onClick={onSwitchToSignup}
-              className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300"
-            >
-              Sign up
-            </button>
-          </p>
+          
+          <div className="border-t border-white/10 pt-3">
+            <p className="text-white/70">
+              Don't have an organization account?{' '}
+              <button
+                onClick={onSwitchToSignup}
+                className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300"
+              >
+                Sign up
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default LoginForm 
+export default OrganizationLoginForm

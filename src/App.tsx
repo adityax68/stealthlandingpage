@@ -11,6 +11,8 @@ import AdminDashboard from './components/admin/AdminDashboard'
 import ChatBot from './components/ChatBot'
 
 import { AuthProvider } from './contexts/AuthContext'
+import { EmployeeModalProvider } from './contexts/EmployeeModalContext'
+import EmployeeRequestModal from './components/EmployeeRequestModal'
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(false)
@@ -153,6 +155,9 @@ function AppContent() {
       
       {/* ChatBot - Always visible when authenticated */}
       <ChatBot isAuthenticated={isAuthenticated} />
+      
+      {/* Employee Request Modal - Rendered at app level */}
+      <EmployeeRequestModal />
     </div>
   )
 }
@@ -160,9 +165,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <EmployeeModalProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </EmployeeModalProvider>
     </AuthProvider>
   )
 }

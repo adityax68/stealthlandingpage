@@ -10,19 +10,21 @@ import {
   ChevronDown,
   ChevronRight,
   Calendar,
-  BarChart3
+  BarChart3,
+  Users
 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 
 import ComprehensiveAssessment from './assessment/ComprehensiveAssessment'
 import ComprehensiveResults from './assessment/ComprehensiveResults'
+import HRDashboard from './hr/HRDashboard'
 
 interface DashboardProps {
   onLogout: () => void
   user: any
 }
 
-type Tab = 'assessment' | 'history'
+type Tab = 'assessment' | 'history' | 'hr'
 type AssessmentView = 'main' | 'assessment' | 'results'
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
@@ -498,6 +500,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         return renderAssessmentContent()
       case 'history':
         return renderHistoryContent()
+      case 'hr':
+        return <HRDashboard user={user} />
       default:
         return renderAssessmentContent()
     }
@@ -559,6 +563,21 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             <History className="w-4 h-4" />
             <span className="font-medium text-sm">Assessment History</span>
           </button>
+
+          {/* HR Dashboard - Only show if user is HR */}
+          {user?.role === 'hr' && (
+            <button
+              onClick={() => setActiveTab('hr')}
+              className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                activeTab === 'hr'
+                  ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Users className="w-4 h-4" />
+              <span className="font-medium text-sm">HR Dashboard</span>
+            </button>
+          )}
 
           {/* Admin Navigation - Only show if user is admin */}
           {user?.role === 'admin' && (
@@ -643,6 +662,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 <History className="w-4 h-4" />
                 <span className="font-medium text-sm">Assessment History</span>
               </button>
+
+              {/* HR Dashboard - Only show if user is HR */}
+              {user?.role === 'hr' && (
+                <button
+                  onClick={() => {
+                    setActiveTab('hr')
+                    setIsSidebarOpen(false)
+                  }}
+                  className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                    activeTab === 'hr'
+                      ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <Users className="w-4 h-4" />
+                  <span className="font-medium text-sm">HR Dashboard</span>
+                </button>
+              )}
 
               {/* Admin Navigation - Only show if user is admin */}
               {user?.role === 'admin' && (

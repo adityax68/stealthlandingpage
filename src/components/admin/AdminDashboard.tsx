@@ -1,208 +1,230 @@
-import React, { useState, useEffect } from 'react';
-import { Brain, CheckCircle, XCircle, AlertCircle, Shield, Users, BarChart3 } from 'lucide-react';
+import React, { useState } from 'react';
+import { UserPlus, Users, X } from 'lucide-react';
 
 interface AdminDashboardProps {}
 
+interface OrganisationForm {
+  org_name: string;
+  hr_email: string;
+}
+
 const AdminDashboard: React.FC<AdminDashboardProps> = () => {
-  const [message, setMessage] = useState<{ type: 'success' | 'error' | 'warning' | 'info'; text: string } | null>(null);
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalAssessments: 0,
-    activeUsers: 0
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState<OrganisationForm>({
+    org_name: '',
+    hr_email: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState<'success' | 'error'>('success');
 
-  useEffect(() => {
-    // Load admin dashboard data
-    loadDashboardData();
-  }, []);
+  const handleAddOrganisation = () => {
+    setIsModalOpen(true);
+  };
 
-  const loadDashboardData = async () => {
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setFormData({ org_name: '', hr_email: '' });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
     try {
-      // In a real app, you would fetch this data from your API
-      // For now, we'll use mock data
-      setStats({
-        totalUsers: 1250,
-        totalAssessments: 3420,
-        activeUsers: 89
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:8000/api/v1/admin/organisations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
       });
+
+      if (response.ok) {
+        setToastMessage('Organisation added successfully!');
+        setToastType('success');
+        setShowToast(true);
+        handleCloseModal();
+        
+        // Hide toast after 3 seconds
+        setTimeout(() => setShowToast(false), 3000);
+      } else {
+        const errorData = await response.json();
+        setToastMessage(errorData.detail || 'Failed to add organisation');
+        setToastType('error');
+        setShowToast(true);
+      }
     } catch (error) {
-      console.error('Error loading dashboard data:', error);
-      showMessage('error', 'Failed to load dashboard data');
+      setToastMessage('Network error. Please try again.');
+      setToastType('error');
+      setShowToast(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const showMessage = (type: 'success' | 'error' | 'warning' | 'info', text: string) => {
-    setMessage({ type, text });
-    setTimeout(() => setMessage(null), 8000);
-  };
-
-  if (!hasPrivilege()) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
-        <div className="text-white text-xl">Access Denied</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 p-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <Shield className="w-8 h-8 text-purple-400" />
-            <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
+      {/* Background Orbs - Consistent with main website */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-10 left-10 w-48 h-48 md:top-20 md:left-20 md:w-72 md:h-72 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-10 right-10 w-64 h-64 md:bottom-20 md:right-20 md:w-96 md:h-96 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded-full blur-3xl animate-float-delayed"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-56 h-56 md:w-80 md:h-80 bg-gradient-to-br from-accent-start/15 to-accent-end/15 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute top-1/4 right-1/4 w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-primary-start/10 to-accent-start/10 rounded-full blur-2xl animate-float-slow"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-secondary-start/15 to-primary-end/15 rounded-full blur-2xl animate-float-delayed"></div>
+        <div className="absolute top-3/4 left-1/3 w-20 h-20 md:w-28 md:h-28 bg-gradient-to-br from-accent-start/20 to-secondary-start/20 rounded-full blur-xl animate-float"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-start/5 via-transparent to-accent-start/5 animate-water-flow"></div>
+      </div>
 
-        <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 mb-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold text-white mb-4">System Administration & Monitoring</h2>
-            <p className="text-white/70 text-lg">Manage users, monitor system health, and view analytics</p>
-          </div>
-        </div>
-        
-        {/* Message Display */}
-        {message && (
-          <div className={`mb-6 p-4 rounded-lg flex items-center space-x-3 ${
-            message.type === 'success' 
-              ? 'bg-green-500/20 border border-green-500/30 text-green-300'
-              : message.type === 'warning'
-              ? 'bg-yellow-500/20 border border-yellow-500/30 text-yellow-300'
-              : message.type === 'info'
-              ? 'bg-blue-500/20 border border-blue-500/30 text-blue-300'
-              : 'bg-red-500/20 border border-red-500/30 text-red-300'
-          }`}>
-            {message.type === 'success' && <CheckCircle className="w-5 h-5" />}
-            {message.type === 'warning' && <AlertCircle className="w-5 h-5" />}
-            {message.type === 'info' && <AlertCircle className="w-5 h-5" />}
-            {message.type === 'error' && <XCircle className="w-5 h-5" />}
-            <span>{message.text}</span>
-          </div>
-        )}
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center space-x-4">
-              <Users className="w-12 h-12 text-blue-400" />
-              <div>
-                <p className="text-white/70 text-sm">Total Users</p>
-                <p className="text-3xl font-bold text-white">{stats.totalUsers.toLocaleString()}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center space-x-4">
-              <BarChart3 className="w-12 h-12 text-green-400" />
-              <div>
-                <p className="text-white/70 text-sm">Total Assessments</p>
-                <p className="text-3xl font-bold text-white">{stats.totalAssessments.toLocaleString()}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center space-x-4">
-              <Brain className="w-12 h-12 text-purple-400" />
-              <div>
-                <p className="text-white/70 text-sm">Active Users</p>
-                <p className="text-3xl font-bold text-white">{stats.activeUsers}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Admin Features */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* User Management Card */}
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-            <h2 className="text-xl font-semibold text-white mb-4">👥 User Management</h2>
-            <p className="text-white/70 text-sm mb-6">
-              Manage user accounts, roles, and permissions
-            </p>
-            
-            <div className="space-y-4">
-              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-                <h3 className="text-blue-300 font-medium mb-2">Available Actions:</h3>
-                <ul className="text-white/70 text-sm space-y-1">
-                  <li>• View all registered users</li>
-                  <li>• Manage user roles and permissions</li>
-                  <li>• Suspend or activate user accounts</li>
-                  <li>• View user activity and assessments</li>
-                </ul>
-              </div>
+      {/* Content */}
+      <div className="relative z-10 min-h-screen">
+        {/* Header Section */}
+        <div className="bg-black/20 backdrop-blur-xl border-b border-white/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              {/* Title */}
+              <h1 className="text-2xl md:text-3xl font-bold text-white">
+                Admin Panel
+              </h1>
               
-              <button
-                onClick={() => showMessage('info', 'User management features coming soon')}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center font-medium"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Manage Users
-              </button>
-            </div>
-          </div>
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                {/* Add Organisation Button */}
+                <button 
+                  onClick={handleAddOrganisation}
+                  className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-primary-start/25 flex items-center space-x-2"
+                >
+                  <div className="relative z-10 flex items-center space-x-2">
+                    <UserPlus className="w-4 h-4" />
+                    <span>Add Organisation</span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </button>
 
-          {/* System Monitoring Card */}
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-            <h2 className="text-xl font-semibold text-white mb-4">📊 System Monitoring</h2>
-            <p className="text-white/70 text-sm mb-6">
-              Monitor system health, performance, and analytics
-            </p>
-            
-            <div className="space-y-4">
-              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
-                <h3 className="text-green-300 font-medium mb-2">Monitoring Features:</h3>
-                <ul className="text-white/70 text-sm space-y-1">
-                  <li>• System performance metrics</li>
-                  <li>• Database health and optimization</li>
-                  <li>• API usage statistics</li>
-                  <li>• Error logs and alerts</li>
-                </ul>
+                {/* Add Counsellor Button */}
+                <button className="group relative overflow-hidden bg-gradient-to-r from-secondary-start to-secondary-end hover:from-secondary-start/90 hover:to-secondary-end/90 text-white px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-secondary-start/25 flex items-center space-x-2">
+                  <div className="relative z-10 flex items-center space-x-2">
+                    <Users className="w-4 h-4" />
+                    <span>Add Counsellor</span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </button>
               </div>
-              
-              <button
-                onClick={() => showMessage('info', 'System monitoring features coming soon')}
-                className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center font-medium"
-              >
-                <BarChart3 className="w-4 h-4 mr-2" />
-                View Analytics
-              </button>
             </div>
           </div>
         </div>
 
-        {/* Coming Soon Section */}
-        <div className="mt-8 bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-white mb-4">🚀 More Features Coming Soon</h2>
-            <p className="text-white/70 text-sm mb-4">
-              We're working on additional admin features to help you manage the platform more effectively
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="bg-white/5 rounded-lg p-3">
-                <p className="text-white/70">Advanced Analytics</p>
-              </div>
-              <div className="bg-white/5 rounded-lg p-3">
-                <p className="text-white/70">Bulk Operations</p>
-              </div>
-              <div className="bg-white/5 rounded-lg p-3">
-                <p className="text-white/70">Audit Logs</p>
-              </div>
+        {/* Main Content Area */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Future functionalities will go here */}
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
+            <div className="text-center text-white/70">
+              <p className="text-lg mb-4">Admin functionalities will be added here</p>
+              <p className="text-sm">User management, analytics, system monitoring, and more...</p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={handleCloseModal}
+          ></div>
+          
+          {/* Modal Content */}
+          <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 w-full max-w-md">
+            {/* Close Button */}
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            
+            {/* Modal Header */}
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-white mb-2">Add Organisation</h2>
+              <p className="text-white/70 text-sm">Enter organisation details</p>
+            </div>
+            
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Organisation Name */}
+              <div>
+                <label htmlFor="org_name" className="block text-sm font-medium text-white/90 mb-2">
+                  Organisation Name
+                </label>
+                <input
+                  type="text"
+                  id="org_name"
+                  name="org_name"
+                  value={formData.org_name}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent transition-all"
+                  placeholder="Enter organisation name"
+                />
+              </div>
+              
+              {/* HR Email */}
+              <div>
+                <label htmlFor="hr_email" className="block text-sm font-medium text-white/90 mb-2">
+                  HR Email
+                </label>
+                <input
+                  type="email"
+                  id="hr_email"
+                  name="hr_email"
+                  value={formData.hr_email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent transition-all"
+                  placeholder="Enter HR email address"
+                />
+              </div>
+              
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {isLoading ? 'Adding...' : 'Add Organisation'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="fixed top-4 right-4 z-50">
+          <div className={`px-6 py-4 rounded-xl shadow-lg backdrop-blur-xl border ${
+            toastType === 'success' 
+              ? 'bg-green-500/20 border-green-500/30 text-green-300' 
+              : 'bg-red-500/20 border-red-500/30 text-red-300'
+          }`}>
+            <p className="font-medium">{toastMessage}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
-
-// Helper function to check admin privileges
-const hasPrivilege = (): boolean => {
-  // In a real app, this would check the user's actual privileges
-  // For now, we'll assume the user has admin access if they can access this component
-  return true;
 };
 
 export default AdminDashboard; 

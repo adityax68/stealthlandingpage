@@ -22,7 +22,7 @@ interface Employee {
   updated_at: string
 }
 
-const HRDashboard: React.FC<HRDashboardProps> = ({ user }) => {
+const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')

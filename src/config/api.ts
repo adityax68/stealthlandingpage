@@ -27,6 +27,7 @@ export const API_ENDPOINTS = {
   ACCESS_REQUEST_EMPLOYEE: `${API_BASE_URL}/api/v1/access/request-employee`,
   // HR endpoints
   HR_EMPLOYEES: `${API_BASE_URL}/api/v1/hr/employees`,
+  HR_EMPLOYEES_DASHBOARD: `${API_BASE_URL}/api/v1/hr/employees/dashboard`,
 }
 
 export default API_BASE_URL 

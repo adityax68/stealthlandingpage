@@ -11,20 +11,28 @@ import {
   ChevronRight,
   Calendar,
   BarChart3,
-  Users
+  Users,
+  Settings,
+  Building,
+  UserCheck,
+  AlertCircle
 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 
 import ComprehensiveAssessment from './assessment/ComprehensiveAssessment'
 import ComprehensiveResults from './assessment/ComprehensiveResults'
 import HRDashboard from './hr/HRDashboard'
+import EmployeeSupport from './EmployeeSupport'
+import EmployeeRequestModal from './EmployeeRequestModal'
+import { useEmployeeModal } from '../contexts/EmployeeModalContext'
+import { useToast } from '../contexts/ToastContext'
 
 interface DashboardProps {
   onLogout: () => void
   user: any
 }
 
-type Tab = 'assessment' | 'history' | 'hr'
+type Tab = 'assessment' | 'history' | 'hr' | 'settings' | 'support'
 type AssessmentView = 'main' | 'assessment' | 'results'
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
@@ -34,6 +42,101 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const [assessmentHistory, setAssessmentHistory] = useState<any[]>([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
+  
+  // Settings menu state
+  const [isRequestingAccess, setIsRequestingAccess] = useState(false)
+  
+  // Employee modal context
+  const { openEmployeeModal, isEmployeeModalOpen } = useEmployeeModal()
+  
+  // Toast context
+  const { showToast } = useToast()
+  
+  console.log('Dashboard rendered, openEmployeeModal function:', openEmployeeModal)
+  console.log('Dashboard rendered, isEmployeeModalOpen state:', isEmployeeModalOpen)
+  console.log('Current user:', user)
+
+  // Close settings menu when clicking outside
+  useEffect(() => {
+    // No longer needed since we removed the dropdown menu
+  }, [])
+
+  // Debug useEffect for settings state
+  useEffect(() => {
+    // No longer needed since we removed the dropdown menu
+  }, [])
+
+  const handleRequestAccess = async (accessType: string) => {
+    console.log('🚀 handleRequestAccess called with:', accessType)
+    console.log('🚀 openEmployeeModal function:', openEmployeeModal)
+    
+    if (accessType === 'employee') {
+      console.log('🚀 Employee access requested, about to call openEmployeeModal()')
+      openEmployeeModal()
+      console.log('🚀 openEmployeeModal() called successfully')
+      return
+    }
+    
+    try {
+      setIsRequestingAccess(true)
+      
+      const token = localStorage.getItem('token')
+      if (!token) {
+        showToast('No authentication token found', 'error')
+        return
+      }
+
+      console.log('🚀 Making API request for', accessType, 'access...')
+      const response = await fetch(`${API_ENDPOINTS.ACCESS_REQUEST}?access_type=${accessType}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const data = await response.json()
+      console.log('🚀 API response:', response.status, data)
+
+      if (response.ok) {
+        // Success - show success toast
+        const successMessage = data.message || `${accessType.toUpperCase()} access granted successfully!`
+        showToast(successMessage, 'success')
+        
+        // Update user role in localStorage if available
+        if (data.new_role) {
+          const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+          currentUser.role = data.new_role
+          localStorage.setItem('user', JSON.stringify(currentUser))
+          console.log('🚀 User role updated to:', data.new_role)
+          
+          // Force a re-render by updating the user object
+          if (user) {
+            user.role = data.new_role
+          }
+        }
+      } else {
+        // Error - show error message with specific handling for HR access
+        let errorMessage = data.detail || 'Failed to request access'
+        
+        if (response.status === 403 && accessType === 'hr') {
+          errorMessage = 'Your organisation is not registered with us. Please contact your HR department to register your organisation.'
+        } else if (response.status === 400 && errorMessage.includes('already has elevated access')) {
+          errorMessage = 'You already have elevated access. No additional access is needed.'
+        } else if (response.status === 400 && errorMessage.includes('Admin users cannot request additional access')) {
+          errorMessage = 'Admin users already have full access to the system.'
+        }
+        
+        showToast(errorMessage, 'error')
+        console.error(`Error: ${errorMessage}`)
+      }
+    } catch (error) {
+      console.error('Error requesting access:', error)
+      showToast('Failed to request access. Please try again.', 'error')
+    } finally {
+      setIsRequestingAccess(false)
+    }
+  }
 
 
   useEffect(() => {
@@ -494,14 +597,123 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     )
   }
 
+  const renderSettingsContent = () => {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6">
+            <span className="gradient-text">Settings</span>
+          </h1>
+          <p className="text-base sm:text-lg lg:text-xl text-white/70 max-w-3xl mx-auto px-4">
+            Manage your account settings and request additional access levels.
+          </p>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
+          {/* Current Role Display */}
+          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10 mb-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Current Access Level</h2>
+            <div className={`inline-flex items-center px-4 py-2 rounded-lg border ${
+              user?.role === 'hr' ? 'border-blue-500/30 bg-blue-500/20 text-blue-300' :
+              user?.role === 'employee' ? 'border-green-500/30 bg-green-500/20 text-green-300' :
+              user?.role === 'counsellor' ? 'border-orange-500/30 bg-orange-500/20 text-orange-300' :
+              user?.role === 'admin' ? 'border-purple-500/30 bg-purple-500/20 text-purple-300' :
+              'border-gray-500/30 bg-gray-500/20 text-gray-300'
+            }`}>
+              <span className="font-medium">{user?.role?.toUpperCase() || 'USER'}</span>
+            </div>
+          </div>
+
+          {/* Access Request Options - Only show for basic users */}
+          {user?.role === 'user' && (
+            <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-4">Request Additional Access</h2>
+              <p className="text-white/70 mb-6">Request elevated access levels for additional features and permissions.</p>
+              
+              <div className="grid md:grid-cols-3 gap-4">
+                {/* Employee Access */}
+                <button
+                  onClick={() => {
+                    console.log('Employee access requested from Settings page')
+                    openEmployeeModal()
+                  }}
+                  className="p-6 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl hover:border-green-400/50 transition-all duration-300 group"
+                >
+                  <div className="text-center">
+                    <Building className="w-12 h-12 text-green-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
+                    <h3 className="text-lg font-semibold text-white mb-2">Employee Access</h3>
+                    <p className="text-white/70 text-sm">Access to employee features and organization tools</p>
+                  </div>
+                </button>
+
+                {/* HR Access */}
+                <button
+                  onClick={() => {
+                    console.log('HR access requested from Settings page')
+                    handleRequestAccess('hr')
+                  }}
+                  disabled={isRequestingAccess}
+                  className="p-6 bg-gradient-to-r from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl hover:border-blue-400/50 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="text-center">
+                    <UserCheck className="w-12 h-12 text-blue-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
+                    <h3 className="text-lg font-semibold text-white mb-2">HR Access</h3>
+                    <p className="text-white/70 text-sm">Access to HR management and employee oversight</p>
+                    {isRequestingAccess && (
+                      <div className="mt-3 text-blue-400 text-sm">Processing request...</div>
+                    )}
+                  </div>
+                </button>
+
+                {/* Counsellor Access */}
+                <button
+                  onClick={() => {
+                    console.log('Counsellor access requested from Settings page')
+                    handleRequestAccess('counsellor')
+                  }}
+                  disabled={isRequestingAccess}
+                  className="p-6 bg-gradient-to-r from-orange-500/20 to-orange-600/20 border border-orange-500/30 rounded-xl hover:border-orange-400/50 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="text-center">
+                    <Shield className="w-12 h-12 text-orange-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
+                    <h3 className="text-lg font-semibold text-white mb-2">Counsellor Access</h3>
+                    <p className="text-white/70 text-sm">Access to counselling and mental health tools</p>
+                    {isRequestingAccess && (
+                      <div className="mt-3 text-orange-400 text-sm">Processing request...</div>
+                    )}
+                  </div>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Elevated Access Message */}
+          {user?.role !== 'user' && (
+            <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10">
+              <div className="text-center">
+                <Shield className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                <h2 className="text-xl font-semibold text-white mb-2">You Already Have Elevated Access</h2>
+                <p className="text-white/70">You currently have {user?.role?.toUpperCase()} access. No additional access is needed.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   const renderMainContent = () => {
     switch (activeTab) {
       case 'assessment':
         return renderAssessmentContent()
       case 'history':
         return renderHistoryContent()
+      case 'support':
+        return <EmployeeSupport />
       case 'hr':
         return <HRDashboard user={user} />
+      case 'settings':
+        return renderSettingsContent()
       default:
         return renderAssessmentContent()
     }
@@ -535,6 +747,17 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           <div className="flex items-center space-x-2 text-white/70">
             <User className="w-4 h-4" />
             <span className="text-sm truncate">{user?.full_name || 'User'}</span>
+            {user?.role && user.role !== 'user' && (
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                user.role === 'hr' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
+                user.role === 'employee' ? 'bg-green-500/20 text-green-300 border border-green-500/30' :
+                user.role === 'counsellor' ? 'bg-orange-500/20 text-orange-300 border border-orange-500/30' :
+                user.role === 'admin' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
+                'bg-gray-500/20 text-gray-300 border border-gray-500/30'
+              }`}>
+                {user.role.toUpperCase()}
+              </span>
+            )}
           </div>
         </div>
 
@@ -564,6 +787,21 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             <span className="font-medium text-sm">Assessment History</span>
           </button>
 
+          {/* Employee Support - Only show if user is employee */}
+          {user?.role === 'employee' && (
+            <button
+              onClick={() => setActiveTab('support')}
+              className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                activeTab === 'support'
+                  ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <AlertCircle className="w-4 h-4" />
+              <span className="font-medium text-sm">Employee Support</span>
+            </button>
+          )}
+
           {/* HR Dashboard - Only show if user is HR */}
           {user?.role === 'hr' && (
             <button
@@ -589,6 +827,19 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               <span className="font-medium text-sm">Admin Panel</span>
             </button>
           )}
+
+          {/* Settings Button */}
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+              activeTab === 'settings'
+                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                : 'text-white/70 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Settings className="w-4 h-4" />
+            <span className="font-medium text-sm">Settings</span>
+          </button>
         </div>
 
         {/* Logout Button */}
@@ -628,6 +879,17 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               <div className="flex items-center space-x-2 text-white/70">
                 <User className="w-4 h-4" />
                 <span className="text-sm truncate">{user?.full_name || 'User'}</span>
+                {user?.role && user.role !== 'user' && (
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    user.role === 'hr' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
+                    user.role === 'employee' ? 'bg-green-500/20 text-green-300 border border-green-500/30' :
+                    user.role === 'counsellor' ? 'bg-orange-500/20 text-orange-300 border border-orange-500/30' :
+                    user.role === 'admin' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
+                    'bg-gray-500/20 text-gray-300 border border-gray-500/30'
+                  }`}>
+                    {user.role.toUpperCase()}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -663,6 +925,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 <span className="font-medium text-sm">Assessment History</span>
               </button>
 
+              {/* Employee Support - Only show if user is employee */}
+              {user?.role === 'employee' && (
+                <button
+                  onClick={() => {
+                    setActiveTab('support')
+                    setIsSidebarOpen(false)
+                  }}
+                  className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                    activeTab === 'support'
+                      ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <AlertCircle className="w-4 h-4" />
+                  <span className="font-medium text-sm">Employee Support</span>
+                </button>
+              )}
+
               {/* HR Dashboard - Only show if user is HR */}
               {user?.role === 'hr' && (
                 <button
@@ -694,6 +974,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                   <span className="font-medium text-sm">Admin Panel</span>
                 </button>
               )}
+
+              {/* Settings Button */}
+              <button
+                onClick={() => {
+                  setActiveTab('settings')
+                  setIsSidebarOpen(false)
+                }}
+                className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                  activeTab === 'settings'
+                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Settings className="w-4 h-4" />
+                <span className="font-medium text-sm">Settings</span>
+              </button>
             </div>
 
             {/* Logout Button */}
@@ -717,6 +1013,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       <div className="flex-1 overflow-auto h-screen">
         {renderMainContent()}
       </div>
+      
+      {/* Employee Request Modal */}
+      <EmployeeRequestModal onRoleUpdate={(newRole) => {
+        console.log('Employee role updated to:', newRole)
+        // Update the user role in the current component
+        if (user) {
+          user.role = newRole
+        }
+      }} />
     </div>
   )
 }

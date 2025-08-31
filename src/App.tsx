@@ -9,9 +9,11 @@ import AuthPage from './components/auth/AuthPage'
 import Dashboard from './components/Dashboard'
 import AdminDashboard from './components/admin/AdminDashboard'
 import ChatBot from './components/ChatBot'
+import ToastContainer from './components/ui/ToastContainer'
 
 import { AuthProvider } from './contexts/AuthContext'
 import { EmployeeModalProvider } from './contexts/EmployeeModalContext'
+import { ToastProvider } from './contexts/ToastContext'
 import EmployeeRequestModal from './components/EmployeeRequestModal'
 
 function AppContent() {
@@ -103,6 +105,13 @@ function AppContent() {
     navigate('/', { replace: true })
   }
 
+  const handleUserRoleUpdate = (newRole: string) => {
+    if (user) {
+      const updatedUser = { ...user, role: newRole }
+      setUser(updatedUser)
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+    }
+  }
 
 
   if (showSplash) {
@@ -157,7 +166,7 @@ function AppContent() {
       <ChatBot isAuthenticated={isAuthenticated} />
       
       {/* Employee Request Modal - Rendered at app level */}
-      <EmployeeRequestModal />
+      <EmployeeRequestModal onRoleUpdate={handleUserRoleUpdate} />
     </div>
   )
 }
@@ -166,9 +175,12 @@ function App() {
   return (
     <AuthProvider>
       <EmployeeModalProvider>
-        <Router>
-          <AppContent />
-        </Router>
+        <ToastProvider>
+          <Router>
+            <AppContent />
+            <ToastContainer />
+          </Router>
+        </ToastProvider>
       </EmployeeModalProvider>
     </AuthProvider>
   )

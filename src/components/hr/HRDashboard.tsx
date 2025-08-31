@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Users, User, Mail, Building, Calendar, Loader2 } from 'lucide-react'
+import { Users, User, Mail, Loader2, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react'
 import { API_ENDPOINTS } from '../../config/api'
+import EmployeeDetail from './EmployeeDetail'
+import HRComplaints from './HRComplaints'
 
 interface HRDashboardProps {
   user: any
@@ -14,22 +16,74 @@ interface Employee {
   hr_email: string
   full_name: string
   email: string
-  department?: string
-  position?: string
-  hire_date?: string
   is_active: boolean
   created_at: string
   updated_at: string
 }
 
+type HRTab = 'employees' | 'complaints'
+
 const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
+  const [activeTab, setActiveTab] = useState<HRTab>('employees')
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [employeesPerPage] = useState(10)
 
   useEffect(() => {
     fetchEmployees()
   }, [])
+
+  // Calculate pagination values
+  const indexOfLastEmployee = currentPage * employeesPerPage
+  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage
+  const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee)
+  const totalPages = Math.ceil(employees.length / employeesPerPage)
+
+  // Pagination functions
+  const goToPage = (pageNumber: number) => {
+    setCurrentPage(pageNumber)
+  }
+
+  const goToPreviousPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1))
+  }
+
+  const goToNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages))
+  }
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pages = []
+    const maxVisiblePages = 5
+    
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if total is small
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
+      }
+    } else {
+      // Show pages around current page
+      let start = Math.max(1, currentPage - 2)
+      let end = Math.min(totalPages, start + maxVisiblePages - 1)
+      
+      // Adjust start if we're near the end
+      if (end - start < maxVisiblePages - 1) {
+        start = Math.max(1, end - maxVisiblePages + 1)
+      }
+      
+      for (let i = start; i <= end; i++) {
+        pages.push(i)
+      }
+    }
+    
+    return pages
+  }
 
   const fetchEmployees = async () => {
     try {
@@ -63,12 +117,34 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
     }
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
+  const handleEmployeeClick = (employee: Employee) => {
+    setSelectedEmployee(employee)
+  }
+
+  const handleBackToList = () => {
+    setSelectedEmployee(null)
+  }
+
+  const handleStatusUpdate = (employeeId: number, newStatus: boolean) => {
+    setEmployees(prevEmployees => 
+      prevEmployees.map(emp => 
+        emp.id === employeeId ? { ...emp, is_active: newStatus } : emp
+      )
+    )
+    if (selectedEmployee && selectedEmployee.id === employeeId) {
+      setSelectedEmployee(prev => prev ? { ...prev, is_active: newStatus } : null)
+    }
+  }
+
+  // If an employee is selected, show the detail view
+  if (selectedEmployee) {
+    return (
+      <EmployeeDetail
+        employee={selectedEmployee}
+        onBack={handleBackToList}
+        onStatusUpdate={handleStatusUpdate}
+      />
+    )
   }
 
   if (isLoading) {
@@ -105,7 +181,38 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-4">HR Dashboard</h1>
-          <p className="text-white/70">Manage your organization's employees</p>
+          <p className="text-white/70">Manage your organization's employees and complaints</p>
+          
+          {/* Tab Navigation */}
+          <div className="flex justify-center mt-6 space-x-2">
+            <button
+              onClick={() => setActiveTab('employees')}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                activeTab === 'employees'
+                  ? 'bg-gradient-to-r from-primary-start to-primary-end text-white'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <Users className="w-5 h-5" />
+                <span>Employees</span>
+              </div>
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('complaints')}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                activeTab === 'complaints'
+                  ? 'bg-gradient-to-r from-primary-start to-primary-end text-white'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <AlertCircle className="w-5 h-5" />
+                <span>Complaints</span>
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -139,7 +246,7 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
           <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 backdrop-blur-xl rounded-xl p-6 border border-white/10">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <Building className="w-6 h-6 text-white" />
+                <Users className="w-6 h-6 text-white" />
               </div>
               <div>
                 <p className="text-white/70 text-sm">Organization</p>
@@ -151,12 +258,14 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
           </div>
         </div>
 
-        {/* Employee List */}
-        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-          <div className="p-6 border-b border-white/10">
-            <h2 className="text-2xl font-bold text-white">Employee List</h2>
-            <p className="text-white/70 mt-1">All employees under your management</p>
-          </div>
+        {/* Tab Content */}
+        {activeTab === 'employees' ? (
+          // Employee List Content
+          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+            <div className="p-6 border-b border-white/10">
+              <h2 className="text-2xl font-bold text-white">Employee List</h2>
+              <p className="text-white/70 mt-1">Click on any employee row to view details</p>
+            </div>
 
           {employees.length === 0 ? (
             <div className="p-12 text-center">
@@ -165,130 +274,162 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
               <p className="text-white/70">No employees have been assigned to your organization yet.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              {/* Desktop Table */}
-              <div className="hidden lg:block">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-white/5 border-b border-white/10">
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Employee</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Code</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Email</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Department</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Position</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Joined</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/10">
-                    {employees.map((employee) => (
-                      <tr key={employee.id} className="hover:bg-white/5 transition-colors duration-200">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                              <User className="w-5 h-5 text-white" />
-                            </div>
-                            <div>
-                              <p className="font-semibold text-white">{employee.full_name}</p>
-                              <p className="text-white/60 text-sm">ID: {employee.user_id}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-white text-sm font-medium">
-                            {employee.employee_code}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-2">
-                            <Mail className="w-4 h-4 text-white/60" />
-                            <span className="text-white">{employee.email}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-white/80">
-                            {employee.department || 'Not specified'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-white/80">
-                            {employee.position || 'Not specified'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-2">
-                            <Calendar className="w-4 h-4 text-white/60" />
-                            <span className="text-white/80">
-                              {employee.hire_date ? formatDate(employee.hire_date) : 'Not specified'}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                            employee.is_active
-                              ? 'bg-green-500/20 text-green-300 border-green-500/30'
-                              : 'bg-red-500/20 text-red-300 border-red-500/30'
-                          }`}>
-                            {employee.is_active ? 'Active' : 'Inactive'}
-                          </span>
-                        </td>
+            <>
+              <div className="overflow-x-auto">
+                {/* Desktop Table */}
+                <div className="hidden lg:block">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-white/5 border-b border-white/10">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Employee</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Code</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Email</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-white/10">
+                      {currentEmployees.map((employee) => (
+                        <tr 
+                          key={employee.id} 
+                          className="hover:bg-white/5 transition-colors duration-200 cursor-pointer"
+                          onClick={() => handleEmployeeClick(employee)}
+                        >
+                          <td className="px-6 py-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
+                                <User className="w-5 h-5 text-white" />
+                              </div>
+                              <div>
+                                <p className="font-semibold text-white">{employee.full_name}</p>
+                                <p className="text-white/60 text-sm">ID: {employee.user_id}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-white text-sm font-medium">
+                              {employee.employee_code}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center space-x-2">
+                              <Mail className="w-4 h-4 text-white/60" />
+                              <span className="text-white">{employee.email}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                              employee.is_active
+                                ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                                : 'bg-red-500/20 text-red-300 border-red-500/30'
+                            }`}>
+                              {employee.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Cards */}
+                <div className="lg:hidden p-4 space-y-4">
+                  {currentEmployees.map((employee) => (
+                    <div 
+                      key={employee.id} 
+                      className="bg-white/5 rounded-xl p-4 border border-white/10 cursor-pointer hover:bg-white/10 transition-colors duration-200"
+                      onClick={() => handleEmployeeClick(employee)}
+                    >
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="w-12 h-12 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
+                          <User className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-white">{employee.full_name}</h3>
+                          <p className="text-white/60 text-sm">{employee.employee_code}</p>
+                        </div>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium border ${
+                          employee.is_active
+                            ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                            : 'bg-red-500/20 text-red-300 border-red-500/30'
+                        }`}>
+                          {employee.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center space-x-2">
+                          <Mail className="w-4 h-4 text-white/60" />
+                          <span className="text-white/80">{employee.email}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Mobile Cards */}
-              <div className="lg:hidden p-4 space-y-4">
-                {employees.map((employee) => (
-                  <div key={employee.id} className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                        <User className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-white">{employee.full_name}</h3>
-                        <p className="text-white/60 text-sm">{employee.employee_code}</p>
-                      </div>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${
-                        employee.is_active
-                          ? 'bg-green-500/20 text-green-300 border-green-500/30'
-                          : 'bg-red-500/20 text-red-300 border-red-500/30'
-                      }`}>
-                        {employee.is_active ? 'Active' : 'Inactive'}
-                      </span>
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="p-6 border-t border-white/10">
+                  <div className="flex flex-col items-center gap-4">
+                    {/* Page Info */}
+                    <div className="text-white/70 text-sm text-center">
+                      Showing {indexOfFirstEmployee + 1} to {Math.min(indexOfLastEmployee, employees.length)} of {employees.length} employees
                     </div>
-                    
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <Mail className="w-4 h-4 text-white/60" />
-                        <span className="text-white/80">{employee.email}</span>
+
+                    {/* Pagination Controls */}
+                    <div className="flex items-center space-x-2">
+                      {/* Previous Button */}
+                      <button
+                        onClick={goToPreviousPage}
+                        disabled={currentPage === 1}
+                        className={`p-2 rounded-lg border transition-all duration-200 ${
+                          currentPage === 1
+                            ? 'border-white/20 text-white/40 cursor-not-allowed'
+                            : 'border-white/30 text-white hover:border-white/50 hover:bg-white/5'
+                        }`}
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+
+                      {/* Page Numbers */}
+                      <div className="flex items-center space-x-1">
+                        {getPageNumbers().map((pageNumber) => (
+                          <button
+                            key={pageNumber}
+                            onClick={() => goToPage(pageNumber)}
+                            className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200 ${
+                              pageNumber === currentPage
+                                ? 'bg-gradient-to-r from-primary-start to-primary-end text-white border-primary-end'
+                                : 'border-white/30 text-white/70 hover:border-white/50 hover:bg-white/5'
+                            }`}
+                          >
+                            {pageNumber}
+                          </button>
+                        ))}
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Building className="w-4 h-4 text-white/60" />
-                        <span className="text-white/80">
-                          {employee.department || 'Not specified'}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <User className="w-4 h-4 text-white/60" />
-                        <span className="text-white/80">
-                          {employee.position || 'Not specified'}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="w-4 h-4 text-white/60" />
-                        <span className="text-white/80">
-                          {employee.hire_date ? formatDate(employee.hire_date) : 'Not specified'}
-                        </span>
-                      </div>
+
+                      {/* Next Button */}
+                      <button
+                        onClick={goToNextPage}
+                        disabled={currentPage === totalPages}
+                        className={`p-2 rounded-lg border transition-all duration-200 ${
+                          currentPage === totalPages
+                            ? 'border-white/20 text-white/40 cursor-not-allowed'
+                            : 'border-white/30 text-white hover:border-white/50 hover:bg-white/5'
+                        }`}
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              )}
+            </>
           )}
         </div>
+        ) : (
+          <HRComplaints />
+        )}
       </div>
     </div>
   )

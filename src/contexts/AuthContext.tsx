@@ -15,6 +15,7 @@ interface AuthContextType {
   user: User | null;
   login: (token: string, userData: User) => void;
   logout: () => void;
+  updateUserRole: (newRole: string) => void;
   hasPrivilege: (privilege: string) => boolean;
   hasRole: (role: string) => boolean;
 }
@@ -49,6 +50,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const updateUserRole = (newRole: string) => {
+    if (user) {
+      const updatedUser = { ...user, role: newRole };
+      setUser(updatedUser);
+      // Also update localStorage
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  };
+
   const hasPrivilege = (privilege: string): boolean => {
     return user?.privileges.includes(privilege) || false;
   };
@@ -58,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, hasPrivilege, hasRole }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUserRole, hasPrivilege, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

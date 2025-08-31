@@ -2,9 +2,17 @@ import React, { useState } from 'react'
 import { X, User, Building, Mail } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 import { useEmployeeModal } from '../contexts/EmployeeModalContext'
+import { useAuth } from '../contexts/AuthContext'
+import { useToast } from '../contexts/ToastContext'
 
-const EmployeeRequestModal: React.FC = () => {
+interface EmployeeRequestModalProps {
+  onRoleUpdate?: (newRole: string) => void
+}
+
+const EmployeeRequestModal: React.FC<EmployeeRequestModalProps> = ({ onRoleUpdate }) => {
   const { isEmployeeModalOpen, closeEmployeeModal, onEmployeeSuccess } = useEmployeeModal()
+  const { updateUserRole } = useAuth()
+  const { showToast } = useToast()
   const [formData, setFormData] = useState({
     employee_code: '',
     org_id: '',
@@ -49,13 +57,36 @@ const EmployeeRequestModal: React.FC = () => {
       if (response.ok) {
         // Show success toast
         showToast('Employee access granted', 'success')
+        
+        // Update user role in AuthContext if available
+        if (data.new_role) {
+          updateUserRole(data.new_role)
+          // Also update the App component's user state
+          if (onRoleUpdate) {
+            onRoleUpdate(data.new_role)
+          }
+        }
+        
         onEmployeeSuccess()
         closeEmployeeModal()
         // Reset form
         setFormData({ employee_code: '', org_id: '', hr_email: '' })
       } else {
-        // Show error toast
-        const errorMessage = data.detail || 'Failed to request employee access'
+        // Show error toast with specific handling for organization not found
+        let errorMessage = data.detail || 'Failed to request employee access'
+        
+        if (response.status === 404 && errorMessage.includes('organization does not exist')) {
+          errorMessage = 'Your organisation is not registered with us. Please contact your HR department to register your organisation.'
+        } else if (response.status === 400 && errorMessage.includes('already has elevated access')) {
+          errorMessage = 'You already have elevated access. No additional access is needed.'
+        } else if (response.status === 400 && errorMessage.includes('Admin users cannot request additional access')) {
+          errorMessage = 'Admin users already have full access to the system.'
+        } else if (response.status === 400 && errorMessage.includes('HR email does not match')) {
+          errorMessage = 'The HR email you provided does not match our records. Please verify with your HR department.'
+        } else if (response.status === 400 && errorMessage.includes('Employee code already exists')) {
+          errorMessage = 'This employee code is already registered. Please use a different code or contact support.'
+        }
+        
         showToast(errorMessage, 'error')
         setError(errorMessage)
       }
@@ -69,32 +100,7 @@ const EmployeeRequestModal: React.FC = () => {
     }
   }
 
-  const showToast = (message: string, type: 'success' | 'error') => {
-    // Create toast element
-    const toast = document.createElement('div')
-    toast.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
-      type === 'success' 
-        ? 'bg-green-500 text-white' 
-        : 'bg-red-500 text-white'
-    }`
-    toast.textContent = message
 
-    // Add to DOM
-    document.body.appendChild(toast)
-
-    // Animate in
-    setTimeout(() => {
-      toast.classList.remove('translate-x-full')
-    }, 100)
-
-    // Remove after 5 seconds
-    setTimeout(() => {
-      toast.classList.add('translate-x-full')
-      setTimeout(() => {
-        document.body.removeChild(toast)
-      }, 300)
-    }, 5000)
-  }
 
   if (!isEmployeeModalOpen) return null
 

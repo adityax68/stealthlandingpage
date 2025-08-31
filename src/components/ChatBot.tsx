@@ -20,6 +20,21 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
   const [currentConversationId, setCurrentConversationId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isNewChat, setIsNewChat] = useState(false);
+  
+  // Function to start a new chat
+  const handleNewChat = () => {
+    setMessages([]);
+    setCurrentConversationId(null);
+    setError(null);
+    setIsNewChat(true);
+    // Focus the input for immediate typing
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 100);
+  };
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,10 +75,11 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
       created_at: new Date().toISOString()
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setMessage('');
-    setIsLoading(true);
-    setError(null);
+          setMessages(prev => [...prev, userMessage]);
+      setMessage('');
+      setIsLoading(true);
+      setError(null);
+      setIsNewChat(false);
 
     try {
       // Debug: Check token
@@ -150,8 +166,27 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
               <span className="font-semibold text-lg">Acutie</span>
             </div>
             <div className="flex items-center space-x-2">
+              {/* New Chat Button - Only show when there are messages */}
+              {messages.length > 0 && (
+                <button
+                  onClick={handleNewChat}
+                  className="text-white hover:text-cyan-200 transition-colors p-2 rounded-lg border border-white/20 hover:bg-white/10 text-xs font-medium"
+                  title="Start a new conversation"
+                >
+                  New Chat
+                </button>
+              )}
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  // Reset to clean state when closing
+                  setTimeout(() => {
+                    setMessages([]);
+                    setCurrentConversationId(null);
+                    setError(null);
+                    setIsNewChat(false);
+                  }, 300); // Small delay to allow modal close animation
+                }}
                 className="text-white hover:text-cyan-200 transition-colors p-1 rounded"
               >
                 <X size={16} />
@@ -170,7 +205,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
               {messages.length === 0 && !isLoading && (
                 <div className="text-center text-gray-500 py-12">
                   <MessageCircle size={48} className="mx-auto mb-4 text-gray-300" />
-                  <p className="text-gray-600 font-medium mb-2">Start a conversation with Acutie</p>
+                  <p className="text-gray-600 font-medium mb-2">
+                    {isNewChat ? 'New conversation started' : 'Start a conversation with Acutie'}
+                  </p>
                   <p className="text-sm text-gray-500">I'm here to listen, provide emotional support, and offer guidance if needed</p>
                 </div>
               )}
@@ -215,6 +252,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
               <div ref={messagesEndRef} />
             </div>
 
+
+            
             {/* Error Display */}
             {error && (
               <div className="px-4 py-3 bg-red-50 border border-red-200 text-red-700 text-sm mx-4 mb-2 rounded-lg">

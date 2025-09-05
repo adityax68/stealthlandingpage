@@ -15,6 +15,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import { EmployeeModalProvider } from './contexts/EmployeeModalContext'
 import { ToastProvider } from './contexts/ToastContext'
 import EmployeeRequestModal from './components/EmployeeRequestModal'
+import AuthModal from './components/auth/AuthModal'
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(false)
@@ -22,6 +23,8 @@ function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login')
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -62,6 +65,13 @@ function AppContent() {
     }
   }, [location.pathname, hasSeenSplash])
 
+  // Show auth modal when user visits landing page and is not authenticated
+  useEffect(() => {
+    if (location.pathname === '/' && !isAuthenticated && !isLoading && !showSplash) {
+      setShowAuthModal(true)
+    }
+  }, [location.pathname, isAuthenticated, isLoading, showSplash])
+
   // Simple authentication check on mount
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -95,6 +105,16 @@ function AppContent() {
     localStorage.setItem('user', JSON.stringify(userData))
     setIsAuthenticated(true)
     setUser(userData)
+    setShowAuthModal(false) // Close modal on successful authentication
+  }
+
+  const handleCloseAuthModal = () => {
+    setShowAuthModal(false)
+  }
+
+  const handleOpenSignupModal = () => {
+    setAuthModalMode('signup')
+    setShowAuthModal(true)
   }
 
   const handleLogout = () => {
@@ -139,7 +159,7 @@ function AppContent() {
         <Route path="/" element={
             <main>
             <Header isAuthenticated={isAuthenticated} />
-              <Hero />
+              <Hero onOpenSignupModal={handleOpenSignupModal} />
               <Features />
               <Footer />
             </main>
@@ -167,6 +187,14 @@ function AppContent() {
       
       {/* Employee Request Modal - Rendered at app level */}
       <EmployeeRequestModal onRoleUpdate={handleUserRoleUpdate} />
+      
+      {/* Auth Modal - Rendered at app level */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={handleCloseAuthModal} 
+        onAuthSuccess={handleAuthSuccess}
+        initialMode={authModalMode}
+      />
     </div>
   )
 }

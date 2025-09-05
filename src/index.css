@@ -151,6 +151,15 @@
     }
   }
   
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(200%) skewX(-12deg);
+    }
+  }
+  
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -169,5 +178,9 @@
   
   .animate-glow-pulse {
     animation: glowPulse 4s ease-in-out infinite;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s ease-in-out infinite;
   }
 }

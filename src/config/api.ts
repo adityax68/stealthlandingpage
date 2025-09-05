@@ -39,7 +39,7 @@ export const API_ENDPOINTS = {
   
   // Admin endpoints
   ADMIN_STATS: `${API_BASE_URL}/api/v1/admin/stats`,
-  ADMIN_WEEKLY_USERS: `${API_BASE_URL}/api/v1/admin/weekly-users`,
+  ADMIN_MONTHLY_USERS: `${API_BASE_URL}/api/v1/admin/weekly-users`,
 }
 
 export default API_BASE_URL 

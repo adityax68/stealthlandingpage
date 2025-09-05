@@ -28,13 +28,13 @@ interface AdminStats {
   totalOrganizations: number;
 }
 
-interface WeeklyUserData {
-  week: string;
+interface MonthlyUserData {
+  week: string; // Backend returns 'week' field but contains monthly data
   newUsers: number;
 }
 
-interface WeeklyUsersResponse {
-  weeklyData: WeeklyUserData[];
+interface MonthlyUsersResponse {
+  weeklyData: MonthlyUserData[]; // Backend returns weeklyData field but contains monthly data
 }
 
 // Register Chart.js components
@@ -68,9 +68,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   });
   const [statsLoading, setStatsLoading] = useState(true);
   
-  // Weekly user data state
-  const [weeklyUserData, setWeeklyUserData] = useState<WeeklyUserData[]>([]);
-  const [weeklyDataLoading, setWeeklyDataLoading] = useState(true);
+  // Monthly user data state
+  const [monthlyUserData, setMonthlyUserData] = useState<MonthlyUserData[]>([]);
+  const [monthlyDataLoading, setMonthlyDataLoading] = useState(true);
   const [chartType, setChartType] = useState<'line' | 'bar'>('line');
 
   // Fetch admin stats
@@ -82,7 +82,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`
         }
       });
 
@@ -111,12 +111,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     }
   };
 
-  // Fetch weekly user data
-  const fetchWeeklyUserData = async () => {
+  // Fetch monthly user data
+  const fetchMonthlyUserData = async () => {
     try {
-      setWeeklyDataLoading(true);
+      setMonthlyDataLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch(API_ENDPOINTS.ADMIN_WEEKLY_USERS, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_MONTHLY_USERS, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -125,26 +125,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       });
 
       if (response.ok) {
-        const data: WeeklyUsersResponse = await response.json();
-        setWeeklyUserData(data.weeklyData);
+        const data: MonthlyUsersResponse = await response.json();
+        setMonthlyUserData(data.weeklyData); // Backend returns weeklyData field but contains monthly data
       } else {
-        console.error('Failed to fetch weekly user data');
+        console.error('Failed to fetch monthly user data');
         // Set default empty data on error
-        setWeeklyUserData([]);
+        setMonthlyUserData([]);
       }
     } catch {
-      console.error('Error fetching weekly user data');
+      console.error('Error fetching monthly user data');
       // Set default empty data on error
-      setWeeklyUserData([]);
+      setMonthlyUserData([]);
     } finally {
-      setWeeklyDataLoading(false);
+      setMonthlyDataLoading(false);
     }
   };
 
-  // Load admin stats and weekly data on component mount
+  // Load admin stats and monthly data on component mount
   useEffect(() => {
     fetchAdminStats();
-    fetchWeeklyUserData();
+    fetchMonthlyUserData();
   }, []);
 
   const handleAddOrganisation = () => {
@@ -202,23 +202,31 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     }
   };
 
-  // Chart configuration
+  // Chart configuration with enhanced styling
   const chartData = {
-    labels: weeklyUserData.map(item => item.week),
+    labels: monthlyUserData.map(item => item.week), // Backend returns 'week' field but contains monthly data
     datasets: [
       {
         label: 'New Users',
-        data: weeklyUserData.map(item => item.newUsers),
+        data: monthlyUserData.map(item => item.newUsers),
         borderColor: 'rgb(99, 102, 241)',
-        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-        borderWidth: 3,
-        fill: true,
+        backgroundColor: chartType === 'line' 
+          ? 'rgba(99, 102, 241, 0.15)' 
+          : 'rgba(99, 102, 241, 0.8)',
+        borderWidth: chartType === 'line' ? 4 : 0,
+        fill: chartType === 'line',
         tension: 0.4,
         pointBackgroundColor: 'rgb(99, 102, 241)',
         pointBorderColor: '#ffffff',
-        pointBorderWidth: 2,
-        pointRadius: 6,
-        pointHoverRadius: 8,
+        pointBorderWidth: 3,
+        pointRadius: 8,
+        pointHoverRadius: 12,
+        pointHoverBackgroundColor: 'rgb(99, 102, 241)',
+        pointHoverBorderColor: '#ffffff',
+        pointHoverBorderWidth: 4,
+        // Bar chart specific styling
+        borderRadius: chartType === 'bar' ? 8 : 0,
+        borderSkipped: false,
       },
     ],
   };
@@ -234,19 +242,27 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         display: false,
       },
       tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
         titleColor: '#ffffff',
         bodyColor: '#ffffff',
-        borderColor: 'rgba(99, 102, 241, 0.5)',
-        borderWidth: 1,
-        cornerRadius: 8,
+        borderColor: 'rgba(99, 102, 241, 0.8)',
+        borderWidth: 2,
+        cornerRadius: 12,
         displayColors: false,
+        padding: 12,
+        titleFont: {
+          size: 14,
+          weight: 'bold' as const,
+        },
+        bodyFont: {
+          size: 13,
+        },
         callbacks: {
           title: function(context: { label: string }[]) {
-            return `Week: ${context[0].label}`;
+            return `Month: ${context[0].label}`;
           },
           label: function(context: { parsed: { y: number } }) {
-            return `New Users: ${context.parsed.y}`;
+            return `New Users: ${context.parsed.y.toLocaleString()}`;
           },
         },
       },
@@ -254,33 +270,59 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     scales: {
       x: {
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
+          color: 'rgba(255, 255, 255, 0.08)',
           drawBorder: false,
+          lineWidth: 1,
         },
         ticks: {
-          color: 'rgba(255, 255, 255, 0.7)',
+          color: 'rgba(255, 255, 255, 0.8)',
           font: {
-            size: 12,
+            size: 13,
+            weight: 'normal' as const,
           },
+          padding: 8,
+        },
+        border: {
+          display: false,
         },
       },
       y: {
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
+          color: 'rgba(255, 255, 255, 0.08)',
           drawBorder: false,
+          lineWidth: 1,
         },
         ticks: {
-          color: 'rgba(255, 255, 255, 0.7)',
+          color: 'rgba(255, 255, 255, 0.8)',
           font: {
-            size: 12,
+            size: 13,
+            weight: 'normal' as const,
           },
+          padding: 8,
           beginAtZero: true,
+          callback: function(value: string | number) {
+            return typeof value === 'number' ? value.toLocaleString() : value;
+          },
+        },
+        border: {
+          display: false,
         },
       },
     },
     interaction: {
       intersect: false,
       mode: 'index' as const,
+    },
+    elements: {
+      point: {
+        hoverBackgroundColor: 'rgb(99, 102, 241)',
+        hoverBorderColor: '#ffffff',
+        hoverBorderWidth: 4,
+      },
+    },
+    animation: {
+      duration: 1000,
+      easing: 'easeInOutQuart' as const,
     },
   };
 
@@ -400,16 +442,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </div>
           </div>
 
-          {/* Weekly User Growth Chart */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 mb-8">
+          {/* Monthly User Growth Chart */}
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 mb-8 shadow-2xl">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
               <div className="flex items-center space-x-3 mb-4 md:mb-0">
-                <div className="p-2 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-lg">
-                  <TrendingUp className="w-5 h-5 text-primary-start" />
+                <div className="p-3 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-xl shadow-lg">
+                  <TrendingUp className="w-6 h-6 text-primary-start" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">Weekly User Growth</h3>
-                  <p className="text-white/70 text-sm">New user registrations over time</p>
+                  <h3 className="text-2xl font-bold text-white">Monthly User Growth</h3>
+                  <p className="text-white/70 text-sm">New user registrations by month</p>
                 </div>
               </div>
               
@@ -439,50 +481,68 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </div>
 
             {/* Chart Container */}
-            <div className="relative h-80">
-              {weeklyDataLoading ? (
+            <div className="relative h-96 bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-4 border border-white/10">
+              {monthlyDataLoading ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-start mx-auto mb-4"></div>
-                    <p className="text-white/70">Loading chart data...</p>
+                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-start/30 border-t-primary-start mx-auto mb-6"></div>
+                    <p className="text-white/80 text-lg font-medium">Loading monthly data...</p>
+                    <p className="text-white/60 text-sm mt-2">Fetching user registration trends</p>
                   </div>
                 </div>
-              ) : weeklyUserData.length === 0 ? (
+              ) : monthlyUserData.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center text-white/70">
-                    <TrendingUp className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg mb-2">No data available</p>
-                    <p className="text-sm">Weekly user data will appear here once available</p>
+                    <div className="p-4 bg-gradient-to-br from-primary-start/10 to-primary-end/10 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                      <TrendingUp className="w-10 h-10 text-primary-start/60" />
+                    </div>
+                    <p className="text-xl font-semibold mb-2">No monthly data available</p>
+                    <p className="text-sm">Monthly user registration data will appear here once available</p>
                   </div>
                 </div>
               ) : (
-                <>
+                <div className="h-full">
                   {chartType === 'line' ? (
                     <Line data={chartData} options={chartOptions} />
                   ) : (
                     <Bar data={chartData} options={chartOptions} />
                   )}
-                </>
+                </div>
               )}
             </div>
 
             {/* Chart Summary */}
-            {!weeklyDataLoading && weeklyUserData.length > 0 && (
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <p className="text-white/70 text-sm mb-1">Total Weeks</p>
-                  <p className="text-2xl font-bold text-white">{weeklyUserData.length}</p>
+            {!monthlyDataLoading && monthlyUserData.length > 0 && (
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-6 border border-white/20 shadow-lg">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="p-2 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-lg">
+                      <TrendingUp className="w-4 h-4 text-primary-start" />
+                    </div>
+                    <p className="text-white/80 text-sm font-medium">Total Months</p>
+                  </div>
+                  <p className="text-3xl font-bold text-white">{monthlyUserData.length}</p>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <p className="text-white/70 text-sm mb-1">Total New Users</p>
-                  <p className="text-2xl font-bold text-white">
-                    {weeklyUserData.reduce((sum, item) => sum + item.newUsers, 0).toLocaleString()}
+                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-6 border border-white/20 shadow-lg">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="p-2 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded-lg">
+                      <Users className="w-4 h-4 text-secondary-start" />
+                    </div>
+                    <p className="text-white/80 text-sm font-medium">Total New Users</p>
+                  </div>
+                  <p className="text-3xl font-bold text-white">
+                    {monthlyUserData.reduce((sum, item) => sum + item.newUsers, 0).toLocaleString()}
                   </p>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <p className="text-white/70 text-sm mb-1">Average per Week</p>
-                  <p className="text-2xl font-bold text-white">
-                    {Math.round(weeklyUserData.reduce((sum, item) => sum + item.newUsers, 0) / weeklyUserData.length).toLocaleString()}
+                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-6 border border-white/20 shadow-lg">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="p-2 bg-gradient-to-br from-accent-start/20 to-accent-end/20 rounded-lg">
+                      <Building2 className="w-4 h-4 text-accent-start" />
+                    </div>
+                    <p className="text-white/80 text-sm font-medium">Average per Month</p>
+                  </div>
+                  <p className="text-3xl font-bold text-white">
+                    {Math.round(monthlyUserData.reduce((sum, item) => sum + item.newUsers, 0) / monthlyUserData.length).toLocaleString()}
                   </p>
                 </div>
               </div>

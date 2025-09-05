@@ -6,11 +6,7 @@ interface Ripple {
   y: number
 }
 
-interface HeroProps {
-  onOpenSignupModal?: () => void
-}
-
-const Hero: React.FC<HeroProps> = ({ onOpenSignupModal }) => {
+const Hero: React.FC = () => {
   const [isGlowing, setIsGlowing] = useState(false)
   const [ripples, setRipples] = useState<Ripple[]>([])
   const heroRef = useRef<HTMLElement>(null)
@@ -179,24 +175,6 @@ const Hero: React.FC<HeroProps> = ({ onOpenSignupModal }) => {
               </div>
             </div>
 
-            {/* Signup Link */}
-            {onOpenSignupModal && (
-              <div className={`mt-8 md:mt-10 transition-all duration-1000 delay-2000 ${
-                isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
-              }`}>
-                <div className="text-center">
-                  <p className="text-white/60 text-base sm:text-lg mb-4">
-                    Don't have an account?{' '}
-                    <button
-                      onClick={onOpenSignupModal}
-                      className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300 hover:underline"
-                    >
-                      Sign up
-                    </button>
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

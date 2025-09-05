@@ -24,7 +24,6 @@ function AppContent() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login')
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -112,10 +111,6 @@ function AppContent() {
     setShowAuthModal(false)
   }
 
-  const handleOpenSignupModal = () => {
-    setAuthModalMode('signup')
-    setShowAuthModal(true)
-  }
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -159,7 +154,7 @@ function AppContent() {
         <Route path="/" element={
             <main>
             <Header isAuthenticated={isAuthenticated} />
-              <Hero onOpenSignupModal={handleOpenSignupModal} />
+              <Hero />
               <Features />
               <Footer />
             </main>
@@ -193,7 +188,6 @@ function AppContent() {
         isOpen={showAuthModal} 
         onClose={handleCloseAuthModal} 
         onAuthSuccess={handleAuthSuccess}
-        initialMode={authModalMode}
       />
     </div>
   )

@@ -28,7 +28,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl">
+      <div className="p-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
           <p className="text-white/70">Join us to start your mental health journey</p>
@@ -156,7 +156,8 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
             Already have an account?{' '}
             <button
               onClick={onSwitchToLogin}
-              className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300"
+              className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300 cursor-pointer hover:underline"
+              type="button"
             >
               Sign in
             </button>

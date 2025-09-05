@@ -88,13 +88,35 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
             )}
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden w-8 h-8 flex items-center justify-center text-white hover:text-primary-start transition-colors duration-300"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Header Actions */}
+          <div className="md:hidden flex items-center space-x-3">
+            {/* Mobile Auth Button */}
+            {isAuthenticated ? (
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center space-x-1 px-3 py-1.5 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 text-sm"
+              >
+                <User className="w-4 h-4" />
+                <span>Get Started</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/auth')}
+                className="flex items-center space-x-1 px-3 py-1.5 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 text-sm"
+              >
+                <User className="w-4 h-4" />
+                <span>Sign In</span>
+              </button>
+            )}
+            
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="w-8 h-8 flex items-center justify-center text-white hover:text-primary-start transition-colors duration-300"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -114,34 +136,6 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
                   {item.label}
                 </a>
               ))}
-              {isAuthenticated && (
-                <div className="space-y-2">
-                  {/* Clean mobile nav - no dashboard button */}
-                </div>
-              )}
-              {isAuthenticated ? (
-                <button
-                  onClick={() => {
-                    navigate('/dashboard')
-                    setIsMenuOpen(false)
-                  }}
-                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
-                >
-                  <User className="w-4 h-4" />
-                  <span>Get Started</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    navigate('/auth')
-                    setIsMenuOpen(false)
-                  }}
-                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
-                >
-                  <User className="w-4 h-4" />
-                  <span>Sign In</span>
-                </button>
-              )}
             </div>
           </nav>
         )}

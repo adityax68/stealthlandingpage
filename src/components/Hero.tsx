@@ -6,31 +6,23 @@ interface Ripple {
   y: number
 }
 
-const Hero: React.FC = () => {
-  const [visibleLetters, setVisibleLetters] = useState(0)
+interface HeroProps {
+  onOpenSignupModal?: () => void
+}
+
+const Hero: React.FC<HeroProps> = ({ onOpenSignupModal }) => {
   const [isGlowing, setIsGlowing] = useState(false)
   const [ripples, setRipples] = useState<Ripple[]>([])
   const heroRef = useRef<HTMLElement>(null)
   const rippleId = useRef(0)
-  const comingSoonText = "Coming Soon"
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setVisibleLetters(prev => {
-        if (prev < comingSoonText.length) {
-          return prev + 1
-        }
-        return prev
-      })
-    }, 200)
-
-    // Start glow animation after all letters are visible
+    // Start glow animation immediately
     const glowTimer = setTimeout(() => {
       setIsGlowing(true)
-    }, comingSoonText.length * 200 + 500)
+    }, 500)
 
     return () => {
-      clearInterval(timer)
       clearTimeout(glowTimer)
     }
   }, [])
@@ -114,30 +106,57 @@ const Hero: React.FC = () => {
             {/* Subtle Border Animation */}
             <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             
-            {/* Coming Soon Text */}
-            <div className="flex justify-center items-center space-x-1 md:space-x-2">
-              {comingSoonText.split('').map((letter, index) => (
-                <div
-                  key={index}
-                  className={`relative transition-all duration-700 ${
-                    index < visibleLetters 
-                      ? 'opacity-100 transform translate-y-0 scale-100' 
-                      : 'opacity-0 transform translate-y-10 scale-50'
-                  }`}
-                  style={{
-                    transitionDelay: `${index * 150}ms`
-                  }}
-                >
-                  <span className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-bold bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent drop-shadow-lg">
-                    {letter === ' ' ? '\u00A0' : letter}
-                  </span>
+            {/* Launch Text - Multi-line Layout */}
+            <div className="flex justify-center items-center">
+              <div className="relative group text-center">
+                {/* Main Text with Enhanced Styling */}
+                <div className="relative">
+                  {/* Line 1: "Launching" - Large */}
+                  <div className="relative">
+                    <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent drop-shadow-2xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
+                      Launching
+                    </span>
+                  </div>
                   
-                  {/* Individual Letter Glow */}
-                  <div className={`absolute inset-0 bg-gradient-to-r from-primary-start/30 via-secondary-start/30 to-accent-start/30 blur-xl transition-all duration-1000 ${
+                  {/* Line 2: "on" - Smaller */}
+                  <div className="relative mt-1">
+                    <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-medium tracking-wide bg-gradient-to-r from-primary-start/80 via-secondary-start/80 to-accent-start/80 bg-clip-text text-transparent drop-shadow-xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
+                      on
+                    </span>
+                  </div>
+                  
+                  {/* Line 3: "15 September" - Same size as Launching */}
+                  <div className="relative mt-2">
+                    <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent drop-shadow-2xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
+                      15 September
+                    </span>
+                  </div>
+                  
+                  {/* Line 4: "2025" - Smaller */}
+                  <div className="relative mt-1">
+                    <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium tracking-wide bg-gradient-to-r from-primary-start/80 via-secondary-start/80 to-accent-start/80 bg-clip-text text-transparent drop-shadow-xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
+                      2025
+                    </span>
+                  </div>
+                  
+                  {/* Animated Background Glow */}
+                  <div className={`absolute -inset-4 bg-gradient-to-r from-primary-start/30 via-secondary-start/30 to-accent-start/30 blur-3xl transition-all duration-1000 ${
                     isGlowing ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
                   }`}></div>
+                  
+                  {/* Pulsing Border Effect */}
+                  <div className="absolute -inset-2 bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                 </div>
-              ))}
+                
+                {/* Floating Particles Effect */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute top-0 left-1/4 w-1 h-1 bg-primary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '0s' }}></div>
+                  <div className="absolute top-1/4 right-1/4 w-1 h-1 bg-secondary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '1s' }}></div>
+                  <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-accent-start rounded-full animate-ping opacity-60" style={{ animationDelay: '2s' }}></div>
+                  <div className="absolute bottom-0 right-1/3 w-1 h-1 bg-primary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '0.5s' }}></div>
+                </div>
+                
+              </div>
             </div>
             
             {/* Subtitle */}
@@ -159,6 +178,25 @@ const Hero: React.FC = () => {
                 <div className="w-2 h-2 bg-accent-start rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
               </div>
             </div>
+
+            {/* Signup Link */}
+            {onOpenSignupModal && (
+              <div className={`mt-8 md:mt-10 transition-all duration-1000 delay-2000 ${
+                isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+              }`}>
+                <div className="text-center">
+                  <p className="text-white/60 text-base sm:text-lg mb-4">
+                    Don't have an account?{' '}
+                    <button
+                      onClick={onOpenSignupModal}
+                      className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300 hover:underline"
+                    >
+                      Sign up
+                    </button>
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

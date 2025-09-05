@@ -20,7 +20,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, isLoad
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl">
+      <div className="p-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
           <p className="text-white/70">Sign in to your account</p>
@@ -97,8 +97,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, isLoad
           <p className="text-white/70">
             Don't have an account?{' '}
             <button
-              onClick={onSwitchToSignup}
-              className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                onSwitchToSignup()
+              }}
+              className="text-primary-start hover:text-primary-end font-medium transition-colors duration-300 cursor-pointer hover:underline"
+              type="button"
             >
               Sign up
             </button>

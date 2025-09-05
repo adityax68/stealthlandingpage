@@ -36,6 +36,10 @@ export const API_ENDPOINTS = {
   COMPLAINTS_MY_COMPLAINTS: `${API_BASE_URL}/api/v1/complaints/my-complaints`,
   COMPLAINTS_RESOLVE: `${API_BASE_URL}/api/v1/complaints`,
   COMPLAINTS_HR_ALL: `${API_BASE_URL}/api/v1/complaints/hr/all-complaints`,
+  
+  // Admin endpoints
+  ADMIN_STATS: `${API_BASE_URL}/api/v1/admin/stats`,
+  ADMIN_WEEKLY_USERS: `${API_BASE_URL}/api/v1/admin/weekly-users`,
 }
 
 export default API_BASE_URL 

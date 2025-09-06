@@ -82,7 +82,7 @@ function AppContent() {
         setIsAuthenticated(true)
         setUser(parsedUserData)
       } catch (error) {
-        console.error('Error parsing user data:', error)
+        console.error('Error parsing user data-:', error)
         localStorage.removeItem('token')
         localStorage.removeItem('user')
       }

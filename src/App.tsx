@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Features from './components/Features'
@@ -10,6 +10,10 @@ import Dashboard from './components/Dashboard'
 import AdminDashboard from './components/admin/AdminDashboard'
 import ChatBot from './components/ChatBot'
 import ToastContainer from './components/ui/ToastContainer'
+import TestSelector from './components/assessment/TestSelector'
+import DynamicTestRunner from './components/assessment/DynamicTestRunner'
+import TestResults from './components/assessment/TestResults'
+import ErrorBoundary from './components/ErrorBoundary'
 
 import { AuthProvider } from './contexts/AuthContext'
 import { EmployeeModalProvider } from './contexts/EmployeeModalContext'
@@ -24,8 +28,12 @@ function AppContent() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [currentTest, setCurrentTest] = useState<string | null>(null)
+  const [testResults, setTestResults] = useState<any>(null)
+  const [showTestSelector, setShowTestSelector] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
+  const [searchParams] = useSearchParams()
 
 
   useEffect(() => {
@@ -71,6 +79,46 @@ function AppContent() {
     }
   }, [location.pathname, isAuthenticated, isLoading, showSplash])
 
+  // Handle browser back button navigation and authentication state
+  useEffect(() => {
+    const handlePopState = () => {
+      // Re-check authentication state when browser back button is pressed
+      const token = localStorage.getItem('token')
+      const userData = localStorage.getItem('user')
+      
+      if (token && userData) {
+        try {
+          const parsedUserData = JSON.parse(userData)
+          if (!isAuthenticated || !user) {
+            setIsAuthenticated(true)
+            setUser(parsedUserData)
+          }
+        } catch (error) {
+          console.error('Error parsing user data on navigation:', error)
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          setIsAuthenticated(false)
+          setUser(null)
+        }
+      } else {
+        if (isAuthenticated) {
+          setIsAuthenticated(false)
+          setUser(null)
+        }
+      }
+    }
+
+    // Listen for browser back/forward navigation
+    window.addEventListener('popstate', handlePopState)
+    
+    // Also check on location change
+    handlePopState()
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [location.pathname, isAuthenticated, user])
+
   // Simple authentication check on mount
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -85,7 +133,12 @@ function AppContent() {
         console.error('Error parsing user data-:', error)
         localStorage.removeItem('token')
         localStorage.removeItem('user')
+        setIsAuthenticated(false)
+        setUser(null)
       }
+    } else {
+      setIsAuthenticated(false)
+      setUser(null)
     }
     setIsLoading(false)
   }, [])
@@ -128,6 +181,43 @@ function AppContent() {
     }
   }
 
+  // Test system handlers
+  const handleTestSelect = (testCode: string) => {
+    setCurrentTest(testCode)
+    setShowTestSelector(false)
+  }
+
+  const handleTestComplete = (results: any) => {
+    setTestResults(results)
+    setCurrentTest(null)
+  }
+
+
+  const handleBackToDashboard = () => {
+    setCurrentTest(null)
+    setTestResults(null)
+    setShowTestSelector(false)
+    navigate('/dashboard')
+  }
+
+  const handleTakeAnotherTest = () => {
+    setTestResults(null)
+    setShowTestSelector(true)
+  }
+
+  // Handle URL parameters for direct test selection
+  useEffect(() => {
+    if (location.pathname === '/tests') {
+      const testParam = searchParams.get('test')
+      if (testParam && ['phq9', 'gad7', 'pss10'].includes(testParam)) {
+        setCurrentTest(testParam)
+        setShowTestSelector(false)
+      } else {
+        setShowTestSelector(true)
+      }
+    }
+  }, [location.pathname, searchParams])
+
 
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />
@@ -161,14 +251,53 @@ function AppContent() {
         } />
         <Route path="/dashboard" element={
           isAuthenticated ? (
-            <Dashboard onLogout={handleLogout} user={user} />
+            <ErrorBoundary>
+              <Dashboard onLogout={handleLogout} user={user} />
+            </ErrorBoundary>
           ) : (
             <Navigate to="/" replace />
           )
         } />
         <Route path="/admin" element={
+          isLoading ? (
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
+              <div className="text-white text-xl">Loading...</div>
+            </div>
+          ) : isAuthenticated ? (
+            <ErrorBoundary>
+              <AdminDashboard />
+            </ErrorBoundary>
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
+        
+        {/* Test System Routes */}
+        <Route path="/tests" element={
           isAuthenticated ? (
-            <AdminDashboard />
+            showTestSelector ? (
+              <TestSelector 
+                onTestSelect={handleTestSelect}
+                onBack={handleBackToDashboard}
+              />
+            ) : currentTest ? (
+              <DynamicTestRunner
+                testCode={currentTest}
+                onComplete={handleTestComplete}
+                onBack={handleBackToDashboard}
+              />
+            ) : testResults ? (
+              <TestResults
+                results={testResults}
+                onBack={handleBackToDashboard}
+                onTakeAnother={handleTakeAnotherTest}
+              />
+            ) : (
+              <TestSelector 
+                onTestSelect={handleTestSelect}
+                onBack={handleBackToDashboard}
+              />
+            )
           ) : (
             <Navigate to="/" replace />
           )

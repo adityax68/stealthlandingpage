@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { 
   Brain, 
   History, 
@@ -36,12 +37,14 @@ type Tab = 'assessment' | 'history' | 'hr' | 'settings' | 'support'
 type AssessmentView = 'main' | 'assessment' | 'results'
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<Tab>('assessment')
   const [assessmentView, setAssessmentView] = useState<AssessmentView>('main')
   const [assessmentResults, setAssessmentResults] = useState<any>(null)
   const [assessmentHistory, setAssessmentHistory] = useState<any[]>([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false)
   
   // Settings menu state
   const [isRequestingAccess, setIsRequestingAccess] = useState(false)
@@ -140,14 +143,30 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
 
   useEffect(() => {
-    // Load assessment history
+    // Load assessment history only when component mounts
     loadAssessmentHistory()
   }, [])
 
+  // Load assessment history when switching to history tab
+  useEffect(() => {
+    if (activeTab === 'history') {
+      loadAssessmentHistory()
+    }
+  }, [activeTab])
+
+  // Reset assessment view when activeTab changes
+  useEffect(() => {
+    if (activeTab !== 'assessment') {
+      setAssessmentView('main')
+      setExpandedRows(new Set())
+    }
+  }, [activeTab])
+
   const loadAssessmentHistory = async () => {
     try {
+      setIsLoadingHistory(true)
       console.log('Loading assessment history...')
-      const response = await fetch(API_ENDPOINTS.CLINICAL_ASSESSMENTS, {
+      const response = await fetch(API_ENDPOINTS.UNIFIED_ASSESSMENTS, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       })
       
@@ -156,12 +175,20 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       if (response.ok) {
         const data = await response.json()
         console.log('Assessment history data:', data)
-        setAssessmentHistory(data)
+        
+        // Deduplicate assessments by ID to prevent duplicate keys
+        const uniqueAssessments = data.filter((assessment: any, index: number, self: any[]) => 
+          index === self.findIndex((a: any) => a.id === assessment.id)
+        )
+        console.log('Unique assessments after deduplication:', uniqueAssessments)
+        setAssessmentHistory(uniqueAssessments)
       } else {
         console.error('Failed to load assessment history:', response.status)
       }
     } catch (error) {
       console.error('Error loading assessment history:', error)
+    } finally {
+      setIsLoadingHistory(false)
     }
   }
 
@@ -225,7 +252,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     }
 
     return (
-      <div className="p-4 sm:p-6 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8 min-h-full">
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             <span className="gradient-text">Mental Health Assessment</span>
@@ -235,11 +262,57 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* Individual Tests Section */}
+          <div className="mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">Individual Mental Health Tests</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {/* PHQ-9 Depression Test */}
+              <div className="bg-gradient-to-br from-red-500/10 to-red-600/10 backdrop-blur-xl rounded-2xl p-6 border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:scale-105 cursor-pointer group" onClick={() => navigate('/tests?test=phq9')}>
+                <div className="text-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-2xl">❤️</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">PHQ-9</h3>
+                  <p className="text-white/70 mb-4 text-sm">Depression Assessment</p>
+                  <p className="text-white/60 text-xs mb-4">9 questions • 5-10 minutes</p>
+                  <div className="text-red-400 text-sm font-medium">Start Depression Test →</div>
+                </div>
+              </div>
+
+              {/* GAD-7 Anxiety Test */}
+              <div className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 hover:scale-105 cursor-pointer group" onClick={() => navigate('/tests?test=gad7')}>
+                <div className="text-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-2xl">🧠</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">GAD-7</h3>
+                  <p className="text-white/70 mb-4 text-sm">Anxiety Assessment</p>
+                  <p className="text-white/60 text-xs mb-4">7 questions • 5-10 minutes</p>
+                  <div className="text-yellow-400 text-sm font-medium">Start Anxiety Test →</div>
+                </div>
+              </div>
+
+              {/* PSS-10 Stress Test */}
+              <div className="bg-gradient-to-br from-orange-500/10 to-orange-600/10 backdrop-blur-xl rounded-2xl p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300 hover:scale-105 cursor-pointer group" onClick={() => navigate('/tests?test=pss10')}>
+                <div className="text-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-2xl">⚡</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">PSS-10</h3>
+                  <p className="text-white/70 mb-4 text-sm">Stress Assessment</p>
+                  <p className="text-white/60 text-xs mb-4">10 questions • 5-10 minutes</p>
+                  <div className="text-orange-400 text-sm font-medium">Start Stress Test →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Comprehensive Assessment */}
           <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10 hover:border-primary-start/30 transition-all duration-300">
             <div className="text-center">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-primary-start to-primary-end rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                <BarChart3 className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
               <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Comprehensive Assessment</h3>
               <p className="text-white/70 mb-6 sm:mb-8 text-base sm:text-lg">
@@ -249,7 +322,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 onClick={handleStartAssessment}
                 className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-xl hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105 font-semibold text-base sm:text-lg"
               >
-                Start Assessment
+                Start Comprehensive Assessment
               </button>
             </div>
           </div>
@@ -258,20 +331,50 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     )
   }
 
+  const renderLoadingSpinner = () => (
+    <div className="flex items-center justify-center py-12">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-12 h-12 border-4 border-primary-start/30 border-t-primary-start rounded-full animate-spin"></div>
+        <p className="text-white/70 text-lg">Loading...</p>
+      </div>
+    </div>
+  )
+
   const renderHistoryContent = () => {
+    console.log('Rendering history content, assessmentHistory length:', assessmentHistory.length)
+    console.log('Assessment history data:', assessmentHistory)
     return (
-      <div className="p-4 sm:p-6 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8 min-h-full">
         <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6">
-            <span className="gradient-text">Assessment History</span>
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-3 sm:mb-4 lg:mb-6">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold">
+              <span className="gradient-text">Assessment History</span>
+            </h1>
+            <button
+              onClick={loadAssessmentHistory}
+              disabled={isLoadingHistory}
+              className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Refresh assessment history"
+            >
+              <svg 
+                className={`w-5 h-5 text-white ${isLoadingHistory ? 'animate-spin' : ''}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+          </div>
           <p className="text-base sm:text-lg lg:text-xl text-white/70 max-w-3xl mx-auto px-4">
             Review your past assessments and track your mental health progress over time.
           </p>
         </div>
 
         <div className="max-w-7xl mx-auto">
-          {assessmentHistory.length > 0 ? (
+          {isLoadingHistory ? (
+            renderLoadingSpinner()
+          ) : assessmentHistory.length > 0 ? (
             <>
               {/* Desktop Table View */}
               <div className="hidden lg:block bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
@@ -289,8 +392,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
                 {/* Table Body */}
                 <div className="divide-y divide-white/10">
-                  {assessmentHistory.map((assessment) => (
-                    <div key={assessment.id} className="group hover:bg-white/5 transition-all duration-300">
+                  {assessmentHistory.map((assessment, index) => (
+                    <div key={`desktop-assessment-${assessment.id}-${assessment.created_at}-${index}`} className="group hover:bg-white/5 transition-all duration-300">
                       {/* Main Row */}
                       <div className="px-6 py-4">
                         <div className="grid grid-cols-12 gap-4 items-center">
@@ -446,8 +549,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
               {/* Mobile Card View */}
               <div className="lg:hidden space-y-4">
-                {assessmentHistory.map((assessment) => (
-                  <div key={assessment.id} className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden">
+                {assessmentHistory.map((assessment, index) => (
+                  <div key={`mobile-assessment-${assessment.id}-${assessment.created_at}-${index}`} className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden">
                     {/* Main Card Content */}
                     <div className="p-4">
                       {/* Header Row */}
@@ -585,7 +688,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 Start your first assessment to begin tracking your mental health journey.
               </p>
               <button
-                onClick={() => setActiveTab('assessment')}
+                onClick={() => handleTabSwitch('assessment')}
                 className="px-6 py-3 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-xl hover:from-primary-end hover:to-primary-start transition-all duration-300 font-semibold text-sm sm:text-base"
               >
                 Start Your First Assessment
@@ -599,7 +702,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
   const renderSettingsContent = () => {
     return (
-      <div className="p-4 sm:p-6 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8 min-h-full">
         <div className="text-center mb-6 sm:mb-8 lg:mb-12">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6">
             <span className="gradient-text">Settings</span>
@@ -702,7 +805,16 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     )
   }
 
+  const handleTabSwitch = (tab: Tab) => {
+    setActiveTab(tab)
+    // Always reset assessment view when switching tabs to prevent UI mingling
+    setAssessmentView('main')
+    // Clear any expanded rows when switching tabs
+    setExpandedRows(new Set())
+  }
+
   const renderMainContent = () => {
+    console.log('Rendering main content, activeTab:', activeTab)
     switch (activeTab) {
       case 'assessment':
         return renderAssessmentContent()
@@ -720,7 +832,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black flex overflow-hidden">
+    <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black flex overflow-hidden relative">
       {/* Mobile Menu Button */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
@@ -764,7 +876,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         {/* Navigation Tabs */}
         <div className="flex-1 p-3 space-y-2 relative z-10 overflow-y-auto min-h-0">
           <button
-            onClick={() => setActiveTab('assessment')}
+            onClick={() => handleTabSwitch('assessment')}
             className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'assessment'
                 ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
@@ -776,7 +888,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           </button>
 
           <button
-            onClick={() => setActiveTab('history')}
+            onClick={() => handleTabSwitch('history')}
             className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'history'
                 ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
@@ -790,7 +902,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           {/* Employee Support - Only show if user is employee */}
           {user?.role === 'employee' && (
             <button
-              onClick={() => setActiveTab('support')}
+              onClick={() => handleTabSwitch('support')}
               className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                 activeTab === 'support'
                   ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
@@ -805,7 +917,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           {/* HR Dashboard - Only show if user is HR */}
           {user?.role === 'hr' && (
             <button
-              onClick={() => setActiveTab('hr')}
+              onClick={() => handleTabSwitch('hr')}
               className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                 activeTab === 'hr'
                   ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
@@ -820,7 +932,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           {/* Admin Navigation - Only show if user is admin */}
           {user?.role === 'admin' && (
             <button
-              onClick={() => window.location.href = '/admin'}
+              onClick={() => navigate('/admin')}
               className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-white/70 hover:text-white hover:bg-white/5"
             >
               <Shield className="w-4 h-4" />
@@ -830,7 +942,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
           {/* Settings Button */}
           <button
-            onClick={() => setActiveTab('settings')}
+            onClick={() => handleTabSwitch('settings')}
             className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'settings'
                 ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
@@ -869,7 +981,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             <div className="absolute inset-0 bg-black/40 backdrop-blur-xl pointer-events-none"></div>
             
             {/* Header */}
-            <div className="p-4 border-b border-white/10 relative z-10 mt-16 flex-shrink-0">
+            <div className="p-4 border-b border-white/10 relative z-10 flex-shrink-0">
               <div className="flex items-center space-x-3 mb-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
                   <Brain className="w-4 h-4 text-white" />
@@ -897,7 +1009,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             <div className="flex-1 p-3 space-y-2 relative z-10 overflow-y-auto min-h-0">
               <button
                 onClick={() => {
-                  setActiveTab('assessment')
+                  handleTabSwitch('assessment')
                   setIsSidebarOpen(false)
                 }}
                 className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
@@ -912,7 +1024,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
               <button
                 onClick={() => {
-                  setActiveTab('history')
+                  handleTabSwitch('history')
                   setIsSidebarOpen(false)
                 }}
                 className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
@@ -929,7 +1041,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               {user?.role === 'employee' && (
                 <button
                   onClick={() => {
-                    setActiveTab('support')
+                    handleTabSwitch('support')
                     setIsSidebarOpen(false)
                   }}
                   className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
@@ -947,7 +1059,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               {user?.role === 'hr' && (
                 <button
                   onClick={() => {
-                    setActiveTab('hr')
+                    handleTabSwitch('hr')
                     setIsSidebarOpen(false)
                   }}
                   className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
@@ -965,7 +1077,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               {user?.role === 'admin' && (
                 <button
                   onClick={() => {
-                    window.location.href = '/admin'
+                    navigate('/admin')
                     setIsSidebarOpen(false)
                   }}
                   className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-white/70 hover:text-white hover:bg-white/5"
@@ -978,7 +1090,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               {/* Settings Button */}
               <button
                 onClick={() => {
-                  setActiveTab('settings')
+                  handleTabSwitch('settings')
                   setIsSidebarOpen(false)
                 }}
                 className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
@@ -1010,8 +1122,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto h-screen">
-        {renderMainContent()}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
+          {renderMainContent()}
+        </div>
       </div>
       
       {/* Employee Request Modal */}

@@ -6,10 +6,12 @@ console.log('Environment VITE_API_URL:', import.meta.env.VITE_API_URL)
 console.log('Final API_BASE_URL:', API_BASE_URL)
 
 export const API_ENDPOINTS = {
+  BASE_URL: API_BASE_URL,
   LOGIN: `${API_BASE_URL}/api/v1/auth/login`,
   SIGNUP: `${API_BASE_URL}/api/v1/auth/signup`,
   ME: `${API_BASE_URL}/api/v1/auth/me`,
   CLINICAL_ASSESSMENTS: `${API_BASE_URL}/api/v1/clinical/my-assessments`,
+  UNIFIED_ASSESSMENTS: `${API_BASE_URL}/api/v1/clinical/unified-assessments`,
   COMPREHENSIVE_ASSESSMENT: `${API_BASE_URL}/api/v1/clinical/comprehensive-assessment`,
   QUESTIONS: `${API_BASE_URL}/api/v1/clinical/questions`,
   // Additional endpoints
@@ -18,6 +20,12 @@ export const API_ENDPOINTS = {
   QUESTIONS_PSS10: `${API_BASE_URL}/api/v1/clinical/questions/pss10`,
   CLINICAL_COMPREHENSIVE: `${API_BASE_URL}/api/v1/clinical/comprehensive`,
   CLINICAL_ASSESS: `${API_BASE_URL}/api/v1/clinical/assess`,
+  // New Test System endpoints
+  TESTS_DEFINITIONS: `${API_BASE_URL}/api/v1/tests/definitions`,
+  TESTS_DETAILS: `${API_BASE_URL}/api/v1/tests/definitions`,
+  TESTS_CATEGORIES: `${API_BASE_URL}/api/v1/tests/categories`,
+  TESTS_ASSESS: `${API_BASE_URL}/api/v1/tests/assess`,
+  TESTS_ASSESSMENTS: `${API_BASE_URL}/api/v1/tests/assessments`,
   // Chat endpoints
   CHAT_SEND: `${API_BASE_URL}/api/v1/chat/send`,
   CHAT_CONVERSATIONS: `${API_BASE_URL}/api/v1/chat/conversations`,

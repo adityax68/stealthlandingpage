@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { UserPlus, Users, X, User, Building2, Users2, TrendingUp } from 'lucide-react';
+import { UserPlus, Users, X, User, Building2, Users2, TrendingUp, ArrowLeft, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { API_ENDPOINTS } from '../../config/api';
 import {
   Chart as ChartJS,
@@ -50,7 +51,31 @@ ChartJS.register(
 );
 
 const AdminDashboard: React.FC<AdminDashboardProps> = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Check authentication on mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    
+    if (!token || !userData) {
+      navigate('/', { replace: true });
+      return;
+    }
+    
+    try {
+      const parsedUserData = JSON.parse(userData);
+      if (parsedUserData.role !== 'admin') {
+        navigate('/dashboard', { replace: true });
+        return;
+      }
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      navigate('/', { replace: true });
+      return;
+    }
+  }, [navigate]);
   const [formData, setFormData] = useState<OrganisationForm>({
     org_name: '',
     hr_email: ''
@@ -67,22 +92,30 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     totalOrganizations: 0
   });
   const [statsLoading, setStatsLoading] = useState(true);
+  const [statsError, setStatsError] = useState<string | null>(null);
   
   // Monthly user data state
   const [monthlyUserData, setMonthlyUserData] = useState<MonthlyUserData[]>([]);
   const [monthlyDataLoading, setMonthlyDataLoading] = useState(true);
+  const [monthlyDataError, setMonthlyDataError] = useState<string | null>(null);
   const [chartType, setChartType] = useState<'line' | 'bar'>('line');
 
   // Fetch admin stats
   const fetchAdminStats = async () => {
     try {
       setStatsLoading(true);
+      setStatsError(null);
       const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      
       const response = await fetch(API_ENDPOINTS.ADMIN_STATS, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`
         }
       });
 
@@ -90,7 +123,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         const data = await response.json();
         setAdminStats(data);
       } else {
-        console.error('Failed to fetch admin stats');
+        const errorText = await response.text();
+        console.error('Failed to fetch admin stats:', response.status, errorText);
+        setStatsError(`Failed to load stats: ${response.status}`);
         // Set default values on error
         setAdminStats({
           totalUsers: 0,
@@ -98,8 +133,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           totalOrganizations: 0
         });
       }
-    } catch {
-      console.error('Error fetching admin stats');
+    } catch (error) {
+      console.error('Error fetching admin stats:', error);
+      setStatsError('Network error loading stats');
       // Set default values on error
       setAdminStats({
         totalUsers: 0,
@@ -115,7 +151,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   const fetchMonthlyUserData = async () => {
     try {
       setMonthlyDataLoading(true);
+      setMonthlyDataError(null);
       const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      
       const response = await fetch(API_ENDPOINTS.ADMIN_MONTHLY_USERS, {
         method: 'GET',
         headers: {
@@ -128,12 +170,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         const data: MonthlyUsersResponse = await response.json();
         setMonthlyUserData(data.weeklyData); // Backend returns weeklyData field but contains monthly data
       } else {
-        console.error('Failed to fetch monthly user data');
+        const errorText = await response.text();
+        console.error('Failed to fetch monthly user data:', response.status, errorText);
+        setMonthlyDataError(`Failed to load monthly data: ${response.status}`);
         // Set default empty data on error
         setMonthlyUserData([]);
       }
-    } catch {
-      console.error('Error fetching monthly user data');
+    } catch (error) {
+      console.error('Error fetching monthly user data:', error);
+      setMonthlyDataError('Network error loading monthly data');
       // Set default empty data on error
       setMonthlyUserData([]);
     } finally {
@@ -146,6 +191,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     fetchAdminStats();
     fetchMonthlyUserData();
   }, []);
+
+  // Add a loading state to prevent white page
+  if (statsLoading && monthlyDataLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-start/30 border-t-primary-start mx-auto mb-6"></div>
+          <p className="text-white text-xl">Loading Admin Dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handleBackToDashboard = () => {
+    navigate('/dashboard', { replace: true });
+  };
 
   const handleAddOrganisation = () => {
     setIsModalOpen(true);
@@ -345,10 +406,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         <div className="bg-black/20 backdrop-blur-xl border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              {/* Title */}
-              <h1 className="text-2xl md:text-3xl font-bold text-white">
-                Admin Panel
-              </h1>
+              {/* Back Button and Title */}
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={handleBackToDashboard}
+                  className="group relative overflow-hidden bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-white/25 flex items-center space-x-2"
+                >
+                  <div className="relative z-10 flex items-center space-x-2">
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>Back to Dashboard</span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </button>
+                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                  Admin Panel
+                </h1>
+              </div>
               
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
@@ -389,10 +462,23 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   <p className="text-3xl font-bold text-white">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
+                    ) : statsError ? (
+                      <span className="text-red-400 text-sm">Error</span>
                     ) : (
                       adminStats.totalUsers.toLocaleString()
                     )}
                   </p>
+                  {statsError && (
+                    <div className="mt-2">
+                      <p className="text-red-400 text-xs">{statsError}</p>
+                      <button 
+                        onClick={fetchAdminStats}
+                        className="mt-1 px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs rounded transition-colors"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="p-3 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-xl">
                   <User className="w-6 h-6 text-primary-start" />
@@ -409,6 +495,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   <p className="text-3xl font-bold text-white">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
+                    ) : statsError ? (
+                      <span className="text-red-400 text-sm">Error</span>
                     ) : (
                       adminStats.totalEmployees.toLocaleString()
                     )}
@@ -429,6 +517,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   <p className="text-3xl font-bold text-white">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
+                    ) : statsError ? (
+                      <span className="text-red-400 text-sm">Error</span>
                     ) : (
                       adminStats.totalOrganizations.toLocaleString()
                     )}
@@ -488,6 +578,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                     <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-start/30 border-t-primary-start mx-auto mb-6"></div>
                     <p className="text-white/80 text-lg font-medium">Loading monthly data...</p>
                     <p className="text-white/60 text-sm mt-2">Fetching user registration trends</p>
+                  </div>
+                </div>
+              ) : monthlyDataError ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center text-red-400">
+                    <div className="p-4 bg-gradient-to-br from-red-500/10 to-red-600/10 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                      <AlertCircle className="w-10 h-10 text-red-400" />
+                    </div>
+                    <p className="text-xl font-semibold mb-2">Error Loading Data</p>
+                    <p className="text-sm text-red-300">{monthlyDataError}</p>
+                    <button 
+                      onClick={fetchMonthlyUserData}
+                      className="mt-4 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-colors"
+                    >
+                      Retry
+                    </button>
                   </div>
                 </div>
               ) : monthlyUserData.length === 0 ? (

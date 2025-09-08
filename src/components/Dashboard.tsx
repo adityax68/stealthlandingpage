@@ -16,7 +16,12 @@ import {
   Settings,
   Building,
   UserCheck,
-  AlertCircle
+  AlertCircle,
+  Heart,
+  Zap,
+  Target,
+  Activity,
+  Clock
 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 
@@ -54,10 +59,118 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   
   // Toast context
   const { showToast } = useToast()
+
+  // Test system state
+  const [tests, setTests] = useState<any[]>([])
+  const [loadingTests, setLoadingTests] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   
   console.log('Dashboard rendered, openEmployeeModal function:', openEmployeeModal)
   console.log('Dashboard rendered, isEmployeeModalOpen state:', isEmployeeModalOpen)
   console.log('Current user:', user)
+
+  // Load tests on component mount
+  useEffect(() => {
+    loadTests()
+  }, [])
+
+  const loadTests = async () => {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.TESTS_DEFINITIONS}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setTests(data)
+      } else {
+        throw new Error('Failed to load tests')
+      }
+    } catch (error) {
+      console.error('Error loading tests:', error)
+      // If API fails, show empty state - don't add hardcoded categories
+      setTests([])
+    } finally {
+      setLoadingTests(false)
+    }
+  }
+
+  const getTestsByCategory = () => {
+    const testsByCategory: { [key: string]: any[] } = {}
+    
+    tests.forEach(test => {
+      if (!testsByCategory[test.test_category]) {
+        testsByCategory[test.test_category] = []
+      }
+      testsByCategory[test.test_category].push(test)
+    })
+    
+    return testsByCategory
+  }
+
+
+  const getTestsForCategory = (category: string) => {
+    return tests.filter(test => test.test_category === category)
+  }
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category)
+  }
+
+  const handleBackToCategories = () => {
+    setSelectedCategory(null)
+  }
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'depression':
+        return <Heart className="w-5 h-5" />
+      case 'anxiety':
+        return <Brain className="w-5 h-5" />
+      case 'stress':
+        return <Zap className="w-5 h-5" />
+      case 'trauma':
+        return <Shield className="w-5 h-5" />
+      case 'addiction':
+        return <Target className="w-5 h-5" />
+      case 'personality':
+        return <Activity className="w-5 h-5" />
+      case 'cognitive':
+        return <Brain className="w-5 h-5" />
+      case 'social':
+        return <Users className="w-5 h-5" />
+      case 'all':
+        return <BarChart3 className="w-5 h-5" />
+      default:
+        return <Activity className="w-5 h-5" />
+    }
+  }
+
+
+  const getTestColor = (category: string) => {
+    switch (category) {
+      case 'depression':
+        return 'from-red-500/20 to-red-600/20 border-red-500/30 hover:from-red-500/30 hover:to-red-600/30'
+      case 'anxiety':
+        return 'from-yellow-500/20 to-yellow-600/20 border-yellow-500/30 hover:from-yellow-500/30 hover:to-yellow-600/30'
+      case 'stress':
+        return 'from-orange-500/20 to-orange-600/20 border-orange-500/30 hover:from-orange-500/30 hover:to-orange-600/30'
+      case 'trauma':
+        return 'from-purple-500/20 to-purple-600/20 border-purple-500/30 hover:from-purple-500/30 hover:to-purple-600/30'
+      case 'addiction':
+        return 'from-indigo-500/20 to-indigo-600/20 border-indigo-500/30 hover:from-indigo-500/30 hover:to-indigo-600/30'
+      case 'personality':
+        return 'from-pink-500/20 to-pink-600/20 border-pink-500/30 hover:from-pink-500/30 hover:to-pink-600/30'
+      case 'cognitive':
+        return 'from-cyan-500/20 to-cyan-600/20 border-cyan-500/30 hover:from-cyan-500/30 hover:to-cyan-600/30'
+      case 'social':
+        return 'from-green-500/20 to-green-600/20 border-green-500/30 hover:from-green-500/30 hover:to-green-600/30'
+      default:
+        return 'from-blue-500/20 to-blue-600/20 border-blue-500/30 hover:from-blue-500/30 hover:to-blue-600/30'
+    }
+  }
 
   // Close settings menu when clicking outside
   useEffect(() => {
@@ -192,9 +305,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     }
   }
 
-  const handleStartAssessment = () => {
-    setAssessmentView('assessment')
-  }
 
   const handleAssessmentComplete = (results: any) => {
     setAssessmentResults(results)
@@ -265,67 +375,84 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         <div className="max-w-7xl mx-auto px-4">
           {/* Individual Tests Section */}
           <div className="mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">Individual Mental Health Tests</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {/* PHQ-9 Depression Test */}
-              <div className="bg-gradient-to-br from-red-500/10 to-red-600/10 backdrop-blur-xl rounded-2xl p-6 border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:scale-105 cursor-pointer group" onClick={() => navigate('/tests?test=phq9')}>
-                <div className="text-center">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <span className="text-2xl">❤️</span>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">PHQ-9</h3>
-                  <p className="text-white/70 mb-4 text-sm">Depression Assessment</p>
-                  <p className="text-white/60 text-xs mb-4">9 questions • 5-10 minutes</p>
-                  <div className="text-red-400 text-sm font-medium">Start Depression Test →</div>
+            
+            {/* Show loader or category cards or individual tests based on loading state and selection */}
+            {loadingTests ? (
+              /* Loading State */
+              <div className="flex items-center justify-center py-12">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <p className="text-white/70 text-lg">Loading tests...</p>
                 </div>
               </div>
+            ) : !selectedCategory ? (
+              /* Category Cards */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Object.entries(getTestsByCategory()).map(([category, categoryTests]) => (
+                  <div
+                    key={category}
+                    onClick={() => handleCategoryClick(category)}
+                    className={`bg-gradient-to-br ${getTestColor(category)} backdrop-blur-xl rounded-2xl p-6 border transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer`}
+                  >
+                    {/* Category Header */}
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="p-3 bg-white/10 rounded-xl">
+                        {getCategoryIcon(category)}
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-white capitalize">{category}</h2>
+                        <p className="text-white/60 text-sm">{categoryTests.length} test{categoryTests.length !== 1 ? 's' : ''} available</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* Individual Tests for Selected Category */
+              <div className="max-w-4xl mx-auto">
+                {/* Back Button */}
+                <button
+                  onClick={handleBackToCategories}
+                  className="flex items-center text-white/70 hover:text-white transition-colors duration-300 mb-6"
+                >
+                  <ChevronRight className="w-5 h-5 mr-2 rotate-180" />
+                  Back to Categories
+                </button>
 
-              {/* GAD-7 Anxiety Test */}
-              <div className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 hover:scale-105 cursor-pointer group" onClick={() => navigate('/tests?test=gad7')}>
-                <div className="text-center">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <span className="text-2xl">🧠</span>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">GAD-7</h3>
-                  <p className="text-white/70 mb-4 text-sm">Anxiety Assessment</p>
-                  <p className="text-white/60 text-xs mb-4">7 questions • 5-10 minutes</p>
-                  <div className="text-yellow-400 text-sm font-medium">Start Anxiety Test →</div>
-                </div>
-              </div>
 
-              {/* PSS-10 Stress Test */}
-              <div className="bg-gradient-to-br from-orange-500/10 to-orange-600/10 backdrop-blur-xl rounded-2xl p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300 hover:scale-105 cursor-pointer group" onClick={() => navigate('/tests?test=pss10')}>
-                <div className="text-center">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <span className="text-2xl">⚡</span>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">PSS-10</h3>
-                  <p className="text-white/70 mb-4 text-sm">Stress Assessment</p>
-                  <p className="text-white/60 text-xs mb-4">10 questions • 5-10 minutes</p>
-                  <div className="text-orange-400 text-sm font-medium">Start Stress Test →</div>
+                {/* Individual Test Cards */}
+                <div className="space-y-4">
+                  {getTestsForCategory(selectedCategory).map((test) => (
+                    <div
+                      key={test.id}
+                      onClick={() => navigate(`/tests?test=${test.test_code}`)}
+                      className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 cursor-pointer transition-all duration-300 hover:bg-white/20 hover:scale-102 group"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <h3 className="text-xl font-semibold text-white mb-2">{test.test_name}</h3>
+                          <p className="text-white/70 text-sm leading-relaxed mb-3">{test.description}</p>
+                        </div>
+                        <ChevronRight className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 ml-4" />
+                      </div>
+
+                      <div className="flex items-center justify-between text-white/60 text-sm">
+                        <div className="flex items-center">
+                          <Clock className="w-4 h-4 mr-1" />
+                          <span>{test.total_questions} questions</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Users className="w-4 h-4 mr-1" />
+                          <span>5-10 min</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Comprehensive Assessment */}
-          <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10 hover:border-primary-start/30 transition-all duration-300">
-            <div className="text-center">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-primary-start to-primary-end rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <BarChart3 className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Comprehensive Assessment</h3>
-              <p className="text-white/70 mb-6 sm:mb-8 text-base sm:text-lg">
-                Complete evaluation covering depression, anxiety, and stress using validated clinical scales (PHQ-9, GAD-7, PSS-10).
-              </p>
-              <button
-                onClick={handleStartAssessment}
-                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-xl hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105 font-semibold text-base sm:text-lg"
-              >
-                Start Comprehensive Assessment
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     )

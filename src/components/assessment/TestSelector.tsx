@@ -84,6 +84,7 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
     }
   ]
 
+
   const getTestIcon = (category: string) => {
     switch (category) {
       case 'depression':
@@ -170,6 +171,7 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
               Choose from our validated clinical assessments to get insights into your mental health and well-being.
             </p>
           </div>
+
         </div>
 
         {/* Test Cards Grid */}

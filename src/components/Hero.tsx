@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { User } from 'lucide-react'
 
 interface Ripple {
   id: number
@@ -6,7 +8,12 @@ interface Ripple {
   y: number
 }
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  isAuthenticated?: boolean
+}
+
+const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
+  const navigate = useNavigate()
   const [isGlowing, setIsGlowing] = useState(false)
   const [ripples, setRipples] = useState<Ripple[]>([])
   const heroRef = useRef<HTMLElement>(null)
@@ -174,6 +181,24 @@ const Hero: React.FC = () => {
                 <div className="w-2 h-2 bg-accent-start rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
               </div>
             </div>
+
+            {/* Sign In Button - Only show when not authenticated */}
+            {!isAuthenticated && (
+              <div className={`mt-8 md:mt-10 transition-all duration-1000 delay-2000 ${
+                isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+              }`}>
+                <button
+                  onClick={() => navigate('/auth')}
+                  className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary-start/25 flex items-center space-x-3 mx-auto"
+                >
+                  <div className="relative z-10 flex items-center space-x-3">
+                    <User className="w-6 h-6" />
+                    <span>Sign In to Get Started</span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </button>
+              </div>
+            )}
 
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, Paperclip } from 'lucide-react';
 import { API_ENDPOINTS } from '../config/api';
 
 interface Message {
@@ -21,6 +21,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isNewChat, setIsNewChat] = useState(false);
+  const [attachments, setAttachments] = useState<Array<{id: number, filename: string, isProcessed: boolean}>>([]);
+  const [isProcessingDocument, setIsProcessingDocument] = useState(false);
   
   // Function to start a new chat
   const handleNewChat = () => {
@@ -28,6 +30,12 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
     setCurrentConversationId(null);
     setError(null);
     setIsNewChat(true);
+    setAttachments([]);
+    setIsProcessingDocument(false);
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     // Focus the input for immediate typing
     setTimeout(() => {
       if (inputRef.current) {
@@ -37,7 +45,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
   };
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when new messages arrive
@@ -99,7 +108,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
         },
         body: JSON.stringify({
           message: userMessage.content,
-          conversation_id: currentConversationId
+          conversation_id: currentConversationId,
+          attachment_ids: attachments.map(att => att.id)
         })
       });
 
@@ -124,6 +134,13 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
       setMessages(prev => [...prev, assistantMessage]);
       setCurrentConversationId(data.conversation_id);
       
+      // Clear attachments after successful send
+      setAttachments([]);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
       setError(errorMessage);
@@ -134,13 +151,100 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
   };
 
 
+  const handleRemoveFile = (attachmentId: number) => {
+    setAttachments(prev => prev.filter(att => att.id !== attachmentId));
+  };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      uploadFile(file);
+      // Reset the input so the same file can be selected again if needed
+      e.target.value = '';
     }
   };
+
+  const uploadFile = async (file: File) => {
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const ALLOWED_TYPES = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain',
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/gif',
+      'image/webp',
+      'image/bmp'
+    ];
+
+    // Check if file is already uploaded
+    const isAlreadyUploaded = attachments.some(att => att.filename === file.name);
+    if (isAlreadyUploaded) {
+      setError(`File "${file.name}" is already uploaded`);
+      return;
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      setError(`File size exceeds 10MB limit`);
+      return;
+    }
+
+    // Validate file type
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setError(`File type not supported. Allowed: PDF, DOC, DOCX, TXT, JPG, PNG, GIF, WebP, BMP`);
+      return;
+    }
+
+    setIsProcessingDocument(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(API_ENDPOINTS.CHAT_UPLOAD, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Upload failed');
+      }
+
+      const uploadedFileData = await response.json();
+      setAttachments(prev => [...prev, {
+        id: uploadedFileData.file_id,
+        filename: uploadedFileData.filename,
+        isProcessed: true
+      }]);
+      setIsProcessingDocument(false);
+      
+      // Show success message
+      setError(null); // Clear any previous errors
+
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Upload failed';
+      setError(errorMessage);
+    } finally {
+      setIsProcessingDocument(false);
+    }
+  };
+
+
+
 
   if (!isAuthenticated) return null;
 
@@ -185,6 +289,12 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
                     setCurrentConversationId(null);
                     setError(null);
                     setIsNewChat(false);
+                    setAttachments([]);
+                    setIsProcessingDocument(false);
+                    // Reset file input
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = '';
+                    }
                   }, 300); // Small delay to allow modal close animation
                 }}
                 className="text-white hover:text-cyan-200 transition-colors p-1 rounded"
@@ -237,7 +347,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
                 </div>
               ))}
               
-              {isLoading && (
+              {isLoading && !isProcessingDocument && (
                 <div className="flex justify-start">
                   <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl shadow-sm">
                     <div className="flex space-x-1">
@@ -266,23 +376,72 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
 
             {/* Input Area - Fixed at Bottom */}
             <div className="p-4 border-t border-gray-200 bg-white flex-shrink-0 z-10">
-              <div className="flex space-x-3">
+              {/* Document List */}
+              {attachments.length > 0 && (
+                <div className="mb-3 flex flex-wrap gap-2">
+                  {attachments.map((attachment) => (
+                    <div key={attachment.id} className="flex items-center space-x-2 bg-gray-100 rounded-lg px-3 py-2 text-sm">
+                      <Paperclip size={14} className="text-gray-600" />
+                      <span className="text-gray-700 truncate max-w-32">{attachment.filename}</span>
+                      <button
+                        onClick={() => handleRemoveFile(attachment.id)}
+                        className="text-gray-500 hover:text-gray-700"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              <div className="flex items-end space-x-3">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isLoading}
+                  className="p-2 text-gray-600 hover:text-gray-800 transition-colors disabled:opacity-50 relative"
+                  title={isProcessingDocument ? "Uploading..." : "Attach file"}
+                >
+                  {isProcessingDocument ? (
+                    <div className="w-5 h-5 border-2 border-gray-300 border-t-cyan-500 rounded-full animate-spin"></div>
+                  ) : (
+                    <Paperclip size={20} />
+                  )}
+                </button>
+                
                 <input
-                  ref={inputRef}
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Type your message to Acutie..."
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.webp,.bmp"
+                  onChange={handleFileInputChange}
+                  className="hidden"
                   disabled={isLoading}
                 />
+                
+                <div className="flex-1 relative">
+                  <textarea
+                    ref={inputRef}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                    placeholder="Type your message to Acutie..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500 resize-none min-h-[50px] max-h-32"
+                    disabled={isLoading}
+                    rows={1}
+                    style={{ minHeight: '50px' }}
+                  />
+                </div>
+                
                 <button
                   onClick={handleSendMessage}
-                  disabled={!message.trim() || isLoading}
-                  className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-500 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white px-4 py-3 rounded-xl transition-all duration-200 font-medium disabled:cursor-not-allowed"
+                  disabled={(!message.trim() && attachments.length === 0) || isLoading}
+                  className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-500 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white p-3 rounded-full transition-all duration-200 disabled:cursor-not-allowed"
                 >
-                  <Send size={16} />
+                  <Send size={20} />
                 </button>
               </div>
             </div>

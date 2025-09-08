@@ -30,6 +30,8 @@ export const API_ENDPOINTS = {
   CHAT_SEND: `${API_BASE_URL}/api/v1/chat/send`,
   CHAT_CONVERSATIONS: `${API_BASE_URL}/api/v1/chat/conversations`,
   CHAT_MESSAGES: `${API_BASE_URL}/api/v1/chat/conversations`,
+  CHAT_UPLOAD: `${API_BASE_URL}/api/v1/chat/upload`,
+  CHAT_FILES: `${API_BASE_URL}/api/v1/chat/files`,
   // Access request endpoints
   ACCESS_REQUEST: `${API_BASE_URL}/api/v1/access/request`,
   ACCESS_REQUEST_EMPLOYEE: `${API_BASE_URL}/api/v1/access/request-employee`,

@@ -79,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
               </button>
             ) : (
               <button
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/login')}
                 className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
               >
                 <User className="w-4 h-4" />
@@ -101,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
               </button>
             ) : (
               <button
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/login')}
                 className="flex items-center space-x-1 px-3 py-1.5 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 text-sm"
               >
                 <User className="w-4 h-4" />

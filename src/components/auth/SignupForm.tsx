@@ -16,9 +16,26 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+  // Password validation functions
+  const hasUppercase = /[A-Z]/.test(password)
+  const hasLowercase = /[a-z]/.test(password)
+  const hasNumber = /\d/.test(password)
+  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+  const hasMinLength = password.length >= 8
+
+  const passwordRequirements = [
+    { text: 'At least 8 characters', isValid: hasMinLength },
+    { text: 'One uppercase letter', isValid: hasUppercase },
+    { text: 'One lowercase letter', isValid: hasLowercase },
+    { text: 'One number', isValid: hasNumber },
+    { text: 'One special character', isValid: hasSpecialChar }
+  ]
+
+  const isPasswordValid = hasUppercase && hasLowercase && hasNumber && hasSpecialChar && hasMinLength
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (password !== confirmPassword) {
+    if (password !== confirmPassword || !isPasswordValid) {
       return
     }
     onSignup(name, email, password)
@@ -108,6 +125,35 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+            {/* Password Requirements */}
+            {password && (
+              <div className="mt-2 space-y-1">
+                {passwordRequirements.map((requirement, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
+                      requirement.isValid 
+                        ? 'bg-green-500/20 border border-green-500/30' 
+                        : 'bg-red-500/20 border border-red-500/30'
+                    }`}>
+                      {requirement.isValid ? (
+                        <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-3 h-3 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className={`text-sm ${
+                      requirement.isValid ? 'text-green-300' : 'text-red-300'
+                    }`}>
+                      {requirement.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
@@ -144,7 +190,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
 
           <button
             type="submit"
-            disabled={isLoading || !passwordsMatch}
+            disabled={isLoading || !passwordsMatch || !isPasswordValid}
             className="w-full py-3 px-6 bg-gradient-to-r from-primary-start to-primary-end text-white font-semibold rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             {isLoading ? 'Creating Account...' : 'Create Account'}

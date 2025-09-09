@@ -50,6 +50,13 @@ export const API_ENDPOINTS = {
   // Admin endpoints
   ADMIN_STATS: `${API_BASE_URL}/api/v1/admin/stats`,
   ADMIN_MONTHLY_USERS: `${API_BASE_URL}/api/v1/admin/weekly-users`,
+  ADMIN_TEST_ANALYTICS: `${API_BASE_URL}/api/v1/admin/test-analytics`,
+  ADMIN_USERS: `${API_BASE_URL}/api/v1/admin/users`,
+  ADMIN_USERS_SEARCH: `${API_BASE_URL}/api/v1/admin/users/search`,
+  ADMIN_EMPLOYEES: `${API_BASE_URL}/api/v1/admin/employees`,
+  ADMIN_EMPLOYEES_SEARCH: `${API_BASE_URL}/api/v1/admin/employees/search`,
+  ADMIN_ORGANISATIONS: `${API_BASE_URL}/api/v1/admin/organisations`,
+  ADMIN_ORGANISATIONS_SEARCH: `${API_BASE_URL}/api/v1/admin/organisations/search`,
 }
 
 export default API_BASE_URL 

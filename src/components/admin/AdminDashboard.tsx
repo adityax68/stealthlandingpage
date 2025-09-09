@@ -15,8 +15,16 @@ import {
 } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
 
+// Import components directly for now
+import UserList from './UserList';
+import EmployeeList from './EmployeeList';
+import OrganizationList from './OrganizationList';
+import TestAnalytics from './TestAnalytics';
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface AdminDashboardProps {}
+
+type AdminTab = 'overview' | 'users' | 'employees' | 'organizations' | 'test-analytics'
 
 interface OrganisationForm {
   org_name: string;
@@ -53,6 +61,7 @@ ChartJS.register(
 const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<AdminTab>('overview');
   
   // Check authentication on mount
   useEffect(() => {
@@ -307,16 +316,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         titleColor: '#ffffff',
         bodyColor: '#ffffff',
         borderColor: 'rgba(99, 102, 241, 0.8)',
-        borderWidth: 2,
-        cornerRadius: 12,
+        borderWidth: 1,
+        cornerRadius: 8,
         displayColors: false,
-        padding: 12,
+        padding: 8,
         titleFont: {
-          size: 14,
+          size: 12,
           weight: 'bold' as const,
         },
         bodyFont: {
-          size: 13,
+          size: 11,
         },
         callbacks: {
           title: function(context: { label: string }[]) {
@@ -331,17 +340,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     scales: {
       x: {
         grid: {
-          color: 'rgba(255, 255, 255, 0.08)',
+          color: 'rgba(255, 255, 255, 0.05)',
           drawBorder: false,
-          lineWidth: 1,
+          lineWidth: 0.5,
         },
         ticks: {
-          color: 'rgba(255, 255, 255, 0.8)',
+          color: 'rgba(255, 255, 255, 0.6)',
           font: {
-            size: 13,
+            size: 10,
             weight: 'normal' as const,
           },
-          padding: 8,
+          padding: 4,
         },
         border: {
           display: false,
@@ -349,17 +358,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       },
       y: {
         grid: {
-          color: 'rgba(255, 255, 255, 0.08)',
+          color: 'rgba(255, 255, 255, 0.05)',
           drawBorder: false,
-          lineWidth: 1,
+          lineWidth: 0.5,
         },
         ticks: {
-          color: 'rgba(255, 255, 255, 0.8)',
+          color: 'rgba(255, 255, 255, 0.6)',
           font: {
-            size: 13,
+            size: 10,
             weight: 'normal' as const,
           },
-          padding: 8,
+          padding: 4,
           beginAtZero: true,
           callback: function(value: string | number) {
             return typeof value === 'number' ? value.toLocaleString() : value;
@@ -378,11 +387,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       point: {
         hoverBackgroundColor: 'rgb(99, 102, 241)',
         hoverBorderColor: '#ffffff',
-        hoverBorderWidth: 4,
+        hoverBorderWidth: 2,
+        radius: 3,
+        hoverRadius: 5,
       },
     },
     animation: {
-      duration: 1000,
+      duration: 500,
       easing: 'easeInOutQuart' as const,
     },
   };
@@ -450,10 +461,70 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           </div>
         </div>
 
+        {/* Tab Navigation */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-2 mb-6">
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setActiveTab('overview')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'overview'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
+                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Overview
+              </button>
+              <button
+                onClick={() => setActiveTab('users')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'users'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
+                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Users
+              </button>
+              <button
+                onClick={() => setActiveTab('employees')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'employees'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
+                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Employees
+              </button>
+              <button
+                onClick={() => setActiveTab('organizations')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'organizations'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
+                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Organizations
+              </button>
+              <button
+                onClick={() => setActiveTab('test-analytics')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'test-analytics'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
+                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Test Analytics
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content Area */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Admin Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+          {activeTab === 'overview' && (
+            <>
+              {/* Admin Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* Total Users Card */}
             <div className="group relative overflow-hidden bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105">
               <div className="flex items-center justify-between">
@@ -532,46 +603,46 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </div>
           </div>
 
-          {/* Monthly User Growth Chart */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 mb-8 shadow-2xl">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-              <div className="flex items-center space-x-3 mb-4 md:mb-0">
-                <div className="p-3 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-xl shadow-lg">
-                  <TrendingUp className="w-6 h-6 text-primary-start" />
+              {/* Monthly User Growth Chart - Compact */}
+              <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10 mb-6 shadow-2xl">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                  <div className="flex items-center space-x-2 mb-2 sm:mb-0">
+                    <div className="p-2 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-lg shadow-lg">
+                      <TrendingUp className="w-4 h-4 text-primary-start" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-white">User Growth</h3>
+                      <p className="text-white/70 text-xs">Monthly registrations</p>
+                    </div>
+                  </div>
+                  
+                  {/* Chart Type Toggle */}
+                  <div className="flex bg-white/10 rounded-lg p-1">
+                    <button
+                      onClick={() => setChartType('line')}
+                      className={`px-2 py-1 rounded-md text-xs font-medium transition-all ${
+                        chartType === 'line'
+                          ? 'bg-primary-start text-white shadow-lg'
+                          : 'text-white/70 hover:text-white'
+                      }`}
+                    >
+                      Line
+                    </button>
+                    <button
+                      onClick={() => setChartType('bar')}
+                      className={`px-2 py-1 rounded-md text-xs font-medium transition-all ${
+                        chartType === 'bar'
+                          ? 'bg-primary-start text-white shadow-lg'
+                          : 'text-white/70 hover:text-white'
+                      }`}
+                    >
+                      Bar
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white">Monthly User Growth</h3>
-                  <p className="text-white/70 text-sm">New user registrations by month</p>
-                </div>
-              </div>
-              
-              {/* Chart Type Toggle */}
-              <div className="flex bg-white/10 rounded-lg p-1">
-                <button
-                  onClick={() => setChartType('line')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
-                    chartType === 'line'
-                      ? 'bg-primary-start text-white shadow-lg'
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  Line
-                </button>
-                <button
-                  onClick={() => setChartType('bar')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
-                    chartType === 'bar'
-                      ? 'bg-primary-start text-white shadow-lg'
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  Bar
-                </button>
-              </div>
-            </div>
 
-            {/* Chart Container */}
-            <div className="relative h-96 bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-4 border border-white/10">
+                {/* Chart Container - Smaller */}
+                <div className="relative h-48 bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-3 border border-white/10">
               {monthlyDataLoading ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">
@@ -617,51 +688,51 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               )}
             </div>
 
-            {/* Chart Summary */}
-            {!monthlyDataLoading && monthlyUserData.length > 0 && (
-              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-6 border border-white/20 shadow-lg">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-2 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-lg">
-                      <TrendingUp className="w-4 h-4 text-primary-start" />
+                {/* Chart Summary - Compact */}
+                {!monthlyDataLoading && monthlyUserData.length > 0 && (
+                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-lg p-3 border border-white/20 shadow-lg">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="p-1 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded">
+                          <TrendingUp className="w-3 h-3 text-primary-start" />
+                        </div>
+                        <p className="text-white/80 text-xs font-medium">Months</p>
+                      </div>
+                      <p className="text-lg font-bold text-white">{monthlyUserData.length}</p>
                     </div>
-                    <p className="text-white/80 text-sm font-medium">Total Months</p>
-                  </div>
-                  <p className="text-3xl font-bold text-white">{monthlyUserData.length}</p>
-                </div>
-                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-6 border border-white/20 shadow-lg">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-2 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded-lg">
-                      <Users className="w-4 h-4 text-secondary-start" />
+                    <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-lg p-3 border border-white/20 shadow-lg">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="p-1 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded">
+                          <Users className="w-3 h-3 text-secondary-start" />
+                        </div>
+                        <p className="text-white/80 text-xs font-medium">New Users</p>
+                      </div>
+                      <p className="text-lg font-bold text-white">
+                        {monthlyUserData.reduce((sum, item) => sum + item.newUsers, 0).toLocaleString()}
+                      </p>
                     </div>
-                    <p className="text-white/80 text-sm font-medium">Total New Users</p>
-                  </div>
-                  <p className="text-3xl font-bold text-white">
-                    {monthlyUserData.reduce((sum, item) => sum + item.newUsers, 0).toLocaleString()}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-6 border border-white/20 shadow-lg">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-2 bg-gradient-to-br from-accent-start/20 to-accent-end/20 rounded-lg">
-                      <Building2 className="w-4 h-4 text-accent-start" />
+                    <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-lg p-3 border border-white/20 shadow-lg">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="p-1 bg-gradient-to-br from-accent-start/20 to-accent-end/20 rounded">
+                          <Building2 className="w-3 h-3 text-accent-start" />
+                        </div>
+                        <p className="text-white/80 text-xs font-medium">Avg/Month</p>
+                      </div>
+                      <p className="text-lg font-bold text-white">
+                        {Math.round(monthlyUserData.reduce((sum, item) => sum + item.newUsers, 0) / monthlyUserData.length).toLocaleString()}
+                      </p>
                     </div>
-                    <p className="text-white/80 text-sm font-medium">Average per Month</p>
                   </div>
-                  <p className="text-3xl font-bold text-white">
-                    {Math.round(monthlyUserData.reduce((sum, item) => sum + item.newUsers, 0) / monthlyUserData.length).toLocaleString()}
-                  </p>
-                </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
 
-          {/* Additional Admin Functionalities */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
-            <div className="text-center text-white/70">
-              <p className="text-lg mb-4">Additional Admin Functionalities</p>
-              <p className="text-sm">User management, analytics, system monitoring, and more...</p>
-            </div>
-          </div>
+          {/* Tab Content */}
+          {activeTab === 'users' && <UserList />}
+          {activeTab === 'employees' && <EmployeeList />}
+          {activeTab === 'organizations' && <OrganizationList />}
+          {activeTab === 'test-analytics' && <TestAnalytics />}
         </div>
       </div>
 

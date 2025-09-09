@@ -1,19 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
 import { API_ENDPOINTS } from '../../config/api'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+
+interface User {
+  id: string;
+  email: string;
+  full_name: string;
+  role: string;
+}
 
 interface AuthPageProps {
-  onAuthSuccess: (token: string, user: any) => void
+  onAuthSuccess: (token: string, user: User) => void
 }
 
 const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
+  const [searchParams] = useSearchParams()
   const [isLogin, setIsLogin] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
+
+  // Check URL parameters to determine which form to show
+  useEffect(() => {
+    const mode = searchParams.get('mode')
+    if (mode === 'signup') {
+      setIsLogin(false)
+    } else {
+      setIsLogin(true)
+    }
+  }, [searchParams])
 
   const clearError = () => {
     setError('')
@@ -95,7 +113,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
             setError('This email is already registered. Please use a different email.')
           } else if (Array.isArray(data.detail)) {
             // Handle Pydantic validation errors
-            const validationErrors = data.detail.map((error: any) => {
+            const validationErrors = data.detail.map((error: { loc?: string[]; msg?: string }) => {
               if (error.loc && error.loc.includes('email')) {
                 return 'Please enter a valid email address.'
               } else if (error.loc && error.loc.includes('password')) {

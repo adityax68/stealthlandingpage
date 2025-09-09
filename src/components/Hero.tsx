@@ -182,18 +182,18 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
               </div>
             </div>
 
-            {/* Sign In Button - Only show when not authenticated */}
+            {/* Register Button - Only show when not authenticated */}
             {!isAuthenticated && (
               <div className={`mt-8 md:mt-10 transition-all duration-1000 delay-2000 ${
                 isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
               }`}>
                 <button
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/auth?mode=signup')}
                   className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary-start/25 flex items-center space-x-3 mx-auto"
                 >
                   <div className="relative z-10 flex items-center space-x-3">
                     <User className="w-6 h-6" />
-                    <span>Sign In to Get Started</span>
+                    <span>Register</span>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                 </button>
@@ -203,30 +203,6 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
           </div>
         </div>
 
-        {/* Floating Stats with Enhanced Animations */}
-        <div className="mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto px-4">
-          <div className="text-center group hover:scale-105 transition-transform duration-300">
-            <div className="relative">
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse">99%</div>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-start/20 to-primary-end/20 blur-xl rounded-full animate-float"></div>
-            </div>
-            <div className="text-white/70 text-sm sm:text-lg">Accuracy Rate</div>
-          </div>
-          <div className="text-center group hover:scale-105 transition-transform duration-300">
-            <div className="relative">
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse" style={{ animationDelay: '0.5s' }}>24/7</div>
-              <div className="absolute inset-0 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 blur-xl rounded-full animate-float-delayed"></div>
-            </div>
-            <div className="text-white/70 text-sm sm:text-lg">Available Support</div>
-          </div>
-          <div className="text-center group hover:scale-105 transition-transform duration-300">
-            <div className="relative">
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse" style={{ animationDelay: '1s' }}>10K+</div>
-              <div className="absolute inset-0 bg-gradient-to-r from-accent-start/20 to-accent-end/20 blur-xl rounded-full animate-float-slow"></div>
-            </div>
-            <div className="text-white/70 text-sm sm:text-lg">Users Helped</div>
-          </div>
-        </div>
       </div>
     </section>
   )

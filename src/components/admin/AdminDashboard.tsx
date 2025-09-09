@@ -418,9 +418,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                 </button>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">
-                  Admin Panel
-                </h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-white">
+                Admin Panel
+              </h1>
               </div>
               
               {/* Action Buttons */}

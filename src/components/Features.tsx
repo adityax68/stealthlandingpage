@@ -55,10 +55,35 @@ const Features: React.FC = () => {
             <span className="block gradient-text">Why Choose</span>
             <span className="block gradient-text">Mind Acuity?</span>
           </h2>
-          <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto px-4">
+          <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto px-4 mb-12 md:mb-16">
             Experience the next generation of mental health technology designed to understand, 
             support, and empower your emotional well-being.
           </p>
+          
+          {/* Statistics Section */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto px-4">
+            <div className="text-center group hover:scale-105 transition-transform duration-300">
+              <div className="relative">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse">99%</div>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-start/20 to-primary-end/20 blur-xl rounded-full animate-float"></div>
+              </div>
+              <div className="text-white/70 text-sm sm:text-lg">Accuracy Rate</div>
+            </div>
+            <div className="text-center group hover:scale-105 transition-transform duration-300">
+              <div className="relative">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse" style={{ animationDelay: '0.5s' }}>24/7</div>
+                <div className="absolute inset-0 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 blur-xl rounded-full animate-float-delayed"></div>
+              </div>
+              <div className="text-white/70 text-sm sm:text-lg">Available Support</div>
+            </div>
+            <div className="text-center group hover:scale-105 transition-transform duration-300">
+              <div className="relative">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse" style={{ animationDelay: '1s' }}>10K+</div>
+                <div className="absolute inset-0 bg-gradient-to-r from-accent-start/20 to-accent-end/20 blur-xl rounded-full animate-float-slow"></div>
+              </div>
+              <div className="text-white/70 text-sm sm:text-lg">Users Helped</div>
+            </div>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">

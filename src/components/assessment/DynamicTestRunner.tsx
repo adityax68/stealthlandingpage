@@ -1,38 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react'
 import { API_ENDPOINTS } from '../../config/api'
+import { testCacheService } from '../../services/testCacheService'
+import type { TestDetails } from '../../types/testTypes'
 
-interface TestQuestion {
-  id: number
-  question_number: number
-  question_text: string
-  is_reverse_scored: boolean
-  options: TestQuestionOption[]
-}
+// Interfaces are now imported from types file
 
-interface TestQuestionOption {
-  id: number
-  option_text: string
-  option_value: number
-  weight: number
-  display_order: number
-}
-
-interface TestDefinition {
-  id: number
-  test_code: string
-  test_name: string
-  test_category: string
-  description: string
-  total_questions: number
-  is_active: boolean
-}
-
-interface TestDetails {
-  test_definition: TestDefinition
-  questions: TestQuestion[]
-  scoring_ranges: any[]
-}
+// TestDetails interface is now imported from testCacheService
 
 interface DynamicTestRunnerProps {
   testCode: string
@@ -58,6 +32,19 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
 
   const loadTestDetails = async () => {
     try {
+      setLoading(true)
+      setError(null)
+      
+      // Check cache first
+      const cachedDetails = testCacheService.getCachedTestDetails(testCode)
+      if (cachedDetails) {
+        console.log(`📦 Loading test details for ${testCode} from cache`)
+        setTestDetails(cachedDetails)
+        setLoading(false)
+        return
+      }
+      
+      console.log(`🌐 Fetching test details for ${testCode} from API`)
       const response = await fetch(`${API_ENDPOINTS.TESTS_DEFINITIONS}/${testCode}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -67,6 +54,10 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
       if (response.ok) {
         const data = await response.json()
         setTestDetails(data)
+        
+        // Cache the test details
+        testCacheService.cacheTestDetails(testCode, data)
+        console.log(`💾 Cached test details for ${testCode}`)
       } else {
         throw new Error('Failed to load test details')
       }
@@ -79,7 +70,8 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
   }
 
   const handleAnswer = (optionId: number) => {
-    const questionId = testDetails?.questions[currentQuestion]?.id
+    const questions = getTestQuestions()
+    const questionId = questions?.[currentQuestion]?.id
     if (questionId) {
       setResponses(prev => ({
         ...prev,
@@ -89,7 +81,8 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
   }
 
   const handleNext = () => {
-    if (currentQuestion < (testDetails?.questions.length || 0) - 1) {
+    const questions = getTestQuestions()
+    if (currentQuestion < (questions?.length || 0) - 1) {
       setCurrentQuestion(currentQuestion + 1)
     } else {
       handleSubmit()
@@ -100,6 +93,27 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
     if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1)
     }
+  }
+
+  // Helper functions to handle different test data structures
+  const getTestQuestions = () => {
+    return testDetails?.questions || []
+  }
+
+  const getTestDefinition = () => {
+    return testDetails?.test_definition || testDetails
+  }
+
+  const getTestName = () => {
+    return getTestDefinition()?.test_name || 'Unknown Test'
+  }
+
+  const getTestDescription = () => {
+    return getTestDefinition()?.description || ''
+  }
+
+  const getTestCategory = () => {
+    return getTestDefinition()?.test_category || 'unknown'
   }
 
   const handleSubmit = async () => {
@@ -203,9 +217,10 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
     )
   }
 
-  const currentQuestionData = testDetails.questions[currentQuestion]
+  const questions = getTestQuestions()
+  const currentQuestionData = questions[currentQuestion]
   const currentResponse = responses[currentQuestionData?.id]
-  const progress = ((currentQuestion + 1) / testDetails.questions.length) * 100
+  const progress = ((currentQuestion + 1) / questions.length) * 100
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black p-4 relative overflow-hidden">
@@ -229,21 +244,21 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
           
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
-              <span className="text-4xl mr-3">{getCategoryIcon(testDetails.test_definition.test_category)}</span>
-              <h1 className="text-3xl font-bold text-white">{testDetails.test_definition.test_name}</h1>
+              <span className="text-4xl mr-3">{getCategoryIcon(getTestCategory())}</span>
+              <h1 className="text-3xl font-bold text-white">{getTestName()}</h1>
             </div>
-            <p className="text-white/70">{testDetails.test_definition.description}</p>
+            <p className="text-white/70">{getTestDescription()}</p>
           </div>
 
           {/* Progress Bar */}
           <div className="mb-8">
             <div className="flex justify-between text-white/70 text-sm mb-2">
-              <span>Question {currentQuestion + 1} of {testDetails.questions.length}</span>
+              <span>Question {currentQuestion + 1} of {questions.length}</span>
               <span>{Math.round(progress)}% Complete</span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
               <div 
-                className={`bg-gradient-to-r ${getCategoryColor(testDetails.test_definition.test_category)} h-2 rounded-full transition-all duration-300`}
+                className={`bg-gradient-to-r ${getCategoryColor(getTestCategory())} h-2 rounded-full transition-all duration-300`}
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -258,13 +273,13 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
 
           {/* Response Options */}
           <div className="space-y-4">
-            {currentQuestionData?.options.map((option) => (
+            {currentQuestionData?.options.map((option: any) => (
               <button
                 key={option.id}
                 onClick={() => handleAnswer(option.id)}
                 className={`w-full p-4 text-left rounded-lg border transition-all duration-300 ${
                   currentResponse === option.id
-                    ? `bg-gradient-to-r ${getCategoryColor(testDetails.test_definition.test_category)} border-transparent text-white`
+                    ? `bg-gradient-to-r ${getCategoryColor(getTestCategory())} border-transparent text-white`
                     : 'bg-white/5 border-white/20 text-white hover:bg-white/10'
                 }`}
               >
@@ -295,9 +310,9 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
           <button
             onClick={handleNext}
             disabled={currentResponse === undefined}
-            className={`flex items-center px-6 py-3 bg-gradient-to-r ${getCategoryColor(testDetails.test_definition.test_category)} text-white rounded-lg hover:opacity-90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`flex items-center px-6 py-3 bg-gradient-to-r ${getCategoryColor(getTestCategory())} text-white rounded-lg hover:opacity-90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed`}
           >
-            {currentQuestion === testDetails.questions.length - 1 ? (
+            {currentQuestion === questions.length - 1 ? (
               <>
                 {isSubmitting ? 'Submitting...' : 'Submit Assessment'}
                 {!isSubmitting && <ChevronRight className="w-5 h-5 ml-2" />}

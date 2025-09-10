@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Search, ChevronLeft, ChevronRight, Users, Mail, Calendar, Building, Loader2, UserCheck } from 'lucide-react';
 import { API_ENDPOINTS } from '../../config/api';
+// Removed admin cache service - using direct API calls
 
 interface Employee {
   id: number;
@@ -15,6 +16,16 @@ interface Employee {
   updated_at: string;
 }
 
+interface EmployeesResponse {
+  employees: Employee[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
+}
+
 const EmployeeList: React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +35,7 @@ const EmployeeList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalEmployees, setTotalEmployees] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const employeesPerPage = 10;
 
@@ -31,7 +43,7 @@ const EmployeeList: React.FC = () => {
     fetchEmployees();
   }, [currentPage]);
 
-  const fetchEmployees = async (searchTerm?: string) => {
+  const fetchEmployees = useCallback(async (searchTerm?: string) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -43,6 +55,10 @@ const EmployeeList: React.FC = () => {
       }
 
       const skip = (currentPage - 1) * employeesPerPage;
+      
+      // Removed cache check - using direct API calls with database indexes
+
+      console.log('🌐 Fetching employees from API');
       const endpoint = searchTerm 
         ? `${API_ENDPOINTS.ADMIN_EMPLOYEES_SEARCH}?employee_code=${encodeURIComponent(searchTerm)}&skip=${skip}&limit=${employeesPerPage}`
         : `${API_ENDPOINTS.ADMIN_EMPLOYEES}?skip=${skip}&limit=${employeesPerPage}`;
@@ -55,17 +71,20 @@ const EmployeeList: React.FC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setEmployees(data);
+        const data: EmployeesResponse = await response.json();
         
-        // For search, we don't have total count, so we estimate
-        if (searchTerm) {
-          setTotalPages(Math.ceil(data.length / employeesPerPage) || 1);
-          setTotalEmployees(data.length);
+        // Handle new API response format with pagination
+        if (data.employees && data.pagination) {
+          setEmployees(data.employees);
+          setTotalPages(data.pagination.total_pages);
+          setTotalEmployees(data.pagination.total);
+          
+          // Removed caching - using direct API calls with database indexes
         } else {
-          // For regular fetch, we could implement total count in backend
-          setTotalPages(Math.ceil(data.length / employeesPerPage) || 1);
-          setTotalEmployees(data.length);
+          // Fallback for old API format
+          setEmployees(Array.isArray(data) ? data : []);
+          setTotalPages(Math.ceil((Array.isArray(data) ? data.length : 0) / employeesPerPage) || 1);
+          setTotalEmployees(Array.isArray(data) ? data.length : 0);
         }
       } else {
         const errorData = await response.json();
@@ -77,18 +96,31 @@ const EmployeeList: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage, employeesPerPage]);
 
-  const handleSearch = async () => {
-    if (searchEmployeeCode.trim()) {
-      setIsSearching(true);
-      setCurrentPage(1);
-      await fetchEmployees(searchEmployeeCode.trim());
-      setIsSearching(false);
-    } else {
-      setCurrentPage(1);
-      await fetchEmployees();
+  // Debounced search function
+  const debouncedSearch = useCallback((searchTerm: string) => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
     }
+    
+    const timeout = setTimeout(async () => {
+      if (searchTerm.trim()) {
+        setIsSearching(true);
+        setCurrentPage(1);
+        await fetchEmployees(searchTerm.trim());
+        setIsSearching(false);
+      } else {
+        setCurrentPage(1);
+        await fetchEmployees();
+      }
+    }, 300); // 300ms debounce
+    
+    setSearchTimeout(timeout);
+  }, [fetchEmployees, searchTimeout]);
+
+  const handleSearch = () => {
+    debouncedSearch(searchEmployeeCode);
   };
 
   const handleClearSearch = () => {
@@ -101,13 +133,46 @@ const EmployeeList: React.FC = () => {
     setCurrentPage(page);
   };
 
+  // Skeleton loading component
+  const SkeletonLoader = () => (
+    <div className="space-y-4">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="bg-gray-800/50 rounded-xl p-6 animate-pulse">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gray-700 rounded-full"></div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-700 rounded w-32"></div>
+                <div className="h-3 bg-gray-700 rounded w-48"></div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="h-6 bg-gray-700 rounded-full w-16"></div>
+              <div className="h-6 bg-gray-700 rounded-full w-20"></div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white/70">Loading employees...</p>
+      <div className="space-y-6">
+        {/* Header skeleton */}
+        <div className="flex items-center justify-between">
+          <div className="h-8 bg-gray-700 rounded w-48 animate-pulse"></div>
+          <div className="h-10 bg-gray-700 rounded w-32 animate-pulse"></div>
         </div>
+        
+        {/* Search skeleton */}
+        <div className="flex items-center space-x-4">
+          <div className="h-10 bg-gray-700 rounded w-80 animate-pulse"></div>
+          <div className="h-10 bg-gray-700 rounded w-24 animate-pulse"></div>
+        </div>
+        
+        {/* Employees skeleton */}
+        <SkeletonLoader />
       </div>
     );
   }

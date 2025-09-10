@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ChevronLeft, ChevronRight, Building2, Mail, Calendar, Hash, Loader2, Plus } from 'lucide-react';
 import { API_ENDPOINTS } from '../../config/api';
+// Removed admin cache service - using direct API calls
 
 interface Organization {
   id: number;
@@ -9,6 +10,16 @@ interface Organization {
   hr_email: string;
   created_at: string;
   updated_at: string;
+}
+
+interface OrganizationsResponse {
+  organisations: Organization[];  // Note: API uses British spelling
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
 }
 
 const OrganizationList: React.FC = () => {
@@ -41,6 +52,10 @@ const OrganizationList: React.FC = () => {
       }
 
       const skip = (currentPage - 1) * organizationsPerPage;
+      
+      // Removed cache check - using direct API calls with database indexes
+
+      console.log('🌐 Fetching organizations from API');
       let endpoint = `${API_ENDPOINTS.ADMIN_ORGANISATIONS}?skip=${skip}&limit=${organizationsPerPage}`;
       
       if (orgId || hrEmail) {
@@ -57,17 +72,19 @@ const OrganizationList: React.FC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setOrganizations(data);
+        const data: OrganizationsResponse = await response.json();
+        setOrganizations(data.organisations);  // Use British spelling from API
         
-        // For search, we don't have total count, so we estimate
-        if (orgId || hrEmail) {
-          setTotalPages(Math.ceil(data.length / organizationsPerPage) || 1);
-          setTotalOrganizations(data.length);
+        // Use pagination data from API response
+        if (data.pagination) {
+          setTotalPages(data.pagination.total_pages);
+          setTotalOrganizations(data.pagination.total);
+          
+          // Removed caching - using direct API calls with database indexes
         } else {
-          // For regular fetch, we could implement total count in backend
-          setTotalPages(Math.ceil(data.length / organizationsPerPage) || 1);
-          setTotalOrganizations(data.length);
+          // Fallback for search results
+          setTotalPages(Math.ceil(data.organisations.length / organizationsPerPage) || 1);
+          setTotalOrganizations(data.organisations.length);
         }
       } else {
         const errorData = await response.json();

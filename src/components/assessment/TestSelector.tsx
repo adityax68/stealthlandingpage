@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Brain, Heart, Zap, ChevronRight, Clock, Users, BarChart3 } from 'lucide-react'
 import { API_ENDPOINTS } from '../../config/api'
-
-interface TestDefinition {
-  id: number
-  test_code: string
-  test_name: string
-  test_category: string
-  description: string
-  total_questions: number
-  is_active: boolean
-  created_at: string
-}
+import { testCacheService } from '../../services/testCacheService'
+import type { TestDefinition } from '../../types/testTypes'
+import RecentTestsPanel from './RecentTestsPanel'
 
 interface TestSelectorProps {
   onTestSelect: (testCode: string) => void
@@ -29,6 +21,19 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
 
   const loadTests = async () => {
     try {
+      setLoading(true)
+      setError(null)
+      
+      // Check cache first
+      const cachedTests = testCacheService.getCachedTestDefinitions()
+      if (cachedTests) {
+        console.log('📦 Loading tests from cache')
+        setTests(cachedTests)
+        setLoading(false)
+        return
+      }
+      
+      console.log('🌐 Fetching tests from API')
       const response = await fetch(`${API_ENDPOINTS.TESTS_DEFINITIONS}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -38,6 +43,15 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
       if (response.ok) {
         const data = await response.json()
         setTests(data)
+        
+        // Cache the results
+        testCacheService.cacheTestDefinitions(data)
+        
+        // Extract and cache categories
+        const categories = [...new Set(data.map((test: any) => test.test_category))] as string[]
+        testCacheService.cacheTestCategories(categories)
+        
+        console.log('💾 Cached test definitions and categories')
       } else {
         throw new Error('Failed to load tests')
       }
@@ -193,6 +207,14 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
             </p>
           </div>
 
+        </div>
+
+        {/* Recent Tests Panel */}
+        <div className="mb-8">
+          <RecentTestsPanel 
+            onTestSelect={onTestSelect}
+            onRefresh={loadTests}
+          />
         </div>
 
         {/* Test Cards Grid */}

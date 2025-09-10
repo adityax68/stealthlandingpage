@@ -24,9 +24,8 @@ import {
   Clock
 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
+import { testCacheService } from '../services/testCacheService'
 
-import ComprehensiveAssessment from './assessment/ComprehensiveAssessment'
-import ComprehensiveResults from './assessment/ComprehensiveResults'
 import HRDashboard from './hr/HRDashboard'
 import EmployeeSupport from './EmployeeSupport'
 import EmployeeRequestModal from './EmployeeRequestModal'
@@ -39,13 +38,10 @@ interface DashboardProps {
 }
 
 type Tab = 'assessment' | 'history' | 'hr' | 'settings' | 'support'
-type AssessmentView = 'main' | 'assessment' | 'results'
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<Tab>('assessment')
-  const [assessmentView, setAssessmentView] = useState<AssessmentView>('main')
-  const [assessmentResults, setAssessmentResults] = useState<any>(null)
   const [assessmentHistory, setAssessmentHistory] = useState<any[]>([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
@@ -76,6 +72,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
   const loadTests = async () => {
     try {
+      setLoadingTests(true)
+      
+      // Check cache first
+      const cachedTests = testCacheService.getCachedTestDefinitions()
+      if (cachedTests) {
+        console.log('📦 Loading tests from cache in Dashboard')
+        setTests(cachedTests)
+        setLoadingTests(false)
+        return
+      }
+      
+      console.log('🌐 Fetching tests from API in Dashboard')
       const response = await fetch(`${API_ENDPOINTS.TESTS_DEFINITIONS}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -85,6 +93,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       if (response.ok) {
         const data = await response.json()
         setTests(data)
+        
+        // Cache the results
+        testCacheService.cacheTestDefinitions(data)
+        
+        // Extract and cache categories
+        const categories = [...new Set(data.map((test: any) => test.test_category))] as string[]
+        testCacheService.cacheTestCategories(categories)
+        
+        console.log('💾 Cached test definitions and categories in Dashboard')
       } else {
         throw new Error('Failed to load tests')
       }
@@ -267,10 +284,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     }
   }, [activeTab])
 
-  // Reset assessment view when activeTab changes
+  // Reset expanded rows when activeTab changes
   useEffect(() => {
     if (activeTab !== 'assessment') {
-      setAssessmentView('main')
       setExpandedRows(new Set())
     }
   }, [activeTab])
@@ -306,19 +322,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }
 
 
-  const handleAssessmentComplete = (results: any) => {
-    setAssessmentResults(results)
-    setAssessmentView('results')
-    loadAssessmentHistory() // Refresh history
-  }
-
-  const handleBackToMain = () => {
-    setAssessmentView('main')
-  }
-
-  const handleNewAssessment = () => {
-    setAssessmentView('assessment')
-  }
 
   const toggleRowExpansion = (assessmentId: number) => {
     const newExpandedRows = new Set(expandedRows)
@@ -342,25 +345,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }
 
   const renderAssessmentContent = () => {
-    if (assessmentView === 'assessment') {
-      return (
-        <ComprehensiveAssessment
-          onComplete={handleAssessmentComplete}
-          onBack={handleBackToMain}
-        />
-      )
-    }
-
-    if (assessmentView === 'results') {
-      return (
-        <ComprehensiveResults
-          results={assessmentResults}
-          onBack={handleBackToMain}
-          onNewAssessment={handleNewAssessment}
-        />
-      )
-    }
-
     return (
       <div className="p-4 sm:p-6 lg:p-8 min-h-full">
         <div className="text-center mb-8 sm:mb-12">
@@ -934,8 +918,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
   const handleTabSwitch = (tab: Tab) => {
     setActiveTab(tab)
-    // Always reset assessment view when switching tabs to prevent UI mingling
-    setAssessmentView('main')
     // Clear any expanded rows when switching tabs
     setExpandedRows(new Set())
   }

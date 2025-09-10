@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Search, ChevronLeft, ChevronRight, User, Mail, Calendar, Loader2 } from 'lucide-react';
 import { API_ENDPOINTS } from '../../config/api';
+// Removed admin cache service - using direct API calls
 
 interface User {
   id: number;
@@ -13,6 +14,16 @@ interface User {
   created_at: string;
 }
 
+interface UsersResponse {
+  users: User[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
+}
+
 const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -22,6 +33,7 @@ const UserList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const usersPerPage = 10;
 
@@ -29,7 +41,7 @@ const UserList: React.FC = () => {
     fetchUsers();
   }, [currentPage]);
 
-  const fetchUsers = async (searchTerm?: string) => {
+  const fetchUsers = useCallback(async (searchTerm?: string) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -41,6 +53,10 @@ const UserList: React.FC = () => {
       }
 
       const skip = (currentPage - 1) * usersPerPage;
+      
+      // Removed cache check - using direct API calls with database indexes
+
+      console.log('🌐 Fetching users from API');
       const endpoint = searchTerm 
         ? `${API_ENDPOINTS.ADMIN_USERS_SEARCH}?email=${encodeURIComponent(searchTerm)}&skip=${skip}&limit=${usersPerPage}`
         : `${API_ENDPOINTS.ADMIN_USERS}?skip=${skip}&limit=${usersPerPage}`;
@@ -53,17 +69,20 @@ const UserList: React.FC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setUsers(data);
+        const data: UsersResponse = await response.json();
         
-        // For search, we don't have total count, so we estimate
-        if (searchTerm) {
-          setTotalPages(Math.ceil(data.length / usersPerPage) || 1);
-          setTotalUsers(data.length);
+        // Handle new API response format with pagination
+        if (data.users && data.pagination) {
+          setUsers(data.users);
+          setTotalPages(data.pagination.total_pages);
+          setTotalUsers(data.pagination.total);
+          
+          // Removed caching - using direct API calls with database indexes
         } else {
-          // For regular fetch, we could implement total count in backend
-          setTotalPages(Math.ceil(data.length / usersPerPage) || 1);
-          setTotalUsers(data.length);
+          // Fallback for old API format
+          setUsers(Array.isArray(data) ? data : []);
+          setTotalPages(Math.ceil((Array.isArray(data) ? data.length : 0) / usersPerPage) || 1);
+          setTotalUsers(Array.isArray(data) ? data.length : 0);
         }
       } else {
         const errorData = await response.json();
@@ -75,18 +94,31 @@ const UserList: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage, usersPerPage]);
 
-  const handleSearch = async () => {
-    if (searchEmail.trim()) {
-      setIsSearching(true);
-      setCurrentPage(1);
-      await fetchUsers(searchEmail.trim());
-      setIsSearching(false);
-    } else {
-      setCurrentPage(1);
-      await fetchUsers();
+  // Debounced search function
+  const debouncedSearch = useCallback((searchTerm: string) => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
     }
+    
+    const timeout = setTimeout(async () => {
+      if (searchTerm.trim()) {
+        setIsSearching(true);
+        setCurrentPage(1);
+        await fetchUsers(searchTerm.trim());
+        setIsSearching(false);
+      } else {
+        setCurrentPage(1);
+        await fetchUsers();
+      }
+    }, 300); // 300ms debounce
+    
+    setSearchTimeout(timeout);
+  }, [fetchUsers, searchTimeout]);
+
+  const handleSearch = () => {
+    debouncedSearch(searchEmail);
   };
 
   const handleClearSearch = () => {
@@ -114,13 +146,46 @@ const UserList: React.FC = () => {
     }
   };
 
+  // Skeleton loading component
+  const SkeletonLoader = () => (
+    <div className="space-y-4">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="bg-gray-800/50 rounded-xl p-6 animate-pulse">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gray-700 rounded-full"></div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-700 rounded w-32"></div>
+                <div className="h-3 bg-gray-700 rounded w-48"></div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="h-6 bg-gray-700 rounded-full w-16"></div>
+              <div className="h-6 bg-gray-700 rounded-full w-20"></div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white/70">Loading users...</p>
+      <div className="space-y-6">
+        {/* Header skeleton */}
+        <div className="flex items-center justify-between">
+          <div className="h-8 bg-gray-700 rounded w-48 animate-pulse"></div>
+          <div className="h-10 bg-gray-700 rounded w-32 animate-pulse"></div>
         </div>
+        
+        {/* Search skeleton */}
+        <div className="flex items-center space-x-4">
+          <div className="h-10 bg-gray-700 rounded w-80 animate-pulse"></div>
+          <div className="h-10 bg-gray-700 rounded w-24 animate-pulse"></div>
+        </div>
+        
+        {/* Users skeleton */}
+        <SkeletonLoader />
       </div>
     );
   }
@@ -164,10 +229,16 @@ const UserList: React.FC = () => {
                 type="text"
                 placeholder="Search by email..."
                 value={searchEmail}
-                onChange={(e) => setSearchEmail(e.target.value)}
+                onChange={(e) => {
+                  setSearchEmail(e.target.value);
+                  debouncedSearch(e.target.value);
+                }}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
               />
+              {isSearching && (
+                <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4 animate-spin" />
+              )}
             </div>
           </div>
           <div className="flex gap-2">

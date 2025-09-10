@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { TestTube, Users, TrendingUp, Calendar, AlertTriangle, Building2 } from 'lucide-react';
 import { API_ENDPOINTS } from '../../config/api';
+// Removed admin cache service - using direct API calls
 
 interface TestAnalytics {
   total_tests: number;
@@ -24,6 +25,10 @@ const TestAnalytics: React.FC = () => {
   const fetchTestAnalytics = async () => {
     try {
       setIsLoading(true);
+      
+      // Removed cache check - using direct API calls with database indexes
+
+      console.log('🌐 Fetching test analytics from API');
       const token = localStorage.getItem('token');
       const response = await fetch(API_ENDPOINTS.ADMIN_TEST_ANALYTICS, {
         headers: {
@@ -38,6 +43,8 @@ const TestAnalytics: React.FC = () => {
 
       const data = await response.json();
       setAnalytics(data);
+      
+      // Removed caching - using direct API calls with database indexes
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

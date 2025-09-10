@@ -33,7 +33,7 @@ const UserList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [searchTimeout, setSearchTimeout] = useState<number | null>(null);
 
   const usersPerPage = 10;
 
@@ -114,7 +114,7 @@ const UserList: React.FC = () => {
       }
     }, 300); // 300ms debounce
     
-    setSearchTimeout(timeout);
+    setSearchTimeout(timeout as unknown as number);
   }, [fetchUsers, searchTimeout]);
 
   const handleSearch = () => {

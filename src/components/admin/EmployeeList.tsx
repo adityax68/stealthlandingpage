@@ -35,7 +35,7 @@ const EmployeeList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalEmployees, setTotalEmployees] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [searchTimeout, setSearchTimeout] = useState<number | null>(null);
 
   const employeesPerPage = 10;
 
@@ -116,7 +116,7 @@ const EmployeeList: React.FC = () => {
       }
     }, 300); // 300ms debounce
     
-    setSearchTimeout(timeout);
+    setSearchTimeout(timeout as unknown as number);
   }, [fetchEmployees, searchTimeout]);
 
   const handleSearch = () => {

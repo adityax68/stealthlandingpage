@@ -26,7 +26,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
   const [isProcessingDocument, setIsProcessingDocument] = useState(false);
   const [hasInitializedWithMood, setHasInitializedWithMood] = useState(false);
   
-  const { moodData, hasPendingMoodData, clearMoodData, setHasPendingMoodData } = useMood();
+  const { moodData, clearMoodData } = useMood();
   
   // Function to start a new chat
   const handleNewChat = () => {

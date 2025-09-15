@@ -32,7 +32,7 @@ const ClinicalAssessment: React.FC<ClinicalAssessmentProps> = ({
     try {
               const response = await fetch(`${API_ENDPOINTS.QUESTIONS}/${assessmentType}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       })
       
@@ -152,7 +152,7 @@ const ClinicalAssessment: React.FC<ClinicalAssessmentProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         },
         body: JSON.stringify({
           assessment_type: assessmentType,

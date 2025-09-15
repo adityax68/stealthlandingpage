@@ -32,7 +32,7 @@ const EmployeeSupport: React.FC = () => {
       setIsLoading(true)
       setError('')
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         setError('No authentication token found')
         return
@@ -71,7 +71,7 @@ const EmployeeSupport: React.FC = () => {
       setIsSubmitting(true)
       setError('')
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         setError('No authentication token found')
         return

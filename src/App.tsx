@@ -15,52 +15,28 @@ import DynamicTestRunner from './components/assessment/DynamicTestRunner'
 import TestResults from './components/assessment/TestResults'
 import ErrorBoundary from './components/ErrorBoundary'
 
-import { AuthProvider } from './contexts/AuthContext'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { EmployeeModalProvider } from './contexts/EmployeeModalContext'
 import { ToastProvider } from './contexts/ToastContext'
 import { MoodProvider } from './contexts/MoodContext'
+import SessionNotification from './components/SessionNotification'
 import EmployeeRequestModal from './components/EmployeeRequestModal'
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(false)
   const [hasSeenSplash, setHasSeenSplash] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(true)
   const [currentTest, setCurrentTest] = useState<string | null>(null)
   const [testResults, setTestResults] = useState<any>(null)
   const [showTestSelector, setShowTestSelector] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
+  
+  // Use the new AuthContext
+  const { user, isAuthenticated, logout, refreshToken } = useAuth()
 
 
-  useEffect(() => {
-    // Check if user is already authenticated
-    const token = localStorage.getItem('token')
-    const userData = localStorage.getItem('user')
-    
-    if (token && userData) {
-      try {
-        const parsedUserData = JSON.parse(userData)
-        
-        // Set authentication state immediately from localStorage
-            setIsAuthenticated(true)
-            setUser(parsedUserData)
-          setIsLoading(false)
-      } catch (error) {
-        console.error('Error parsing user data from localStorage:', error)
-        // Clear invalid data
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        setIsAuthenticated(false)
-        setUser(null)
-        setIsLoading(false)
-      }
-    } else {
-      setIsLoading(false)
-    }
-  }, [])
+  // Remove old authentication logic - now handled by AuthContext
 
   // Show splash screen only on first visit to home page
   useEffect(() => {
@@ -72,69 +48,9 @@ function AppContent() {
   }, [location.pathname, hasSeenSplash])
 
 
-  // Handle browser back button navigation and authentication state
-  useEffect(() => {
-    const handlePopState = () => {
-      // Re-check authentication state when browser back button is pressed
-      const token = localStorage.getItem('token')
-      const userData = localStorage.getItem('user')
-      
-      if (token && userData) {
-        try {
-          const parsedUserData = JSON.parse(userData)
-          if (!isAuthenticated || !user) {
-            setIsAuthenticated(true)
-            setUser(parsedUserData)
-          }
-        } catch (error) {
-          console.error('Error parsing user data on navigation:', error)
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-          setIsAuthenticated(false)
-          setUser(null)
-        }
-      } else {
-        if (isAuthenticated) {
-          setIsAuthenticated(false)
-          setUser(null)
-        }
-      }
-    }
+  // Remove old authentication state handling - now handled by AuthContext
 
-    // Listen for browser back/forward navigation
-    window.addEventListener('popstate', handlePopState)
-    
-    // Also check on location change
-    handlePopState()
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState)
-    }
-  }, [location.pathname, isAuthenticated, user])
-
-  // Simple authentication check on mount
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    const userData = localStorage.getItem('user')
-    
-    if (token && userData) {
-      try {
-        const parsedUserData = JSON.parse(userData)
-        setIsAuthenticated(true)
-        setUser(parsedUserData)
-      } catch (error) {
-        console.error('Error parsing user data-:', error)
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        setIsAuthenticated(false)
-        setUser(null)
-      }
-    } else {
-      setIsAuthenticated(false)
-      setUser(null)
-    }
-    setIsLoading(false)
-  }, [])
+  // Authentication is now handled by AuthContext
 
   const handleSplashComplete = () => {
     setShowSplash(false)
@@ -145,28 +61,13 @@ function AppContent() {
     }
   }
 
-  const handleAuthSuccess = (token: string, userData: any) => {
-    localStorage.setItem('token', token)
-    localStorage.setItem('user', JSON.stringify(userData))
-    setIsAuthenticated(true)
-    setUser(userData)
-  }
-
-
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    setIsAuthenticated(false)
-    setUser(null)
+  const handleLogout = async () => {
+    await logout()
     navigate('/', { replace: true })
   }
 
-  const handleUserRoleUpdate = (newRole: string) => {
-    if (user) {
-      const updatedUser = { ...user, role: newRole }
-      setUser(updatedUser)
-      localStorage.setItem('user', JSON.stringify(updatedUser))
-    }
+  const handleUserRoleUpdate = (_newRole: string) => {
+    // This is now handled by AuthContext
   }
 
   // Test system handlers
@@ -211,36 +112,32 @@ function AppContent() {
     return <SplashScreen onComplete={handleSplashComplete} />
   }
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-10 left-10 w-48 h-48 md:top-20 md:left-20 md:w-72 md:h-72 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute bottom-10 right-10 w-64 h-64 md:bottom-20 md:right-20 md:w-96 md:h-96 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded-full blur-3xl animate-float-delayed"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-56 h-56 md:w-80 md:h-80 bg-gradient-to-br from-accent-start/15 to-accent-end/15 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-start/5 via-transparent to-accent-start/5 animate-water-flow"></div>
-        </div>
-        <div className="text-white text-xl relative z-10">Loading...</div>
-      </div>
-    )
-  }
+  // Loading is now handled by AuthContext
 
   return (
     <div className="app">
+      {/* Session notification for token expiry */}
+      <SessionNotification 
+        onRefresh={refreshToken}
+        onDismiss={() => {
+          // User dismissed the notification - they'll be logged out when token expires
+          console.log('Session notification dismissed by user');
+        }}
+        onLogout={handleLogout}
+      />
       <Routes>
         <Route path="/auth" element={
           isAuthenticated ? (
             <Navigate to="/dashboard" replace />
           ) : (
-            <AuthPage onAuthSuccess={handleAuthSuccess} initialMode="signup" />
+            <AuthPage initialMode="signup" />
           )
         } />
         <Route path="/login" element={
           isAuthenticated ? (
             <Navigate to="/dashboard" replace />
           ) : (
-            <AuthPage onAuthSuccess={handleAuthSuccess} initialMode="login" />
+            <AuthPage initialMode="login" />
           )
         } />
         <Route path="/" element={
@@ -261,18 +158,7 @@ function AppContent() {
           )
         } />
         <Route path="/admin" element={
-          isLoading ? (
-            <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center relative overflow-hidden">
-              {/* Background Effects */}
-              <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-10 left-10 w-48 h-48 md:top-20 md:left-20 md:w-72 md:h-72 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-full blur-3xl animate-float"></div>
-                <div className="absolute bottom-10 right-10 w-64 h-64 md:bottom-20 md:right-20 md:w-96 md:h-96 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded-full blur-3xl animate-float-delayed"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-56 h-56 md:w-80 md:h-80 bg-gradient-to-br from-accent-start/15 to-accent-end/15 rounded-full blur-3xl animate-pulse-slow"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-start/5 via-transparent to-accent-start/5 animate-water-flow"></div>
-              </div>
-              <div className="text-white text-xl relative z-10">Loading...</div>
-            </div>
-          ) : isAuthenticated ? (
+          isAuthenticated ? (
             <ErrorBoundary>
               <AdminDashboard />
             </ErrorBoundary>

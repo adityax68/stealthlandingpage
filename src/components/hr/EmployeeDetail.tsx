@@ -47,7 +47,7 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
       setIsLoadingAssessments(true)
       setError('')
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         setError('No authentication token found')
         return
@@ -79,7 +79,7 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
       setIsUpdatingStatus(true)
       setError('')
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         setError('No authentication token found')
         return

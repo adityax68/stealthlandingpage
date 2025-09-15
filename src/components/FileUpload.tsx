@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Upload, X, File, Image, FileText, AlertCircle, CheckCircle } from 'lucide-react';
 import { API_ENDPOINTS } from '../config/api';
+import { useToast } from '../contexts/ToastContext';
 
 interface FileUploadProps {
   onFileUploaded: (fileId: number, filename: string) => void;
@@ -29,6 +30,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { showToast } = useToast();
 
   const ALLOWED_TYPES = [
     // Documents
@@ -75,7 +77,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
     setError(null);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       if (!token) {
         throw new Error('No authentication token found');
       }
@@ -99,10 +101,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
       const uploadedFileData: UploadedFile = await response.json();
       setUploadedFile(uploadedFileData);
       onFileUploaded(uploadedFileData.file_id, uploadedFileData.filename);
+      showToast('File uploaded successfully!', 'success');
 
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Upload failed';
       setError(errorMessage);
+      showToast(errorMessage, 'error');
     } finally {
       setIsUploading(false);
     }

@@ -1,20 +1,20 @@
 import React, { useState } from 'react'
 import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
+import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINTS } from '../../config/api'
 
-import { useNavigate } from 'react-router-dom'
-
 interface AuthPageProps {
-  onAuthSuccess: (token: string, user: any) => void
   initialMode?: 'login' | 'signup'
 }
 
-const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, initialMode = 'signup' }) => {
+const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signup' }) => {
   const [isLogin, setIsLogin] = useState(initialMode === 'login')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const clearError = () => {
     setError('')
@@ -25,47 +25,19 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, initialMode = 'signu
     setError('')
     
     try {
-      const formData = new URLSearchParams()
-      formData.append('username', email)
-      formData.append('password', password)
+      await login(email, password)
       
-      console.log('Login URL:', API_ENDPOINTS.LOGIN)
-      
-      const response = await fetch(API_ENDPOINTS.LOGIN, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: formData,
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        onAuthSuccess(data.access_token, data.user)
-        // Check if there's pending mood data
-        const hasPendingMood = localStorage.getItem('moodAssessment') !== null
-        if (hasPendingMood) {
-          // Navigate to home to trigger mood assessment flow
-          navigate('/')
-        } else {
-          navigate('/dashboard')
-        }
+      // Check if there's pending mood data
+      const hasPendingMood = localStorage.getItem('moodAssessment') !== null
+      if (hasPendingMood) {
+        // Navigate to home to trigger mood assessment flow
+        navigate('/')
       } else {
-        // Handle specific error messages
-        if (response.status === 401) {
-          setError('Invalid credentials')
-        } else if (response.status === 400) {
-          setError(data.detail || 'Account is inactive. Please contact support.')
-        } else if (response.status === 503) {
-          setError('Database connection error. Please try again in a moment.')
-        } else {
-          setError(data.detail || 'Login failed. Please try again.')
-        }
+        navigate('/dashboard')
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Login error:', err)
-      setError('Connection error. Please check your internet and try again.')
+      setError(err.message || 'Login failed. Please try again.')
     } finally {
       setIsLoading(false)
     }

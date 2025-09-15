@@ -38,7 +38,7 @@ const HRComplaints: React.FC = () => {
       setIsLoading(true)
       setError('')
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         setError('No authentication token found')
         return
@@ -67,7 +67,7 @@ const HRComplaints: React.FC = () => {
 
   const fetchEmployees = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) return
 
       const response = await fetch(API_ENDPOINTS.HR_EMPLOYEES, {
@@ -90,7 +90,7 @@ const HRComplaints: React.FC = () => {
       setIsResolvingComplaint(complaintId)
       setError('')
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         setError('No authentication token found')
         return

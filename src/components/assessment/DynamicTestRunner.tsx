@@ -47,7 +47,7 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
       console.log(`🌐 Fetching test details for ${testCode} from API`)
       const response = await fetch(`${API_ENDPOINTS.TESTS_DEFINITIONS}/${testCode}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       })
       
@@ -132,7 +132,7 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         },
         body: JSON.stringify({
           test_code: testCode,

@@ -67,6 +67,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
   // Load tests on component mount
   useEffect(() => {
+    console.log('🔍 Dashboard useEffect triggered, user:', user)
+    console.log('🔍 Token in localStorage:', localStorage.getItem('access_token'))
     loadTests()
   }, [])
 
@@ -84,14 +86,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       }
       
       console.log('🌐 Fetching tests from API in Dashboard')
+      
+      // Prepare headers - only add Authorization if token exists
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      
+      const token = localStorage.getItem('access_token')
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+      
       const response = await fetch(`${API_ENDPOINTS.TESTS_DEFINITIONS}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        headers
       })
       
       if (response.ok) {
         const data = await response.json()
+        console.log('✅ Successfully loaded tests:', data)
         setTests(data)
         
         // Cache the results
@@ -103,10 +115,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         
         console.log('💾 Cached test definitions and categories in Dashboard')
       } else {
-        throw new Error('Failed to load tests')
+        console.error('❌ API response not OK:', response.status, response.statusText)
+        const errorText = await response.text()
+        console.error('❌ Error response:', errorText)
+        throw new Error(`Failed to load tests: ${response.status} ${response.statusText}`)
       }
     } catch (error) {
-      console.error('Error loading tests:', error)
+      console.error('❌ Error loading tests:', error)
       // If API fails, show empty state - don't add hardcoded categories
       setTests([])
     } finally {
@@ -213,7 +228,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     try {
       setIsRequestingAccess(true)
       
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         showToast('No authentication token found', 'error')
         return
@@ -296,7 +311,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       setIsLoadingHistory(true)
       console.log('Loading assessment history...')
       const response = await fetch(API_ENDPOINTS.UNIFIED_ASSESSMENTS, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       })
       
       console.log('History response status:', response.status)
@@ -345,6 +360,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }
 
   const renderAssessmentContent = () => {
+    console.log('🔍 Rendering assessment content, loadingTests:', loadingTests, 'tests:', tests, 'selectedCategory:', selectedCategory)
+    
     return (
       <div className="p-4 sm:p-6 lg:p-8 min-h-full">
         <div className="text-center mb-8 sm:mb-12">

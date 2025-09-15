@@ -37,7 +37,7 @@ const EmployeeRequestModal: React.FC<EmployeeRequestModalProps> = ({ onRoleUpdat
     setError('')
 
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         setError('No authentication token found')
         return

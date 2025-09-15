@@ -34,14 +34,24 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
       }
       
       console.log('🌐 Fetching tests from API')
+      
+      // Prepare headers - only add Authorization if token exists
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      
+      const token = localStorage.getItem('access_token')
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+      
       const response = await fetch(`${API_ENDPOINTS.TESTS_DEFINITIONS}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        headers
       })
       
       if (response.ok) {
         const data = await response.json()
+        console.log('✅ Successfully loaded tests:', data)
         setTests(data)
         
         // Cache the results
@@ -53,10 +63,13 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
         
         console.log('💾 Cached test definitions and categories')
       } else {
-        throw new Error('Failed to load tests')
+        console.error('❌ API response not OK:', response.status, response.statusText)
+        const errorText = await response.text()
+        console.error('❌ Error response:', errorText)
+        throw new Error(`Failed to load tests: ${response.status} ${response.statusText}`)
       }
     } catch (error) {
-      console.error('Error loading tests:', error)
+      console.error('❌ Error loading tests:', error)
       setError('Failed to load tests. Please try again.')
       // Fallback to hardcoded tests
       setTests(getFallbackTests())

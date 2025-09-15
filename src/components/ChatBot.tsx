@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Send, X, Paperclip } from 'lucide-react';
 import { API_ENDPOINTS } from '../config/api';
 import { useMood } from '../contexts/MoodContext';
+import { useToast } from '../contexts/ToastContext';
 
 interface Message {
   id: number;
@@ -25,6 +26,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
   const [attachments, setAttachments] = useState<Array<{id: number, filename: string, isProcessed: boolean}>>([]);
   const [isProcessingDocument, setIsProcessingDocument] = useState(false);
   const [hasInitializedWithMood, setHasInitializedWithMood] = useState(false);
+  const { showToast } = useToast();
   
   const { moodData, clearMoodData } = useMood();
   
@@ -107,7 +109,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
     setIsNewChat(false);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       if (!token) {
         throw new Error('No authentication token found. Please log in again.');
       }
@@ -146,6 +148,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
       setError(errorMessage);
+      showToast(errorMessage, 'error');
       console.error('Chat error:', err);
     } finally {
       setIsLoading(false);
@@ -170,7 +173,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
 
     try {
       // Debug: Check token
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       console.log('Token from localStorage:', token);
       console.log('Token length:', token ? token.length : 0);
       
@@ -222,6 +225,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
       setError(errorMessage);
+      showToast(errorMessage, 'error');
       console.error('Chat error:', err);
     } finally {
       setIsLoading(false);
@@ -281,7 +285,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
     setError(null);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       if (!token) {
         throw new Error('No authentication token found');
       }

@@ -90,7 +90,7 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
       setIsLoading(true)
       setError('')
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         setError('No authentication token found')
         return

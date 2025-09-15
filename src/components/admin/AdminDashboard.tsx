@@ -65,7 +65,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   
   // Check authentication on mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     const userData = localStorage.getItem('user');
     
     if (!token || !userData) {
@@ -114,7 +114,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     try {
       setStatsLoading(true);
       setStatsError(null);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       
       if (!token) {
         throw new Error('No authentication token found');
@@ -161,7 +161,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     try {
       setMonthlyDataLoading(true);
       setMonthlyDataError(null);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       
       if (!token) {
         throw new Error('No authentication token found');
@@ -239,7 +239,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       const response = await fetch('http://localhost:8000/api/v1/admin/organisations', {
         method: 'POST',
         headers: {
@@ -530,7 +530,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-white/70 text-sm font-medium mb-1">Total Users</p>
-                  <p className="text-3xl font-bold text-white">
+                  <div className="text-3xl font-bold text-white">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
                     ) : statsError ? (
@@ -538,7 +538,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                     ) : (
                       adminStats.totalUsers.toLocaleString()
                     )}
-                  </p>
+                  </div>
                   {statsError && (
                     <div className="mt-2">
                       <p className="text-red-400 text-xs">{statsError}</p>
@@ -563,7 +563,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-white/70 text-sm font-medium mb-1">Total Employees</p>
-                  <p className="text-3xl font-bold text-white">
+                  <div className="text-3xl font-bold text-white">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
                     ) : statsError ? (
@@ -571,7 +571,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                     ) : (
                       adminStats.totalEmployees.toLocaleString()
                     )}
-                  </p>
+                  </div>
                 </div>
                 <div className="p-3 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded-xl">
                   <Users2 className="w-6 h-6 text-secondary-start" />
@@ -585,7 +585,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-white/70 text-sm font-medium mb-1">Total Organizations</p>
-                  <p className="text-3xl font-bold text-white">
+                  <div className="text-3xl font-bold text-white">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
                     ) : statsError ? (
@@ -593,7 +593,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                     ) : (
                       adminStats.totalOrganizations.toLocaleString()
                     )}
-                  </p>
+                  </div>
                 </div>
                 <div className="p-3 bg-gradient-to-br from-accent-start/20 to-accent-end/20 rounded-xl">
                   <Building2 className="w-6 h-6 text-accent-start" />

@@ -24,10 +24,10 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       })
     }, 300)
 
-    // Complete splash screen after 2 seconds
+    // Complete splash screen after 500ms
     const completeTimer = setTimeout(() => {
       onComplete()
-    }, 2000)
+    }, 500)
 
     return () => {
       clearTimeout(showTimer)

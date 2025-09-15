@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from 'lucide-react'
 import MoodAssessment from './MoodAssessment'
@@ -44,7 +44,7 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
         setShowMoodAssessment(true)
         setHasShownMoodAssessment(true)
         sessionStorage.setItem('hasShownMoodAssessment', 'true')
-      }, 2000) // Show after 2 seconds
+      }, 500) // Show after 500ms
 
       return () => {
         clearTimeout(moodTimer)
@@ -73,26 +73,21 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
     }, 1500)
   }
 
-  const handleMoodAssessmentComplete = (mood: string, reason: string) => {
+  const handleMoodAssessmentComplete = useCallback((mood: string, reason: string) => {
     setMoodData(mood, reason)
     setShowMoodAssessment(false)
     
-    if (isAuthenticated) {
-      // For logged-in users, open chat directly
-      // We'll trigger this through a custom event that ChatBot can listen to
-      window.dispatchEvent(new CustomEvent('openChatWithMood', { 
-        detail: { mood, reason } 
-      }))
-    } else {
+    if (!isAuthenticated) {
       // For logged-out users, set pending mood data and redirect to login
       setHasPendingMoodData(true)
       navigate('/auth')
     }
-  }
+    // For logged-in users, ChatBot will automatically detect moodData change and open
+  }, [isAuthenticated, setMoodData, setHasPendingMoodData, navigate])
 
-  const handleMoodAssessmentSkip = () => {
+  const handleMoodAssessmentSkip = useCallback(() => {
     setShowMoodAssessment(false)
-  }
+  }, [])
 
   return (
     <section 

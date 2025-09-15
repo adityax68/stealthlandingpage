@@ -79,7 +79,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
     }
   }, [isOpen]);
 
-  // Handle mood data initialization - SINGLE useEffect to prevent duplicates
+  // Handle mood data initialization - CONSOLIDATED useEffect
   useEffect(() => {
     if (isAuthenticated && moodData && !hasInitializedWithMood) {
       // Open chat and initialize with mood data
@@ -90,51 +90,16 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
       const moodContext = `I'm feeling ${moodData.mood}${moodData.reason ? ` because ${moodData.reason}` : ''}`;
       
       // Send the mood context directly to AI without showing user message
-      sendMoodMessage(moodContext);
+      sendMoodMessage(moodContext).catch(error => {
+        console.error('Failed to send mood message:', error);
+        // Don't clear mood data if sending failed
+      });
       
       // Clear mood data after use
       clearMoodData();
     }
   }, [isAuthenticated, moodData, hasInitializedWithMood, clearMoodData]);
 
-  // Handle pending mood data after login - SINGLE useEffect to prevent duplicates
-  useEffect(() => {
-    if (isAuthenticated && hasPendingMoodData && moodData && !hasInitializedWithMood) {
-      // Open chat and initialize with mood data
-      setIsOpen(true);
-      setHasInitializedWithMood(true);
-      setHasPendingMoodData(false);
-      
-      // Create mood context message (not shown to user)
-      const moodContext = `I'm feeling ${moodData.mood}${moodData.reason ? ` because ${moodData.reason}` : ''}`;
-      
-      // Send the mood context directly to AI without showing user message
-      sendMoodMessage(moodContext);
-      
-      // Clear mood data after use
-      clearMoodData();
-    }
-  }, [isAuthenticated, hasPendingMoodData, moodData, hasInitializedWithMood, clearMoodData, setHasPendingMoodData]);
-
-  // Listen for custom event to open chat with mood - SINGLE useEffect to prevent duplicates
-  useEffect(() => {
-    const handleOpenChatWithMood = (event: CustomEvent) => {
-      const { mood, reason } = event.detail;
-      if (isAuthenticated && !hasInitializedWithMood) {
-        setIsOpen(true);
-        setHasInitializedWithMood(true);
-        const moodContext = `I'm feeling ${mood}${reason ? ` because ${reason}` : ''}`;
-        
-        // Send mood context directly to AI without showing user message
-        sendMoodMessage(moodContext);
-      }
-    };
-
-    window.addEventListener('openChatWithMood', handleOpenChatWithMood as EventListener);
-    return () => {
-      window.removeEventListener('openChatWithMood', handleOpenChatWithMood as EventListener);
-    };
-  }, [isAuthenticated, hasInitializedWithMood]);
 
   const sendMoodMessage = async (moodMessage: string) => {
     setIsLoading(true);

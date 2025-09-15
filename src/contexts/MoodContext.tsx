@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 interface MoodData {
   mood: string;
@@ -41,7 +41,7 @@ export const MoodProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const setMoodData = (mood: string, reason: string) => {
+  const setMoodData = useCallback((mood: string, reason: string) => {
     const newMoodData: MoodData = {
       mood,
       reason,
@@ -49,13 +49,13 @@ export const MoodProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     setMoodDataState(newMoodData);
     localStorage.setItem('moodAssessment', JSON.stringify(newMoodData));
-  };
+  }, []);
 
-  const clearMoodData = () => {
+  const clearMoodData = useCallback(() => {
     setMoodDataState(null);
     setHasPendingMoodData(false);
     localStorage.removeItem('moodAssessment');
-  };
+  }, [setHasPendingMoodData]);
 
   return (
     <MoodContext.Provider value={{

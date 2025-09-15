@@ -52,10 +52,10 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-white/98 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden animate-slideUp border border-white/30">
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-end justify-start p-4 animate-fadeIn">
+      <div className="glass-card-small max-w-sm w-full mx-4 mb-4">
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-8 text-center relative">
+        <div className="bg-gradient-to-r from-slate-800/80 to-slate-900/80 backdrop-blur-sm text-white p-8 text-center relative border-b border-white/20">
           <button
             onClick={onSkip}
             className="absolute top-5 right-5 text-white/60 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
@@ -67,7 +67,7 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
         </div>
 
         {/* Content */}
-        <div className="p-8">
+        <div className="p-8 bg-white/5">
           {currentStep === 1 && (
             <div className="space-y-8 animate-fadeIn">
               <div className="grid grid-cols-2 gap-4">
@@ -77,13 +77,13 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
                     <button
                       key={mood.id}
                       onClick={() => handleMoodSelect(mood.id)}
-                      className={`p-5 rounded-2xl border border-gray-200/60 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:border-opacity-80 ${mood.bgColor} ${mood.borderColor}`}
+                      className={`p-5 rounded-2xl border border-white/30 bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:bg-white/20 hover:border-white/50 ${mood.borderColor}`}
                     >
                       <div className="flex flex-col items-center space-y-3">
                         <div className={`p-3 rounded-full bg-gradient-to-r ${mood.color} text-white transition-transform duration-200 hover:scale-105`}>
                           <IconComponent size={20} />
                         </div>
-                        <span className="font-light text-gray-700 text-sm tracking-wide">{mood.label}</span>
+                        <span className="font-light text-white text-sm tracking-wide">{mood.label}</span>
                       </div>
                     </button>
                   );
@@ -104,15 +104,15 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
 
               {/* Reason Input */}
               <div>
-                <label className="block text-gray-700 font-light mb-4 text-sm tracking-wide">
+                <label className="block text-white font-light mb-4 text-sm tracking-wide">
                   Why are you feeling this way?
                 </label>
                 <textarea
                   ref={textareaRef}
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  placeholder="Share what's on your mind... (optional)"
-                  className="w-full p-5 border border-gray-200/60 rounded-2xl focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent resize-none text-gray-900 placeholder-gray-400 font-light text-sm leading-relaxed"
+                  placeholder="Share what's on your mind..."
+                  className="w-full p-5 border border-white/30 bg-white/10 backdrop-blur-sm rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 resize-none text-white placeholder-white/60 font-light text-sm leading-relaxed"
                   rows={4}
                 />
               </div>
@@ -121,14 +121,14 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
               <div className="flex space-x-4">
                 <button
                   onClick={handleBack}
-                  className="flex-1 px-6 py-4 text-gray-500 hover:text-gray-700 font-light transition-colors text-sm tracking-wide"
+                  className="flex-1 px-6 py-4 text-white/70 hover:text-white font-light transition-colors text-sm tracking-wide border border-white/30 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={!reason.trim()}
-                  className="flex-1 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 disabled:from-gray-300 disabled:to-gray-400 text-white px-6 py-4 rounded-2xl font-light transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="flex-1 bg-gradient-to-r from-white/20 to-white/30 hover:from-white/30 hover:to-white/40 disabled:from-white/10 disabled:to-white/10 text-white px-6 py-4 rounded-2xl font-light transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center border border-white/30 backdrop-blur-sm"
                 >
                   <Send size={18} />
                 </button>

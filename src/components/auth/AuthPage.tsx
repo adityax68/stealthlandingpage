@@ -43,7 +43,14 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, initialMode = 'signu
 
       if (response.ok) {
         onAuthSuccess(data.access_token, data.user)
-        navigate('/dashboard')
+        // Check if there's pending mood data
+        const hasPendingMood = localStorage.getItem('moodAssessment') !== null
+        if (hasPendingMood) {
+          // Navigate to home to trigger mood assessment flow
+          navigate('/')
+        } else {
+          navigate('/dashboard')
+        }
       } else {
         // Handle specific error messages
         if (response.status === 401) {

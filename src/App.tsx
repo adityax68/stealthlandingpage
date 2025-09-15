@@ -18,6 +18,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import { AuthProvider } from './contexts/AuthContext'
 import { EmployeeModalProvider } from './contexts/EmployeeModalContext'
 import { ToastProvider } from './contexts/ToastContext'
+import { MoodProvider } from './contexts/MoodContext'
 import EmployeeRequestModal from './components/EmployeeRequestModal'
 
 function AppContent() {
@@ -327,14 +328,16 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <EmployeeModalProvider>
-        <ToastProvider>
-          <Router>
-            <AppContent />
-            <ToastContainer />
-          </Router>
-        </ToastProvider>
-      </EmployeeModalProvider>
+      <MoodProvider>
+        <EmployeeModalProvider>
+          <ToastProvider>
+            <Router>
+              <AppContent />
+              <ToastContainer />
+            </Router>
+          </ToastProvider>
+        </EmployeeModalProvider>
+      </MoodProvider>
     </AuthProvider>
   )
 }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from 'lucide-react'
+import MoodAssessment from './MoodAssessment'
+import { useMood } from '../contexts/MoodContext'
 
 interface Ripple {
   id: number
@@ -16,8 +18,11 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
   const navigate = useNavigate()
   const [isGlowing, setIsGlowing] = useState(false)
   const [ripples, setRipples] = useState<Ripple[]>([])
+  const [showMoodAssessment, setShowMoodAssessment] = useState(false)
+  const [, setHasShownMoodAssessment] = useState(false)
   const heroRef = useRef<HTMLElement>(null)
   const rippleId = useRef(0)
+  const { setMoodData, setHasPendingMoodData } = useMood()
 
   useEffect(() => {
     // Start glow animation immediately
@@ -27,6 +32,23 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
 
     return () => {
       clearTimeout(glowTimer)
+    }
+  }, [])
+
+  // Auto-show mood assessment after a short delay
+  useEffect(() => {
+    const hasShownBefore = sessionStorage.getItem('hasShownMoodAssessment')
+    
+    if (!hasShownBefore) {
+      const moodTimer = setTimeout(() => {
+        setShowMoodAssessment(true)
+        setHasShownMoodAssessment(true)
+        sessionStorage.setItem('hasShownMoodAssessment', 'true')
+      }, 2000) // Show after 2 seconds
+
+      return () => {
+        clearTimeout(moodTimer)
+      }
     }
   }, [])
 
@@ -49,6 +71,27 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
     setTimeout(() => {
       setRipples(prev => prev.filter(ripple => ripple.id !== newRipple.id))
     }, 1500)
+  }
+
+  const handleMoodAssessmentComplete = (mood: string, reason: string) => {
+    setMoodData(mood, reason)
+    setShowMoodAssessment(false)
+    
+    if (isAuthenticated) {
+      // For logged-in users, open chat directly
+      // We'll trigger this through a custom event that ChatBot can listen to
+      window.dispatchEvent(new CustomEvent('openChatWithMood', { 
+        detail: { mood, reason } 
+      }))
+    } else {
+      // For logged-out users, set pending mood data and redirect to login
+      setHasPendingMoodData(true)
+      navigate('/auth')
+    }
+  }
+
+  const handleMoodAssessmentSkip = () => {
+    setShowMoodAssessment(false)
   }
 
   return (
@@ -228,6 +271,13 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
           </div>
         </div>
       </div>
+
+      {/* Mood Assessment Modal */}
+      <MoodAssessment
+        isVisible={showMoodAssessment}
+        onComplete={handleMoodAssessmentComplete}
+        onSkip={handleMoodAssessmentSkip}
+      />
     </section>
   )
 }

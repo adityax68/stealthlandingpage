@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Paperclip } from 'lucide-react';
+import { Send, X, Paperclip } from 'lucide-react';
 import { API_ENDPOINTS } from '../config/api';
+import { useMood } from '../contexts/MoodContext';
 
 interface Message {
   id: number;
@@ -23,6 +24,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
   const [isNewChat, setIsNewChat] = useState(false);
   const [attachments, setAttachments] = useState<Array<{id: number, filename: string, isProcessed: boolean}>>([]);
   const [isProcessingDocument, setIsProcessingDocument] = useState(false);
+  const [hasInitializedWithMood, setHasInitializedWithMood] = useState(false);
+  
+  const { moodData, hasPendingMoodData, clearMoodData, setHasPendingMoodData } = useMood();
   
   // Function to start a new chat
   const handleNewChat = () => {
@@ -32,6 +36,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
     setIsNewChat(true);
     setAttachments([]);
     setIsProcessingDocument(false);
+    setHasInitializedWithMood(false);
     // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -73,6 +78,114 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
       }, 200);
     }
   }, [isOpen]);
+
+  // Handle mood data initialization - SINGLE useEffect to prevent duplicates
+  useEffect(() => {
+    if (isAuthenticated && moodData && !hasInitializedWithMood) {
+      // Open chat and initialize with mood data
+      setIsOpen(true);
+      setHasInitializedWithMood(true);
+      
+      // Create mood context message (not shown to user)
+      const moodContext = `I'm feeling ${moodData.mood}${moodData.reason ? ` because ${moodData.reason}` : ''}`;
+      
+      // Send the mood context directly to AI without showing user message
+      sendMoodMessage(moodContext);
+      
+      // Clear mood data after use
+      clearMoodData();
+    }
+  }, [isAuthenticated, moodData, hasInitializedWithMood, clearMoodData]);
+
+  // Handle pending mood data after login - SINGLE useEffect to prevent duplicates
+  useEffect(() => {
+    if (isAuthenticated && hasPendingMoodData && moodData && !hasInitializedWithMood) {
+      // Open chat and initialize with mood data
+      setIsOpen(true);
+      setHasInitializedWithMood(true);
+      setHasPendingMoodData(false);
+      
+      // Create mood context message (not shown to user)
+      const moodContext = `I'm feeling ${moodData.mood}${moodData.reason ? ` because ${moodData.reason}` : ''}`;
+      
+      // Send the mood context directly to AI without showing user message
+      sendMoodMessage(moodContext);
+      
+      // Clear mood data after use
+      clearMoodData();
+    }
+  }, [isAuthenticated, hasPendingMoodData, moodData, hasInitializedWithMood, clearMoodData, setHasPendingMoodData]);
+
+  // Listen for custom event to open chat with mood - SINGLE useEffect to prevent duplicates
+  useEffect(() => {
+    const handleOpenChatWithMood = (event: CustomEvent) => {
+      const { mood, reason } = event.detail;
+      if (isAuthenticated && !hasInitializedWithMood) {
+        setIsOpen(true);
+        setHasInitializedWithMood(true);
+        const moodContext = `I'm feeling ${mood}${reason ? ` because ${reason}` : ''}`;
+        
+        // Send mood context directly to AI without showing user message
+        sendMoodMessage(moodContext);
+      }
+    };
+
+    window.addEventListener('openChatWithMood', handleOpenChatWithMood as EventListener);
+    return () => {
+      window.removeEventListener('openChatWithMood', handleOpenChatWithMood as EventListener);
+    };
+  }, [isAuthenticated, hasInitializedWithMood]);
+
+  const sendMoodMessage = async (moodMessage: string) => {
+    setIsLoading(true);
+    setError(null);
+    setIsNewChat(false);
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+
+      const response = await fetch(API_ENDPOINTS.CHAT_SEND, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          message: moodMessage,
+          conversation_id: currentConversationId,
+          attachment_ids: []
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || errorData.error || 'Failed to send message');
+      }
+
+      const data = await response.json();
+      
+      const assistantMessage: Message = {
+        id: data.message_id,
+        role: 'assistant',
+        content: data.assistant_message,
+        created_at: new Date().toISOString()
+      };
+
+      // Only add assistant message, no user message if hideUserMessage is true
+      setMessages(prev => [...prev, assistantMessage]);
+      setCurrentConversationId(data.conversation_id);
+      
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
+      setError(errorMessage);
+      console.error('Chat error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!message.trim() || isLoading) return;
@@ -255,8 +368,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
         className="fixed bottom-6 right-6 z-50 cursor-pointer"
         onClick={() => setIsOpen(true)}
       >
-        <div className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-500 hover:to-purple-700 text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110">
-          <MessageCircle size={24} />
+        <div className="bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110">
+          <Send size={20} />
         </div>
       </div>
 
@@ -264,10 +377,10 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
       {isOpen && (
         <div className="fixed bottom-6 right-6 z-50 w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
           {/* Header - Fixed */}
-          <div className="bg-gradient-to-r from-cyan-400 to-purple-600 text-white p-4 flex items-center justify-between flex-shrink-0 z-10">
+          <div className="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-4 flex items-center justify-between flex-shrink-0 z-10">
             <div className="flex items-center space-x-3">
-              <MessageCircle size={20} />
-              <span className="font-semibold text-lg">Acutie</span>
+              <Send size={18} />
+              <span className="font-light text-lg tracking-wide">Acutie</span>
             </div>
             <div className="flex items-center space-x-2">
               {/* New Chat Button - Only show when there are messages */}
@@ -314,11 +427,11 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
             >
               {messages.length === 0 && !isLoading && (
                 <div className="text-center text-gray-500 py-12">
-                  <MessageCircle size={48} className="mx-auto mb-4 text-gray-300" />
-                  <p className="text-gray-600 font-medium mb-2">
+                  <Send size={48} className="mx-auto mb-4 text-gray-300" />
+                  <p className="text-gray-600 font-light mb-2 text-sm tracking-wide">
                     {isNewChat ? 'New conversation started' : 'Start a conversation with Acutie'}
                   </p>
-                  <p className="text-sm text-gray-500">I'm here to listen, provide emotional support, and offer guidance if needed</p>
+                  <p className="text-xs text-gray-400 font-light">I'm here to listen, provide emotional support, and offer guidance if needed</p>
                 </div>
               )}
               
@@ -328,15 +441,15 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] px-3 py-2 rounded-xl shadow-sm ${
+                    className={`max-w-[80%] px-4 py-3 rounded-2xl shadow-sm ${
                       msg.role === 'user'
-                        ? 'bg-gradient-to-r from-cyan-400 to-purple-600 text-white'
-                        : 'bg-white text-gray-800 border border-gray-200'
+                        ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white'
+                        : 'bg-white text-gray-800 border border-gray-200/60'
                     }`}
                   >
-                    <p className="text-sm leading-tight">{msg.content}</p>
-                    <p className={`text-xs mt-1 ${
-                      msg.role === 'user' ? 'text-cyan-200' : 'text-gray-500'
+                    <p className="text-sm leading-relaxed font-light">{msg.content}</p>
+                    <p className={`text-xs mt-2 font-light ${
+                      msg.role === 'user' ? 'text-slate-300' : 'text-gray-400'
                     }`}>
                       {new Date(msg.created_at).toLocaleTimeString([], { 
                         hour: '2-digit', 
@@ -439,9 +552,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
                 <button
                   onClick={handleSendMessage}
                   disabled={(!message.trim() && attachments.length === 0) || isLoading}
-                  className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-500 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white p-3 rounded-full transition-all duration-200 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 disabled:from-gray-300 disabled:to-gray-400 text-white p-3 rounded-full transition-all duration-200 disabled:cursor-not-allowed"
                 >
-                  <Send size={20} />
+                  <Send size={18} />
                 </button>
               </div>
             </div>

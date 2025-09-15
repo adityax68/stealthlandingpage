@@ -64,7 +64,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, initialMode = 'signu
     }
   }
 
-  const handleSignup = async (name: string, email: string, password: string) => {
+  const handleSignup = async (signupData: any) => {
     setIsLoading(true)
     setError('')
     
@@ -74,14 +74,23 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, initialMode = 'signu
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ full_name: name, email, password, username: email }),
+        body: JSON.stringify({ 
+          full_name: signupData.name, 
+          email: signupData.email, 
+          password: signupData.password, 
+          username: signupData.email,
+          age: signupData.age,
+          country: signupData.country,
+          state: signupData.state,
+          city: signupData.city
+        }),
       })
 
       const data = await response.json()
 
       if (response.ok) {
         // After successful signup, automatically login to get the token
-        await handleLogin(email, password)
+        await handleLogin(signupData.email, signupData.password)
       } else {
         // Handle specific signup error messages
         if (response.status === 400) {

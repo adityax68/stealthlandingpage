@@ -33,7 +33,7 @@ function AppContent() {
   const [searchParams] = useSearchParams()
   
   // Use the new AuthContext
-  const { user, isAuthenticated, logout, refreshToken } = useAuth()
+  const { user, isAuthenticated, logout, refreshToken, isRefreshing } = useAuth()
 
 
   // Remove old authentication logic - now handled by AuthContext
@@ -63,6 +63,8 @@ function AppContent() {
 
   const handleLogout = async () => {
     await logout()
+    // Clear browser history and navigate to home
+    window.history.replaceState(null, '', '/')
     navigate('/', { replace: true })
   }
 
@@ -149,7 +151,11 @@ function AppContent() {
             </main>
         } />
         <Route path="/dashboard" element={
-          isAuthenticated ? (
+          isRefreshing ? (
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="w-8 h-8 border-4 border-primary-start/30 border-t-primary-start rounded-full animate-spin"></div>
+            </div>
+          ) : isAuthenticated ? (
             <ErrorBoundary>
               <Dashboard onLogout={handleLogout} user={user} />
             </ErrorBoundary>

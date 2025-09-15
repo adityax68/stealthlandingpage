@@ -28,11 +28,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(sessionInfo.user);
     setIsAuthenticated(sessionInfo.isAuthenticated);
 
-    // Set up periodic session check
+    // Set up periodic session check - only update if state actually changed
     const interval = setInterval(() => {
       const currentSession = authService.getSessionInfo();
-      setUser(currentSession.user);
-      setIsAuthenticated(currentSession.isAuthenticated);
+      setUser(prevUser => {
+        if (JSON.stringify(prevUser) !== JSON.stringify(currentSession.user)) {
+          return currentSession.user;
+        }
+        return prevUser;
+      });
+      setIsAuthenticated(prevAuth => {
+        if (prevAuth !== currentSession.isAuthenticated) {
+          return currentSession.isAuthenticated;
+        }
+        return prevAuth;
+      });
     }, 30000); // Check every 30 seconds
 
     return () => clearInterval(interval);

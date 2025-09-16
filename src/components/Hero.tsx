@@ -169,7 +169,7 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
                   {/* Line 3: "15 September" - Same size as Launching */}
                   <div className="relative mt-2">
                     <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent drop-shadow-2xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
-                      15 September
+                      2 October
                     </span>
                   </div>
                   

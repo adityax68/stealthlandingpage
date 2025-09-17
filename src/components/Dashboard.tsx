@@ -21,7 +21,8 @@ import {
   Zap,
   Target,
   Activity,
-  Clock
+  Clock,
+  BookOpen
 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 import { testCacheService } from '../services/testCacheService'
@@ -37,7 +38,7 @@ interface DashboardProps {
   user: any
 }
 
-type Tab = 'assessment' | 'history' | 'hr' | 'settings' | 'support'
+type Tab = 'assessment' | 'history' | 'hr' | 'settings' | 'support' | 'researches'
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const navigate = useNavigate()
@@ -939,6 +940,29 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     setExpandedRows(new Set())
   }
 
+  const renderResearchesContent = () => {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8 min-h-full">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
+            <span className="gradient-text">Researches</span>
+          </h1>
+          <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto px-4">
+            Research content will be available here soon.
+          </p>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8 text-center">
+            <BookOpen className="w-16 h-16 text-white/50 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white mb-2">Coming Soon</h2>
+            <p className="text-white/70">Research content and resources will be available in this section.</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const renderMainContent = () => {
     console.log('Rendering main content, activeTab:', activeTab)
     switch (activeTab) {
@@ -950,6 +974,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         return <EmployeeSupport />
       case 'hr':
         return <HRDashboard user={user} />
+      case 'researches':
+        return renderResearchesContent()
       case 'settings':
         return renderSettingsContent()
       default:
@@ -1054,6 +1080,19 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               <span className="font-medium text-sm">HR Dashboard</span>
             </button>
           )}
+
+          {/* Researches */}
+          <button
+            onClick={() => handleTabSwitch('researches')}
+            className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+              activeTab === 'researches'
+                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                : 'text-white/70 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span className="font-medium text-sm">Researches</span>
+          </button>
 
           {/* Admin Navigation - Only show if user is admin */}
           {user?.role === 'admin' && (
@@ -1198,6 +1237,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                   <span className="font-medium text-sm">HR Dashboard</span>
                 </button>
               )}
+
+              {/* Researches */}
+              <button
+                onClick={() => {
+                  handleTabSwitch('researches')
+                  setIsSidebarOpen(false)
+                }}
+                className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                  activeTab === 'researches'
+                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
+                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <BookOpen className="w-4 h-4" />
+                <span className="font-medium text-sm">Researches</span>
+              </button>
 
               {/* Admin Navigation - Only show if user is admin */}
               {user?.role === 'admin' && (

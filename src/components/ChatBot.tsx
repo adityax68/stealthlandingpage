@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, X, Paperclip } from 'lucide-react';
+import { Send, X, Paperclip, MessageCircleMore } from 'lucide-react';
 import { API_ENDPOINTS } from '../config/api';
 import { useMood } from '../contexts/MoodContext';
 import { useToast } from '../contexts/ToastContext';
@@ -338,7 +338,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
         onClick={() => setIsOpen(true)}
       >
         <div className="bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110">
-          <Send size={20} />
+          <MessageCircleMore size={20} />
         </div>
       </div>
 
@@ -348,7 +348,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
           {/* Header - Fixed */}
           <div className="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-4 flex items-center justify-between flex-shrink-0 z-10">
             <div className="flex items-center space-x-3">
-              <Send size={18} />
+              <MessageCircleMore size={18} />
               <span className="font-light text-lg tracking-wide">Acutie</span>
             </div>
             <div className="flex items-center space-x-2">

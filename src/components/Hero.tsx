@@ -22,7 +22,7 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
   const [, setHasShownMoodAssessment] = useState(false)
   const heroRef = useRef<HTMLElement>(null)
   const rippleId = useRef(0)
-  const { setMoodData, setHasPendingMoodData } = useMood()
+  const { setMoodData } = useMood()
 
   useEffect(() => {
     // Start glow animation immediately
@@ -77,13 +77,9 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
     setMoodData(mood, reason)
     setShowMoodAssessment(false)
     
-    if (!isAuthenticated) {
-      // For logged-out users, set pending mood data and redirect to login
-      setHasPendingMoodData(true)
-      navigate('/auth')
-    }
-    // For logged-in users, ChatBot will automatically detect moodData change and open
-  }, [isAuthenticated, setMoodData, setHasPendingMoodData, navigate])
+    // For both authenticated and guest users, SessionChatBot will automatically detect moodData change and open
+    // No need to redirect to login - users can chat immediately
+  }, [setMoodData])
 
   const handleMoodAssessmentSkip = useCallback(() => {
     setShowMoodAssessment(false)
@@ -266,6 +262,7 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
           </div>
         </div>
       </div>
+
 
       {/* Mood Assessment Modal */}
       <MoodAssessment

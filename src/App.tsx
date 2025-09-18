@@ -8,7 +8,7 @@ import SplashScreen from './components/SplashScreen'
 import AuthPage from './components/auth/AuthPage'
 import Dashboard from './components/Dashboard'
 import AdminDashboard from './components/admin/AdminDashboard'
-import ChatBot from './components/ChatBot'
+import SessionChatBot from './components/SessionChatBot'
 import ToastContainer from './components/ui/ToastContainer'
 import TestSelector from './components/assessment/TestSelector'
 import DynamicTestRunner from './components/assessment/DynamicTestRunner'
@@ -18,7 +18,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { EmployeeModalProvider } from './contexts/EmployeeModalContext'
 import { ToastProvider } from './contexts/ToastContext'
-import { MoodProvider } from './contexts/MoodContext'
+import { MoodProvider, useMood } from './contexts/MoodContext'
 import SessionNotification from './components/SessionNotification'
 import EmployeeRequestModal from './components/EmployeeRequestModal'
 
@@ -34,6 +34,7 @@ function AppContent() {
   
   // Use the new AuthContext
   const { user, isAuthenticated, logout, refreshToken, isRefreshing } = useAuth()
+  const { moodData, clearMoodData } = useMood()
 
 
   // Remove old authentication logic - now handled by AuthContext
@@ -207,8 +208,12 @@ function AppContent() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       
-      {/* ChatBot - Always visible when authenticated */}
-      <ChatBot isAuthenticated={isAuthenticated} />
+      {/* SessionChatBot - Always visible, works for both authenticated and guest users */}
+      <SessionChatBot 
+        isAuthenticated={isAuthenticated} 
+        moodData={moodData} 
+        onMoodDataClear={clearMoodData}
+      />
       
       {/* Employee Request Modal - Rendered at app level */}
       <EmployeeRequestModal onRoleUpdate={handleUserRoleUpdate} />

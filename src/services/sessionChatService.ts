@@ -1,4 +1,4 @@
-import { api } from './apiClient';
+import { API_ENDPOINTS } from '../config/api';
 
 export interface SessionChatMessage {
   message: string;
@@ -91,13 +91,24 @@ class SessionChatService {
       console.log('Sending message with session ID:', sessionId);
       console.log('Message content:', message);
       
-      const response = await api.post<SessionChatResponse>('/api/v1/session-chat/send', {
-        message,
-        session_identifier: sessionId
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message,
+          session_identifier: sessionId
+        })
       });
       
-      console.log('Message sent successfully:', response.data);
-      return response.data;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Message sent successfully:', data);
+      return data;
     } catch (error) {
       console.error('Error in sendMessage:', error);
       console.error('Error details:', {
@@ -110,17 +121,39 @@ class SessionChatService {
   }
 
   async createSubscription(planType: 'free' | 'basic' | 'premium'): Promise<SubscriptionResponse> {
-    const response = await api.post<SubscriptionResponse>('/api/v1/session-chat/subscribe', {
-      plan_type: planType
+    const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/subscribe`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        plan_type: planType
+      })
     });
-    return response.data;
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
   }
 
   async validateAccessCode(accessCode: string): Promise<AccessCodeResponse> {
-    const response = await api.post<AccessCodeResponse>('/api/v1/session-chat/access-code', {
-      access_code: accessCode
+    const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/access-code`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        access_code: accessCode
+      })
     });
-    return response.data;
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
   }
 
   async linkSessionToSubscription(subscriptionToken: string): Promise<void> {
@@ -128,21 +161,61 @@ class SessionChatService {
       session_identifier: this.getSessionId(),
       subscription_token: subscriptionToken
     });
-    await api.post(`/api/v1/session-chat/link-session?${params.toString()}`);
+    
+    const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/link-session?${params.toString()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
   }
 
   async getConversation(): Promise<SessionConversation> {
-    const response = await api.get<SessionConversation>(`/api/v1/session-chat/conversation/${this.getSessionId()}`);
-    return response.data;
+    const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/conversation/${this.getSessionId()}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
   }
 
   async getUsageInfo(): Promise<any> {
-    const response = await api.get(`/api/v1/session-chat/usage/${this.getSessionId()}`);
-    return response.data;
+    const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/usage/${this.getSessionId()}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
   }
 
   async deleteConversation(): Promise<void> {
-    await api.delete(`/api/v1/session-chat/conversation/${this.getSessionId()}`);
+    const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/conversation/${this.getSessionId()}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     // Clear session and create new one
     localStorage.removeItem('sessionId');
     this.initializeSession();

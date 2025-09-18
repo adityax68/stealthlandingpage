@@ -35,16 +35,17 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
     }
   }, [])
 
-  // Auto-show mood assessment after a short delay
+  // Auto-show mood assessment after splash screen completes
   useEffect(() => {
     const hasShownBefore = sessionStorage.getItem('hasShownMoodAssessment')
+    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash')
     
-    if (!hasShownBefore) {
+    if (!hasShownBefore && hasSeenSplash) {
       const moodTimer = setTimeout(() => {
         setShowMoodAssessment(true)
         setHasShownMoodAssessment(true)
         sessionStorage.setItem('hasShownMoodAssessment', 'true')
-      }, 500) // Show after 500ms
+      }, 1000) // Show after 1 second of splash completion
 
       return () => {
         clearTimeout(moodTimer)

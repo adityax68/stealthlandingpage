@@ -4,7 +4,7 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import Features from './components/Features'
 import Footer from './components/Footer'
-import SplashScreen from './components/SplashScreen'
+import VideoSplashScreen from './components/VideoSplashScreen'
 import AuthPage from './components/auth/AuthPage'
 import Dashboard from './components/Dashboard'
 import AdminDashboard from './components/admin/AdminDashboard'
@@ -56,6 +56,7 @@ function AppContent() {
   const handleSplashComplete = () => {
     setShowSplash(false)
     setHasSeenSplash(true)
+    sessionStorage.setItem('hasSeenSplash', 'true')
     // Navigate to home page after splash screen completes
     if (location.pathname !== '/') {
       navigate('/', { replace: true })
@@ -112,7 +113,7 @@ function AppContent() {
 
 
   if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />
+    return <VideoSplashScreen onComplete={handleSplashComplete} />
   }
 
   // Loading is now handled by AuthContext

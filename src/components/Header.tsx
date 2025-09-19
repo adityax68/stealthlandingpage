@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#home' },
     { label: 'Features', href: '#features' },
-    { label: 'Products', href: '#home' },
+    { label: 'Pricing', href: '#pricing' },
     { label: 'Contact', href: '#footer' }
   ]
 
@@ -22,6 +22,8 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
     setIsMenuOpen(false)
     if (href === '#features') {
       document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+    } else if (href === '#pricing') {
+      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
     } else if (href === '#footer') {
       document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })
     } else {
@@ -32,6 +34,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
       }
     }
   }
+
 
 
 
@@ -64,11 +67,6 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
                 {item.label}
               </a>
             ))}
-            {isAuthenticated && (
-              <div className="relative">
-                {/* Clean header - no settings icon */}
-              </div>
-            )}
             {isAuthenticated ? (
               <button
                 onClick={() => navigate('/dashboard')}
@@ -140,8 +138,6 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
           </nav>
         )}
       </div>
-      
-
     </header>
   )
 }

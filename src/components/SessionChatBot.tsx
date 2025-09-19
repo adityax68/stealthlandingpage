@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, Send, X, AlertCircle, Trash2 } from 'lucide-react';
+import { MessageCircle, Send, X, AlertCircle } from 'lucide-react';
 import { sessionChatService } from '../services/sessionChatService';
 import type { SessionChatResponse, SubscriptionResponse } from '../services/sessionChatService';
 import SubscriptionModal from './SubscriptionModal';
@@ -56,6 +56,19 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
       }, 200);
     }
   }, [isOpen]);
+
+  // Listen for custom event to open chatbot
+  useEffect(() => {
+    const handleOpenChatbot = () => {
+      setIsOpen(true);
+    };
+
+    window.addEventListener('openChatbot', handleOpenChatbot);
+    
+    return () => {
+      window.removeEventListener('openChatbot', handleOpenChatbot);
+    };
+  }, []);
 
   // Handle mood data initialization
   useEffect(() => {
@@ -264,6 +277,7 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     }
   };
 
+
   const loadConversation = async () => {
     try {
       setIsLoadingUsage(true);
@@ -316,18 +330,6 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     }
   };
 
-  const clearConversation = async () => {
-    try {
-      await sessionChatService.deleteConversation();
-      setMessages([]);
-      
-      // Keep everything exactly the same - only clear the conversation history
-      // Don't change subscription, plan, or remaining messages at all
-      // DO NOT refresh usage info - it should remain unchanged
-    } catch (error) {
-      console.error('Failed to clear conversation:', error);
-    }
-  };
 
   // Load conversation when chat opens
   useEffect(() => {
@@ -355,10 +357,10 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
 
   const getUsageColor = () => {
     const remaining = getRemainingMessages();
-    if (remaining === Infinity) return 'text-green-600';
-    if (remaining <= 1) return 'text-red-600';
-    if (remaining <= 3) return 'text-yellow-600';
-    return 'text-gray-600';
+    if (remaining === Infinity) return 'text-green-300';
+    if (remaining <= 1) return 'text-red-300';
+    if (remaining <= 3) return 'text-yellow-300';
+    return 'text-white/90';
   };
 
   const getPlanBadge = (planType: string) => {
@@ -405,74 +407,59 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
             {/* Main Header */}
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <div>
+                <div className="flex items-center gap-3">
                   <h3 className="font-semibold">Acutie</h3>
-                  <div className="text-xs opacity-90">
-                    {isLoadingUsage ? (
-                      <div className="flex items-center space-x-1">
-                        <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                        <span className="ml-1">Loading...</span>
-                      </div>
-                    ) : usageInfo.plan_type === 'error' ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-red-300">Error loading plan</span>
-                        <button
-                          onClick={retryLoadConversation}
-                          className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors"
-                        >
-                          Retry
-                        </button>
-                      </div>
-                    ) : usageInfo.plan_type === 'free' ? (
-                      <span className={getUsageColor()}>
-                        {getRemainingMessagesText()} messages left
-                      </span>
-                    ) : usageInfo.plan_type === 'basic' ? (
-                      <span className={getUsageColor()}>
-                        {getRemainingMessagesText()} messages left
-                      </span>
-                    ) : usageInfo.plan_type === 'premium' ? (
-                      <span className="text-green-300">Unlimited messages</span>
-                    ) : null}
-                  </div>
+                  {/* Plan Badge - Aligned with Acutie name */}
+                  {currentPlan && (
+                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${getPlanBadge(currentPlan).color}`}>
+                      {getPlanBadge(currentPlan).text}
+                    </div>
+                  )}
                 </div>
-                {/* Plan Badge */}
-                {currentPlan && (
-                  <div className={`px-2 py-1 rounded-full text-xs font-medium ${getPlanBadge(currentPlan).color}`}>
-                    {getPlanBadge(currentPlan).text}
-                  </div>
-                )}
+                <div className="text-xs opacity-90">
+                  {isLoadingUsage ? (
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      <span className="ml-1">Loading...</span>
+                    </div>
+                  ) : usageInfo.plan_type === 'error' ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-red-300">Error loading plan</span>
+                      <button
+                        onClick={retryLoadConversation}
+                        className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  ) : usageInfo.plan_type === 'free' ? (
+                    <span className={getUsageColor()}>
+                      {getRemainingMessagesText()} messages left
+                    </span>
+                  ) : usageInfo.plan_type === 'basic' ? (
+                    <span className={getUsageColor()}>
+                      {getRemainingMessagesText()} messages left
+                    </span>
+                  ) : usageInfo.plan_type === 'premium' ? (
+                    <span className={getUsageColor()}>
+                      {getRemainingMessagesText()} messages left
+                    </span>
+                  ) : null}
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 {/* Upgrade Button */}
                 {!showAccessCodeInput && (
                   <button
                     onClick={handleUpgradeClick}
-                    className="px-3 py-1 bg-white/20 hover:bg-white/30 text-white text-xs rounded-lg transition-colors"
+                    className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white text-sm rounded-lg transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:scale-105"
                     title="Upgrade plan"
                   >
                     Upgrade
                   </button>
                 )}
-                {/* Subscription Modal Button */}
-                {!showAccessCodeInput && (
-                  <button
-                    onClick={() => setShowSubscriptionModal(true)}
-                    className="px-3 py-1 bg-green-600/80 hover:bg-green-600 text-white text-xs rounded-lg transition-colors"
-                    title="View subscription plans"
-                  >
-                    Plans
-                  </button>
-                )}
-                <button
-                  onClick={clearConversation}
-                  className="p-1 hover:bg-blue-700 rounded transition-colors"
-                  title="Clear conversation"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
                 <button
                   onClick={() => setIsOpen(false)}
                   className="p-1 hover:bg-blue-700 rounded transition-colors"
@@ -483,53 +470,55 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
               </div>
             </div>
             
-            {/* Access Code Input */}
+            {/* Access Code Input - Clean & Lean */}
             {showAccessCodeInput && (
-              <div className="px-4 pb-4 border-t border-blue-500">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={accessCode}
-                      onChange={(e) => {
-                        setAccessCode(e.target.value);
-                        setAccessCodeError(null); // Clear error when typing
-                      }}
-                      placeholder="Enter access code..."
-                      className={`flex-1 px-3 py-2 text-sm bg-white/10 border rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 ${
-                        accessCodeError 
-                          ? 'border-red-400 focus:border-red-400' 
-                          : 'border-white/30 focus:border-white/50'
-                      }`}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          handleAccessCodeSubmit();
-                        }
-                      }}
-                    />
-                    <button
-                      onClick={handleAccessCodeSubmit}
-                      disabled={!accessCode.trim() || isValidatingAccessCode}
-                      className="px-3 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 text-white text-sm rounded-lg transition-colors disabled:cursor-not-allowed"
-                    >
-                      {isValidatingAccessCode ? '...' : 'Apply'}
-                    </button>
-                    <button
-                      onClick={handleCancelUpgrade}
-                      className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-                      title="Cancel"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                  {/* Error Message */}
-                  {accessCodeError && (
-                    <div className="text-red-300 text-xs flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {accessCodeError}
-                    </div>
-                  )}
+              <div className="px-4 pb-3 border-t border-white/20">
+                <div className="flex items-center gap-2 mt-3">
+                  <input
+                    type="text"
+                    value={accessCode}
+                    onChange={(e) => {
+                      setAccessCode(e.target.value);
+                      setAccessCodeError(null);
+                    }}
+                    placeholder="Enter access code..."
+                    className={`flex-1 px-3 py-2 text-sm bg-white/10 border rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all ${
+                      accessCodeError 
+                        ? 'border-red-400 focus:border-red-400' 
+                        : 'border-white/30 focus:border-white/50'
+                    }`}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleAccessCodeSubmit();
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <button
+                    onClick={handleAccessCodeSubmit}
+                    disabled={!accessCode.trim() || isValidatingAccessCode}
+                    className="px-4 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 text-white text-sm rounded-lg transition-all disabled:cursor-not-allowed font-medium"
+                  >
+                    {isValidatingAccessCode ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      'Apply'
+                    )}
+                  </button>
+                  <button
+                    onClick={handleCancelUpgrade}
+                    className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                    title="Cancel"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
+                {accessCodeError && (
+                  <div className="text-red-300 text-xs mt-2 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {accessCodeError}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -563,18 +552,16 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 px-2 py-1 rounded-2xl">
-                  <div className="flex items-center space-x-1">
-                    <span className="text-sm text-gray-600 mr-2">Acutie is typing</span>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                    </div>
+                <div className="bg-gray-100 px-3 py-2 rounded-2xl">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
                 </div>
               </div>
             )}
+
 
             <div ref={messagesEndRef} />
           </div>
@@ -624,49 +611,7 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
               </div>
             )}
             
-            {isLoading && (
-              <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <div className="flex items-center">
-                  <div className="flex space-x-1 mr-2">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                  </div>
-                  <span className="text-sm text-blue-800">
-                    Acutie is typing your response...
-                  </span>
-                </div>
-              </div>
-            )}
             
-            {/* Access Code Input */}
-            {!isLoadingUsage && showAccessCodeInput && (
-              <div className="mb-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={accessCode}
-                    onChange={(e) => setAccessCode(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleAccessCodeSubmit()}
-                    placeholder="Enter your access code..."
-                    className="flex-1 px-3 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 bg-white placeholder-gray-500"
-                  />
-                  <button
-                    onClick={handleAccessCodeSubmit}
-                    disabled={!accessCode.trim()}
-                    className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    Activate
-                  </button>
-                  <button
-                    onClick={() => setShowAccessCodeInput(false)}
-                    className="text-purple-600 hover:text-purple-800 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
             
             <div className="flex gap-3">
               <input

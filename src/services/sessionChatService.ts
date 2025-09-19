@@ -204,22 +204,6 @@ class SessionChatService {
     return await response.json();
   }
 
-  async deleteConversation(): Promise<void> {
-    const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/conversation/${this.getSessionId()}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    // Clear session and create new one
-    localStorage.removeItem('sessionId');
-    this.initializeSession();
-  }
 
   // Helper method to check if user needs subscription
   needsSubscription(response: SessionChatResponse): boolean {

@@ -55,7 +55,6 @@ const OrganizationList: React.FC = () => {
       
       // Removed cache check - using direct API calls with database indexes
 
-      console.log('🌐 Fetching organizations from API');
       let endpoint = `${API_ENDPOINTS.ADMIN_ORGANISATIONS}?skip=${skip}&limit=${organizationsPerPage}`;
       
       if (orgId || hrEmail) {

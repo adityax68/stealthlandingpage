@@ -6,8 +6,6 @@ import { testCacheService } from '../services/testCacheService';
 import type { TestDetails, TestDefinition } from '../types/testTypes';
 
 export const testInterfaceFix = () => {
-  console.log('🔧 Testing Interface Fix');
-  console.log('========================');
 
   // Test 1: TestDefinition interface
   const testDef: TestDefinition = {
@@ -20,7 +18,6 @@ export const testInterfaceFix = () => {
     is_active: true,
     created_at: new Date().toISOString()
   };
-  console.log('✅ TestDefinition interface works:', testDef.test_name);
 
   // Test 2: TestDetails interface (simple structure)
   const testDetails1: TestDetails = {
@@ -44,7 +41,6 @@ export const testInterfaceFix = () => {
       }
     ]
   };
-  console.log('✅ TestDetails interface (simple) works:', testDetails1.test_name);
 
   // Test 3: TestDetails interface (complex structure)
   const testDetails2: TestDetails = {
@@ -59,20 +55,15 @@ export const testInterfaceFix = () => {
     test_definition: testDef,
     scoring_ranges: []
   };
-  console.log('✅ TestDetails interface (complex) works:', testDetails2.test_name);
 
   // Test 4: Cache service with both structures
   testCacheService.cacheTestDetails('phq9', testDetails1);
-  const cached1 = testCacheService.getCachedTestDetails('phq9');
-  console.log('✅ Cache service works with simple structure:', cached1?.test_name);
-
+  testCacheService.getCachedTestDetails('phq9');
   testCacheService.cacheTestDetails('gad7', testDetails2);
-  const cached2 = testCacheService.getCachedTestDetails('gad7');
-  console.log('✅ Cache service works with complex structure:', cached2?.test_name);
-
-  console.log('\n🎉 Interface fix verified!');
-  console.log('💡 Both simple and complex TestDetails structures work');
-  console.log('💡 Cache service handles both formats correctly');
+  testCacheService.getCachedTestDetails('gad7');
+  
+  // Return test objects to avoid unused warnings
+  return { testDef, testDetails1, testDetails2 };
 };
 
 // Export for use in browser console

@@ -27,13 +27,11 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
       // Check cache first
       const cachedTests = testCacheService.getCachedTestDefinitions()
       if (cachedTests) {
-        console.log('📦 Loading tests from cache')
         setTests(cachedTests)
         setLoading(false)
         return
       }
       
-      console.log('🌐 Fetching tests from API')
       
       // Prepare headers - only add Authorization if token exists
       const headers: Record<string, string> = {
@@ -51,7 +49,6 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
       
       if (response.ok) {
         const data = await response.json()
-        console.log('✅ Successfully loaded tests:', data)
         setTests(data)
         
         // Cache the results
@@ -61,7 +58,6 @@ const TestSelector: React.FC<TestSelectorProps> = ({ onTestSelect, onBack }) => 
         const categories = [...new Set(data.map((test: any) => test.test_category))] as string[]
         testCacheService.cacheTestCategories(categories)
         
-        console.log('💾 Cached test definitions and categories')
       } else {
         console.error('❌ API response not OK:', response.status, response.statusText)
         const errorText = await response.text()

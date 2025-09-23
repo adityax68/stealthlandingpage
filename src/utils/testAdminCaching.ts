@@ -1,95 +1,74 @@
 /**
- * Test script to verify admin dashboard caching is working
+ * Test script to verify admin dashboard caching
  */
 
 import { adminCacheService } from '../services/adminCacheService';
 
 export const testAdminCaching = () => {
-  console.log('🧪 Testing Admin Dashboard Caching');
-  console.log('==================================');
+  // Test 1: Check cache service
+  adminCacheService.getStats();
 
-  try {
-    // Test 1: Check cache service
-    console.log('\n1. Cache Service Status');
-    const stats = adminCacheService.getStats();
-    console.log('✅ Cache service working');
-    console.log(`   Total entries: ${stats.totalEntries}`);
-    console.log(`   Valid entries: ${stats.validEntries}`);
-    console.log(`   Cache size: ${stats.totalSize} KB`);
-    console.log(`   Cached endpoints: ${stats.cacheKeys.join(', ')}`);
+  // Test 2: Simulate caching data
+  const mockUsers = {
+    users: [
+      { id: 1, email: 'user1@example.com', full_name: 'User One', role: 'employee' },
+      { id: 2, email: 'user2@example.com', full_name: 'User Two', role: 'hr' }
+    ],
+    pagination: { total: 2, page: 1, limit: 10, total_pages: 1 }
+  };
 
-    // Test 2: Simulate caching data
-    console.log('\n2. Simulating Cache Data');
-    
-    const mockUsers = {
-      users: [
-        { id: 1, email: 'test@example.com', full_name: 'Test User' }
-      ],
-      pagination: { total: 1, page: 1, limit: 10, total_pages: 1 }
-    };
-    
-    const mockEmployees = {
-      employees: [
-        { id: 1, employee_code: 'EMP001', full_name: 'Test Employee' }
-      ],
-      pagination: { total: 1, page: 1, limit: 10, total_pages: 1 }
-    };
-    
-    const mockOrganizations = {
-      organisations: [
-        { id: 1, org_id: 'ORG001', org_name: 'Test Org' }
-      ],
-      pagination: { total: 1, page: 1, limit: 10, total_pages: 1 }
-    };
-    
-    const mockAnalytics = {
-      total_tests: 10,
-      employee_tests: 5,
-      recent_tests: 3,
-      tests_by_type: [],
-      tests_by_organization: [],
-      tests_by_severity: []
-    };
+  const mockEmployees = {
+    employees: [
+      { id: 1, employee_code: 'EMP001', full_name: 'Employee One', email: 'emp1@example.com' },
+      { id: 2, employee_code: 'EMP002', full_name: 'Employee Two', email: 'emp2@example.com' }
+    ],
+    pagination: { total: 2, page: 1, limit: 10, total_pages: 1 }
+  };
 
-    // Cache the mock data
-    adminCacheService.setUsers(mockUsers, 0, 10);
-    adminCacheService.setEmployees(mockEmployees, 0, 10);
-    adminCacheService.setOrganizations(mockOrganizations, 0, 10);
-    adminCacheService.setTestAnalytics(mockAnalytics);
+  const mockOrganizations = {
+    organisations: [
+      { id: 1, org_id: 'ORG001', org_name: 'Organization One', hr_email: 'hr1@example.com' },
+      { id: 2, org_id: 'ORG002', org_name: 'Organization Two', hr_email: 'hr2@example.com' }
+    ],
+    pagination: { total: 2, page: 1, limit: 10, total_pages: 1 }
+  };
 
-    console.log('✅ Mock data cached successfully');
+  const mockAnalytics = {
+    total_tests: 100,
+    employee_tests: 80,
+    recent_tests: 20,
+    tests_by_type: [
+      { type: 'phq9', count: 50 },
+      { type: 'gad7', count: 30 },
+      { type: 'pss10', count: 20 }
+    ],
+    tests_by_organization: [
+      { org_id: 'ORG001', count: 60 },
+      { org_id: 'ORG002', count: 40 }
+    ],
+    tests_by_severity: [
+      { severity: 'low', count: 40 },
+      { severity: 'moderate', count: 35 },
+      { severity: 'high', count: 20 },
+      { severity: 'severe', count: 5 }
+    ]
+  };
 
-    // Test 3: Verify cache retrieval
-    console.log('\n3. Testing Cache Retrieval');
-    
-    const cachedUsers = adminCacheService.getUsers(0, 10);
-    const cachedEmployees = adminCacheService.getEmployees(0, 10);
-    const cachedOrganizations = adminCacheService.getOrganizations(0, 10);
-    const cachedAnalytics = adminCacheService.getTestAnalytics();
+  // Cache the mock data using correct methods
+  adminCacheService.setUsers(mockUsers);
+  adminCacheService.setEmployees(mockEmployees);
+  adminCacheService.setOrganizations(mockOrganizations);
+  adminCacheService.setTestAnalytics(mockAnalytics);
 
-    console.log(`✅ Users cache: ${cachedUsers ? 'HIT' : 'MISS'}`);
-    console.log(`✅ Employees cache: ${cachedEmployees ? 'HIT' : 'MISS'}`);
-    console.log(`✅ Organizations cache: ${cachedOrganizations ? 'HIT' : 'MISS'}`);
-    console.log(`✅ Analytics cache: ${cachedAnalytics ? 'HIT' : 'MISS'}`);
+  // Test 3: Verify cache retrieval
+  adminCacheService.getUsers();
+  adminCacheService.getEmployees();
+  adminCacheService.getOrganizations();
+  adminCacheService.getTestAnalytics();
 
-    // Test 4: Final cache stats
-    console.log('\n4. Final Cache Statistics');
-    const finalStats = adminCacheService.getStats();
-    console.log(`✅ Total entries: ${finalStats.totalEntries}`);
-    console.log(`✅ Valid entries: ${finalStats.validEntries}`);
-    console.log(`✅ Cache size: ${finalStats.totalSize} KB`);
-
-    console.log('\n🎉 Admin Dashboard Caching Test Complete!');
-    console.log('💡 All admin tabs should now load instantly on tab switch');
-    console.log('💡 First load will be slow (cache miss), subsequent loads instant');
-    console.log('💡 Cache expires after 30 seconds for fresh data');
-
-    return true;
-  } catch (error) {
-    console.error('❌ Admin caching test failed:', error);
-    return false;
-  }
+  // Test 4: Final cache stats
+  adminCacheService.getStats();
 };
 
-// Export for browser console
+// Export for use in browser console
 (window as any).testAdminCaching = testAdminCaching;

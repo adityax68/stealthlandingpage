@@ -14,6 +14,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#home' },
     { label: 'Features', href: '#features' },
+    { label: 'Researches', href: '/researches' },
     { label: 'Pricing', href: '#pricing' },
     { label: 'Contact', href: '#footer' }
   ]
@@ -26,6 +27,8 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
       document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
     } else if (href === '#footer') {
       document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })
+    } else if (href === '/researches') {
+      navigate('/researches')
     } else {
       // Scroll to the Coming Soon section in the hero
       const heroSection = document.querySelector('section')

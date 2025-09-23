@@ -56,7 +56,6 @@ const UserList: React.FC = () => {
       
       // Removed cache check - using direct API calls with database indexes
 
-      console.log('🌐 Fetching users from API');
       const endpoint = searchTerm 
         ? `${API_ENDPOINTS.ADMIN_USERS_SEARCH}?email=${encodeURIComponent(searchTerm)}&skip=${skip}&limit=${usersPerPage}`
         : `${API_ENDPOINTS.ADMIN_USERS}?skip=${skip}&limit=${usersPerPage}`;

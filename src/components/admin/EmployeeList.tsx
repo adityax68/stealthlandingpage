@@ -58,7 +58,6 @@ const EmployeeList: React.FC = () => {
       
       // Removed cache check - using direct API calls with database indexes
 
-      console.log('🌐 Fetching employees from API');
       const endpoint = searchTerm 
         ? `${API_ENDPOINTS.ADMIN_EMPLOYEES_SEARCH}?employee_code=${encodeURIComponent(searchTerm)}&skip=${skip}&limit=${employeesPerPage}`
         : `${API_ENDPOINTS.ADMIN_EMPLOYEES}?skip=${skip}&limit=${employeesPerPage}`;

@@ -20,11 +20,12 @@ import UserList from './UserList';
 import EmployeeList from './EmployeeList';
 import OrganizationList from './OrganizationList';
 import TestAnalytics from './TestAnalytics';
+import ResearchManagement from './ResearchManagement';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface AdminDashboardProps {}
 
-type AdminTab = 'overview' | 'users' | 'employees' | 'organizations' | 'test-analytics'
+type AdminTab = 'overview' | 'users' | 'employees' | 'organizations' | 'test-analytics' | 'researches'
 
 interface OrganisationForm {
   org_name: string;
@@ -200,6 +201,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     fetchAdminStats();
     fetchMonthlyUserData();
   }, []);
+
+  // Track which tabs have been loaded
+  const [loadedTabs, setLoadedTabs] = useState<Set<AdminTab>>(new Set(['overview']));
+
+  // Handle tab change with lazy loading
+  const handleTabChange = (tab: AdminTab) => {
+    setActiveTab(tab);
+    
+    // Mark tab as loaded when clicked
+    if (!loadedTabs.has(tab)) {
+      setLoadedTabs(prev => new Set([...prev, tab]));
+    }
+  };
 
   // Add a loading state to prevent white page
   if (statsLoading && monthlyDataLoading) {
@@ -466,7 +480,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-2 mb-6">
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => setActiveTab('overview')}
+                onClick={() => handleTabChange('overview')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'overview'
                     ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
@@ -476,7 +490,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 Overview
               </button>
               <button
-                onClick={() => setActiveTab('users')}
+                onClick={() => handleTabChange('users')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'users'
                     ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
@@ -486,7 +500,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 Users
               </button>
               <button
-                onClick={() => setActiveTab('employees')}
+                onClick={() => handleTabChange('employees')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'employees'
                     ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
@@ -496,7 +510,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 Employees
               </button>
               <button
-                onClick={() => setActiveTab('organizations')}
+                onClick={() => handleTabChange('organizations')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'organizations'
                     ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
@@ -506,7 +520,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 Organizations
               </button>
               <button
-                onClick={() => setActiveTab('test-analytics')}
+                onClick={() => handleTabChange('test-analytics')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'test-analytics'
                     ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
@@ -514,6 +528,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 }`}
               >
                 Test Analytics
+              </button>
+              <button
+                onClick={() => handleTabChange('researches')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'researches'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
+                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Researches
               </button>
             </div>
           </div>
@@ -728,11 +752,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </>
           )}
 
-          {/* Tab Content */}
-          {activeTab === 'users' && <UserList />}
-          {activeTab === 'employees' && <EmployeeList />}
-          {activeTab === 'organizations' && <OrganizationList />}
-          {activeTab === 'test-analytics' && <TestAnalytics />}
+          {/* Tab Content - Only render when tab has been loaded */}
+          {activeTab === 'users' && loadedTabs.has('users') && <UserList />}
+          {activeTab === 'employees' && loadedTabs.has('employees') && <EmployeeList />}
+          {activeTab === 'organizations' && loadedTabs.has('organizations') && <OrganizationList />}
+          {activeTab === 'test-analytics' && loadedTabs.has('test-analytics') && <TestAnalytics />}
+          {activeTab === 'researches' && loadedTabs.has('researches') && <ResearchManagement />}
         </div>
       </div>
 

@@ -1,25 +1,16 @@
 /**
- * Demo script to test the browser cache functionality
- * This can be run in the browser console to test caching
+ * Test script to demonstrate browser cache service
  */
 
 import { testCacheService } from '../services/testCacheService';
 
 export const testCacheDemo = () => {
-  console.log('🧪 Testing Browser Cache Service');
-  console.log('================================');
-
   // Test 1: Cache test categories
-  console.log('\n1. Testing Test Categories Cache');
   const categories = ['depression', 'anxiety', 'stress', 'wellness'];
   testCacheService.cacheTestCategories(categories);
-  
-  const cachedCategories = testCacheService.getCachedTestCategories();
-  console.log('✅ Cached categories:', cachedCategories);
-  console.log('✅ Cache hit:', cachedCategories !== null);
+  testCacheService.getCachedTestCategories();
 
   // Test 2: Cache test definitions
-  console.log('\n2. Testing Test Definitions Cache');
   const testDefinitions = [
     {
       id: 1,
@@ -42,14 +33,10 @@ export const testCacheDemo = () => {
       created_at: new Date().toISOString()
     }
   ];
-  
   testCacheService.cacheTestDefinitions(testDefinitions);
-  const cachedDefinitions = testCacheService.getCachedTestDefinitions();
-  console.log('✅ Cached definitions:', cachedDefinitions?.length, 'tests');
-  console.log('✅ Cache hit:', cachedDefinitions !== null);
+  testCacheService.getCachedTestDefinitions();
 
   // Test 3: Cache test details
-  console.log('\n3. Testing Test Details Cache');
   const testDetails = {
     id: 1,
     test_code: 'phq9',
@@ -73,37 +60,18 @@ export const testCacheDemo = () => {
       }
     ]
   };
-  
   testCacheService.cacheTestDetails('phq9', testDetails);
-  const cachedDetails = testCacheService.getCachedTestDetails('phq9');
-  console.log('✅ Cached test details for PHQ-9:', cachedDetails?.test_name);
-  console.log('✅ Questions cached:', cachedDetails?.questions?.length, 'questions');
-  console.log('✅ Cache hit:', cachedDetails !== null);
+  testCacheService.getCachedTestDetails('phq9');
 
   // Test 4: Recent tests functionality
-  console.log('\n4. Testing Recent Tests');
-  const recentTests = testCacheService.getRecentTests();
-  console.log('✅ Recent tests count:', recentTests.length);
-  console.log('✅ Recent tests:', recentTests.map(t => t.test_name));
+  testCacheService.getRecentTests();
 
   // Test 5: Cache statistics
-  console.log('\n5. Cache Statistics');
-  const stats = testCacheService.getCacheStats();
-  console.log('✅ Total entries:', stats.totalEntries);
-  console.log('✅ Cache size:', stats.cacheSize, 'KB');
-  console.log('✅ Recent tests:', stats.recentTestsCount);
-  console.log('✅ Categories cached:', stats.categoriesCached);
-  console.log('✅ Definitions cached:', stats.definitionsCached);
+  testCacheService.getCacheStats();
 
   // Test 6: Cache invalidation
-  console.log('\n6. Testing Cache Invalidation');
   testCacheService.clearTestCache('phq9');
-  const clearedDetails = testCacheService.getCachedTestDetails('phq9');
-  console.log('✅ PHQ-9 cache cleared:', clearedDetails === null);
-
-  console.log('\n🎉 Cache Demo Complete!');
-  console.log('💡 Check localStorage for cached data');
-  console.log('💡 Try refreshing the page to see cache persistence');
+  testCacheService.getCachedTestDetails('phq9');
 };
 
 // Export for use in browser console

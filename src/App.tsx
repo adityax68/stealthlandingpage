@@ -14,6 +14,7 @@ import ToastContainer from './components/ui/ToastContainer'
 import TestSelector from './components/assessment/TestSelector'
 import DynamicTestRunner from './components/assessment/DynamicTestRunner'
 import TestResults from './components/assessment/TestResults'
+import ResearchesPage from './components/ResearchesPage'
 import ErrorBoundary from './components/ErrorBoundary'
 
 import { AuthProvider, useAuth } from './contexts/AuthContext'
@@ -126,7 +127,6 @@ function AppContent() {
         onRefresh={refreshToken}
         onDismiss={() => {
           // User dismissed the notification - they'll be logged out when token expires
-          console.log('Session notification dismissed by user');
         }}
         onLogout={handleLogout}
       />
@@ -206,6 +206,14 @@ function AppContent() {
           ) : (
             <Navigate to="/" replace />
           )
+        } />
+
+        <Route path="/researches" element={
+          <main>
+            <Header isAuthenticated={isAuthenticated} />
+            <ResearchesPage />
+            <Footer />
+          </main>
         } />
 
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -38,13 +38,11 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
       // Check cache first
       const cachedDetails = testCacheService.getCachedTestDetails(testCode)
       if (cachedDetails) {
-        console.log(`📦 Loading test details for ${testCode} from cache`)
         setTestDetails(cachedDetails)
         setLoading(false)
         return
       }
       
-      console.log(`🌐 Fetching test details for ${testCode} from API`)
       const response = await fetch(`${API_ENDPOINTS.TESTS_DEFINITIONS}/${testCode}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -57,7 +55,6 @@ const DynamicTestRunner: React.FC<DynamicTestRunnerProps> = ({
         
         // Cache the test details
         testCacheService.cacheTestDetails(testCode, data)
-        console.log(`💾 Cached test details for ${testCode}`)
       } else {
         throw new Error('Failed to load test details')
       }

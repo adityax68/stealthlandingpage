@@ -28,7 +28,6 @@ const TestAnalytics: React.FC = () => {
       
       // Removed cache check - using direct API calls with database indexes
 
-      console.log('🌐 Fetching test analytics from API');
       const token = localStorage.getItem('access_token');
       const response = await fetch(API_ENDPOINTS.ADMIN_TEST_ANALYTICS, {
         headers: {

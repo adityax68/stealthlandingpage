@@ -174,8 +174,6 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
     try {
       // Debug: Check token
       const token = localStorage.getItem('access_token');
-      console.log('Token from localStorage:', token);
-      console.log('Token length:', token ? token.length : 0);
       
       if (!token) {
         throw new Error('No authentication token found. Please log in again.');
@@ -194,12 +192,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ isAuthenticated }) => {
         })
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log('Error response:', errorData);
         throw new Error(errorData.detail || errorData.error || 'Failed to send message');
       }
 

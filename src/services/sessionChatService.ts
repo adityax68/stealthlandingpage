@@ -88,8 +88,6 @@ class SessionChatService {
   async sendMessage(message: string): Promise<SessionChatResponse> {
     try {
       const sessionId = this.getSessionId();
-      console.log('Sending message with session ID:', sessionId);
-      console.log('Message content:', message);
       
       const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/send`, {
         method: 'POST',
@@ -107,7 +105,6 @@ class SessionChatService {
       }
       
       const data = await response.json();
-      console.log('Message sent successfully:', data);
       return data;
     } catch (error) {
       console.error('Error in sendMessage:', error);

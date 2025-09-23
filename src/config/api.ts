@@ -1,9 +1,7 @@
 // API Configuration
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '')
 
-// Debug logging
-console.log('Environment VITE_API_URL:', import.meta.env.VITE_API_URL)
-console.log('Final API_BASE_URL:', API_BASE_URL)
+// API configuration
 
 export const API_ENDPOINTS = {
   BASE_URL: API_BASE_URL,
@@ -61,6 +59,10 @@ export const API_ENDPOINTS = {
   ADMIN_EMPLOYEES_SEARCH: `${API_BASE_URL}/api/v1/admin/employees/search`,
   ADMIN_ORGANISATIONS: `${API_BASE_URL}/api/v1/admin/organisations`,
   ADMIN_ORGANISATIONS_SEARCH: `${API_BASE_URL}/api/v1/admin/organisations/search`,
+  
+  // Research endpoints
+  RESEARCHES: `${API_BASE_URL}/api/v1/researches`,
+  ADMIN_RESEARCHES: `${API_BASE_URL}/api/v1/admin/researches`,
 }
 
 export default API_BASE_URL 

@@ -22,7 +22,6 @@ import {
   Target,
   Activity,
   Clock,
-  BookOpen
 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 import { testCacheService } from '../services/testCacheService'
@@ -38,7 +37,7 @@ interface DashboardProps {
   user: any
 }
 
-type Tab = 'assessment' | 'history' | 'hr' | 'settings' | 'support' | 'researches'
+type Tab = 'assessment' | 'history' | 'hr' | 'settings' | 'support'
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const navigate = useNavigate()
@@ -52,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const [isRequestingAccess, setIsRequestingAccess] = useState(false)
   
   // Employee modal context
-  const { openEmployeeModal, isEmployeeModalOpen } = useEmployeeModal()
+  const { openEmployeeModal } = useEmployeeModal()
   
   // Toast context
   const { showToast } = useToast()
@@ -62,14 +61,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const [loadingTests, setLoadingTests] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   
-  console.log('Dashboard rendered, openEmployeeModal function:', openEmployeeModal)
-  console.log('Dashboard rendered, isEmployeeModalOpen state:', isEmployeeModalOpen)
-  console.log('Current user:', user)
 
   // Load tests on component mount
   useEffect(() => {
-    console.log('🔍 Dashboard useEffect triggered, user:', user)
-    console.log('🔍 Token in localStorage:', localStorage.getItem('access_token'))
     loadTests()
   }, [])
 
@@ -80,13 +74,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       // Check cache first
       const cachedTests = testCacheService.getCachedTestDefinitions()
       if (cachedTests) {
-        console.log('📦 Loading tests from cache in Dashboard')
         setTests(cachedTests)
         setLoadingTests(false)
         return
       }
       
-      console.log('🌐 Fetching tests from API in Dashboard')
       
       // Prepare headers - only add Authorization if token exists
       const headers: Record<string, string> = {
@@ -104,7 +96,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       
       if (response.ok) {
         const data = await response.json()
-        console.log('✅ Successfully loaded tests:', data)
         setTests(data)
         
         // Cache the results
@@ -114,7 +105,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         const categories = [...new Set(data.map((test: any) => test.test_category))] as string[]
         testCacheService.cacheTestCategories(categories)
         
-        console.log('💾 Cached test definitions and categories in Dashboard')
       } else {
         console.error('❌ API response not OK:', response.status, response.statusText)
         const errorText = await response.text()
@@ -216,13 +206,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }, [])
 
   const handleRequestAccess = async (accessType: string) => {
-    console.log('🚀 handleRequestAccess called with:', accessType)
-    console.log('🚀 openEmployeeModal function:', openEmployeeModal)
-    
     if (accessType === 'employee') {
-      console.log('🚀 Employee access requested, about to call openEmployeeModal()')
       openEmployeeModal()
-      console.log('🚀 openEmployeeModal() called successfully')
       return
     }
     
@@ -235,7 +220,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         return
       }
 
-      console.log('🚀 Making API request for', accessType, 'access...')
       const response = await fetch(`${API_ENDPOINTS.ACCESS_REQUEST}?access_type=${accessType}`, {
         method: 'POST',
         headers: {
@@ -245,7 +229,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       })
 
       const data = await response.json()
-      console.log('🚀 API response:', response.status, data)
 
       if (response.ok) {
         // Success - show success toast
@@ -257,7 +240,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
           currentUser.role = data.new_role
           localStorage.setItem('user', JSON.stringify(currentUser))
-          console.log('🚀 User role updated to:', data.new_role)
           
           // Force a re-render by updating the user object
           if (user) {
@@ -310,22 +292,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const loadAssessmentHistory = async () => {
     try {
       setIsLoadingHistory(true)
-      console.log('Loading assessment history...')
       const response = await fetch(API_ENDPOINTS.UNIFIED_ASSESSMENTS, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       })
       
-      console.log('History response status:', response.status)
       
       if (response.ok) {
         const data = await response.json()
-        console.log('Assessment history data:', data)
         
         // Deduplicate assessments by ID to prevent duplicate keys
         const uniqueAssessments = data.filter((assessment: any, index: number, self: any[]) => 
           index === self.findIndex((a: any) => a.id === assessment.id)
         )
-        console.log('Unique assessments after deduplication:', uniqueAssessments)
         setAssessmentHistory(uniqueAssessments)
       } else {
         console.error('Failed to load assessment history:', response.status)
@@ -361,7 +339,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }
 
   const renderAssessmentContent = () => {
-    console.log('🔍 Rendering assessment content, loadingTests:', loadingTests, 'tests:', tests, 'selectedCategory:', selectedCategory)
     
     return (
       <div className="p-4 sm:p-6 lg:p-8 min-h-full">
@@ -470,8 +447,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   )
 
   const renderHistoryContent = () => {
-    console.log('Rendering history content, assessmentHistory length:', assessmentHistory.length)
-    console.log('Assessment history data:', assessmentHistory)
     return (
       <div className="p-4 sm:p-6 lg:p-8 min-h-full">
         <div className="text-center mb-6 sm:mb-8 lg:mb-12">
@@ -866,7 +841,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 {/* Employee Access */}
                 <button
                   onClick={() => {
-                    console.log('Employee access requested from Settings page')
                     openEmployeeModal()
                   }}
                   className="p-6 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl hover:border-green-400/50 transition-all duration-300 group"
@@ -881,7 +855,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 {/* HR Access */}
                 <button
                   onClick={() => {
-                    console.log('HR access requested from Settings page')
                     handleRequestAccess('hr')
                   }}
                   disabled={isRequestingAccess}
@@ -900,7 +873,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 {/* Counsellor Access */}
                 <button
                   onClick={() => {
-                    console.log('Counsellor access requested from Settings page')
                     handleRequestAccess('counsellor')
                   }}
                   disabled={isRequestingAccess}
@@ -940,31 +912,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     setExpandedRows(new Set())
   }
 
-  const renderResearchesContent = () => {
-    return (
-      <div className="p-4 sm:p-6 lg:p-8 min-h-full">
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
-            <span className="gradient-text">Researches</span>
-          </h1>
-          <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto px-4">
-            Research content will be available here soon.
-          </p>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8 text-center">
-            <BookOpen className="w-16 h-16 text-white/50 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Coming Soon</h2>
-            <p className="text-white/70">Research content and resources will be available in this section.</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   const renderMainContent = () => {
-    console.log('Rendering main content, activeTab:', activeTab)
     switch (activeTab) {
       case 'assessment':
         return renderAssessmentContent()
@@ -974,8 +923,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         return <EmployeeSupport />
       case 'hr':
         return <HRDashboard user={user} />
-      case 'researches':
-        return renderResearchesContent()
       case 'settings':
         return renderSettingsContent()
       default:
@@ -1081,18 +1028,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             </button>
           )}
 
-          {/* Researches */}
-          <button
-            onClick={() => handleTabSwitch('researches')}
-            className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
-              activeTab === 'researches'
-                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                : 'text-white/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span className="font-medium text-sm">Researches</span>
-          </button>
 
           {/* Admin Navigation - Only show if user is admin */}
           {user?.role === 'admin' && (
@@ -1238,21 +1173,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 </button>
               )}
 
-              {/* Researches */}
-              <button
-                onClick={() => {
-                  handleTabSwitch('researches')
-                  setIsSidebarOpen(false)
-                }}
-                className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
-                  activeTab === 'researches'
-                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <BookOpen className="w-4 h-4" />
-                <span className="font-medium text-sm">Researches</span>
-              </button>
 
               {/* Admin Navigation - Only show if user is admin */}
               {user?.role === 'admin' && (
@@ -1311,7 +1231,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       
       {/* Employee Request Modal */}
       <EmployeeRequestModal onRoleUpdate={(newRole) => {
-        console.log('Employee role updated to:', newRole)
         // Update the user role in the current component
         if (user) {
           user.role = newRole

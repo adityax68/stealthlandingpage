@@ -26,7 +26,6 @@ import EmployeeRequestModal from './components/EmployeeRequestModal'
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(false)
-  const [hasSeenSplash, setHasSeenSplash] = useState(false)
   const [currentTest, setCurrentTest] = useState<string | null>(null)
   const [testResults, setTestResults] = useState<any>(null)
   const [showTestSelector, setShowTestSelector] = useState(false)
@@ -41,14 +40,10 @@ function AppContent() {
 
   // Remove old authentication logic - now handled by AuthContext
 
-  // Show splash screen only on first visit to home page
+  // Disable splash screen - video now plays as background on landing page
   useEffect(() => {
-    if (location.pathname === '/' && !hasSeenSplash) {
-      setShowSplash(true)
-    } else {
-      setShowSplash(false)
-    }
-  }, [location.pathname, hasSeenSplash])
+    setShowSplash(false)
+  }, [])
 
 
   // Remove old authentication state handling - now handled by AuthContext
@@ -57,7 +52,6 @@ function AppContent() {
 
   const handleSplashComplete = () => {
     setShowSplash(false)
-    setHasSeenSplash(true)
     sessionStorage.setItem('hasSeenSplash', 'true')
     // Navigate to home page after splash screen completes
     if (location.pathname !== '/') {

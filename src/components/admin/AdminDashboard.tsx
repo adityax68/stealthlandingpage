@@ -217,14 +217,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
   // Add a loading state to prevent white page
   if (statsLoading && monthlyDataLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-start/30 border-t-primary-start mx-auto mb-6"></div>
-          <p className="text-white text-xl">Loading Admin Dashboard...</p>
-        </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-start/30 border-t-primary-start mx-auto mb-6"></div>
+        <p className="text-gray-800 text-xl">Loading Admin Dashboard...</p>
       </div>
-    );
+    </div>
+  );
   }
 
   const handleBackToDashboard = () => {
@@ -413,7 +413,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 relative overflow-hidden">
       {/* Background Orbs - Consistent with main website */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-10 left-10 w-48 h-48 md:top-20 md:left-20 md:w-72 md:h-72 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-full blur-3xl animate-float"></div>
@@ -428,14 +428,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       {/* Content */}
       <div className="relative z-10 min-h-screen">
         {/* Header Section */}
-        <div className="bg-black/20 backdrop-blur-xl border-b border-white/10">
+        <div className="bg-white/90 backdrop-blur-xl border-b border-primary-start/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               {/* Back Button and Title */}
               <div className="flex items-center space-x-4">
                 <button
                   onClick={handleBackToDashboard}
-                  className="group relative overflow-hidden bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-white/25 flex items-center space-x-2"
+                  className="group relative overflow-hidden bg-primary-start/10 hover:bg-primary-start/20 text-gray-800 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-white/25 flex items-center space-x-2"
                 >
                   <div className="relative z-10 flex items-center space-x-2">
                     <ArrowLeft className="w-4 h-4" />
@@ -443,7 +443,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                 </button>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
                   Admin Panel
                 </h1>
               </div>
@@ -453,7 +453,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 {/* Add Organisation Button */}
                 <button 
                   onClick={handleAddOrganisation}
-                  className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-primary-start/25 flex items-center space-x-2"
+                  className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-gray-800 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-primary-start/25 flex items-center space-x-2"
                 >
                   <div className="relative z-10 flex items-center space-x-2">
                     <UserPlus className="w-4 h-4" />
@@ -463,7 +463,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 </button>
 
                 {/* Add Counsellor Button */}
-                <button className="group relative overflow-hidden bg-gradient-to-r from-secondary-start to-secondary-end hover:from-secondary-start/90 hover:to-secondary-end/90 text-white px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-secondary-start/25 flex items-center space-x-2">
+                <button className="group relative overflow-hidden bg-gradient-to-r from-secondary-start to-secondary-end hover:from-secondary-start/90 hover:to-secondary-end/90 text-gray-800 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-secondary-start/25 flex items-center space-x-2">
                   <div className="relative z-10 flex items-center space-x-2">
                     <Users className="w-4 h-4" />
                     <span>Add Counsellor</span>
@@ -477,14 +477,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
         {/* Tab Navigation */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-2 mb-6">
+          <div className="bg-white/90 backdrop-blur-xl rounded-2xl border border-primary-start/20 p-2 mb-6">
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => handleTabChange('overview')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'overview'
-                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
-                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 shadow-lg'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10'
                 }`}
               >
                 Overview
@@ -493,8 +493,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 onClick={() => handleTabChange('users')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'users'
-                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
-                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 shadow-lg'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10'
                 }`}
               >
                 Users
@@ -503,8 +503,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 onClick={() => handleTabChange('employees')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'employees'
-                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
-                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 shadow-lg'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10'
                 }`}
               >
                 Employees
@@ -513,8 +513,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 onClick={() => handleTabChange('organizations')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'organizations'
-                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
-                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 shadow-lg'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10'
                 }`}
               >
                 Organizations
@@ -523,8 +523,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 onClick={() => handleTabChange('test-analytics')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'test-analytics'
-                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
-                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 shadow-lg'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10'
                 }`}
               >
                 Test Analytics
@@ -533,8 +533,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 onClick={() => handleTabChange('researches')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === 'researches'
-                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-white shadow-lg'
-                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 shadow-lg'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10'
                 }`}
               >
                 Researches
@@ -550,11 +550,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               {/* Admin Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* Total Users Card */}
-            <div className="group relative overflow-hidden bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105">
+            <div className="group relative overflow-hidden bg-gradient-to-br from-primary-start/15 to-primary-end/10 backdrop-blur-xl rounded-2xl p-6 border border-primary-start/20 hover:border-primary-start/30 transition-all duration-300 hover:scale-105">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/70 text-sm font-medium mb-1">Total Users</p>
-                  <div className="text-3xl font-bold text-white">
+                  <p className="text-gray-800/70 text-sm font-medium mb-1">Total Users</p>
+                  <div className="text-3xl font-bold text-gray-800">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
                     ) : statsError ? (
@@ -568,7 +568,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                       <p className="text-red-400 text-xs">{statsError}</p>
                       <button 
                         onClick={fetchAdminStats}
-                        className="mt-1 px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs rounded transition-colors"
+                        className="mt-1 px-2 py-1 bg-red-600 hover:bg-red-700 text-black text-xs rounded transition-colors"
                       >
                         Retry
                       </button>
@@ -583,11 +583,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </div>
 
             {/* Total Employees Card */}
-            <div className="group relative overflow-hidden bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105">
+            <div className="group relative overflow-hidden bg-gradient-to-br from-primary-start/15 to-primary-end/10 backdrop-blur-xl rounded-2xl p-6 border border-primary-start/20 hover:border-primary-start/30 transition-all duration-300 hover:scale-105">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/70 text-sm font-medium mb-1">Total Employees</p>
-                  <div className="text-3xl font-bold text-white">
+                  <p className="text-gray-800/70 text-sm font-medium mb-1">Total Employees</p>
+                  <div className="text-3xl font-bold text-gray-800">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
                     ) : statsError ? (
@@ -605,11 +605,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </div>
 
             {/* Total Organizations Card */}
-            <div className="group relative overflow-hidden bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105">
+            <div className="group relative overflow-hidden bg-gradient-to-br from-primary-start/15 to-primary-end/10 backdrop-blur-xl rounded-2xl p-6 border border-primary-start/20 hover:border-primary-start/30 transition-all duration-300 hover:scale-105">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/70 text-sm font-medium mb-1">Total Organizations</p>
-                  <div className="text-3xl font-bold text-white">
+                  <p className="text-gray-800/70 text-sm font-medium mb-1">Total Organizations</p>
+                  <div className="text-3xl font-bold text-gray-800">
                     {statsLoading ? (
                       <div className="animate-pulse bg-white/20 h-8 w-16 rounded"></div>
                     ) : statsError ? (
@@ -628,26 +628,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           </div>
 
               {/* Monthly User Growth Chart - Compact */}
-              <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10 mb-6 shadow-2xl">
+              <div className="bg-gradient-to-br from-primary-start/15 to-primary-end/10 backdrop-blur-xl rounded-2xl p-4 border border-primary-start/20 mb-6 shadow-2xl">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
                   <div className="flex items-center space-x-2 mb-2 sm:mb-0">
                     <div className="p-2 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-lg shadow-lg">
                       <TrendingUp className="w-4 h-4 text-primary-start" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-white">User Growth</h3>
-                      <p className="text-white/70 text-xs">Monthly registrations</p>
+                      <h3 className="text-lg font-bold text-gray-800">User Growth</h3>
+                      <p className="text-gray-800/70 text-xs">Monthly registrations</p>
                     </div>
                   </div>
                   
                   {/* Chart Type Toggle */}
-                  <div className="flex bg-white/10 rounded-lg p-1">
+                  <div className="flex bg-primary-start/10 rounded-lg p-1">
                     <button
                       onClick={() => setChartType('line')}
                       className={`px-2 py-1 rounded-md text-xs font-medium transition-all ${
                         chartType === 'line'
-                          ? 'bg-primary-start text-white shadow-lg'
-                          : 'text-white/70 hover:text-white'
+                          ? 'bg-primary-start text-gray-800 shadow-lg'
+                          : 'text-gray-800/70 hover:text-gray-800'
                       }`}
                     >
                       Line
@@ -656,8 +656,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                       onClick={() => setChartType('bar')}
                       className={`px-2 py-1 rounded-md text-xs font-medium transition-all ${
                         chartType === 'bar'
-                          ? 'bg-primary-start text-white shadow-lg'
-                          : 'text-white/70 hover:text-white'
+                          ? 'bg-primary-start text-gray-800 shadow-lg'
+                          : 'text-gray-800/70 hover:text-gray-800'
                       }`}
                     >
                       Bar
@@ -666,13 +666,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 </div>
 
                 {/* Chart Container - Smaller */}
-                <div className="relative h-48 bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-3 border border-white/10">
+                <div className="relative h-48 bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-3 border border-primary-start/20">
               {monthlyDataLoading ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-start/30 border-t-primary-start mx-auto mb-6"></div>
-                    <p className="text-white/80 text-lg font-medium">Loading monthly data...</p>
-                    <p className="text-white/60 text-sm mt-2">Fetching user registration trends</p>
+                    <p className="text-gray-800/80 text-lg font-medium">Loading monthly data...</p>
+                    <p className="text-gray-800/60 text-sm mt-2">Fetching user registration trends</p>
                   </div>
                 </div>
               ) : monthlyDataError ? (
@@ -685,7 +685,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                     <p className="text-sm text-red-300">{monthlyDataError}</p>
                     <button 
                       onClick={fetchMonthlyUserData}
-                      className="mt-4 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-colors"
+                      className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-black rounded-lg transition-colors"
                     >
                       Retry
                     </button>
@@ -693,7 +693,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 </div>
               ) : monthlyUserData.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
-                  <div className="text-center text-white/70">
+                  <div className="text-center text-gray-800/70">
                     <div className="p-4 bg-gradient-to-br from-primary-start/10 to-primary-end/10 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
                       <TrendingUp className="w-10 h-10 text-primary-start/60" />
                     </div>
@@ -720,18 +720,18 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                         <div className="p-1 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded">
                           <TrendingUp className="w-3 h-3 text-primary-start" />
                         </div>
-                        <p className="text-white/80 text-xs font-medium">Months</p>
+                        <p className="text-gray-800/80 text-xs font-medium">Months</p>
                       </div>
-                      <p className="text-lg font-bold text-white">{monthlyUserData.length}</p>
+                      <p className="text-lg font-bold text-gray-800">{monthlyUserData.length}</p>
                     </div>
                     <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-lg p-3 border border-white/20 shadow-lg">
                       <div className="flex items-center space-x-2 mb-2">
                         <div className="p-1 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded">
                           <Users className="w-3 h-3 text-secondary-start" />
                         </div>
-                        <p className="text-white/80 text-xs font-medium">New Users</p>
+                        <p className="text-gray-800/80 text-xs font-medium">New Users</p>
                       </div>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-lg font-bold text-gray-800">
                         {monthlyUserData.reduce((sum, item) => sum + item.newUsers, 0).toLocaleString()}
                       </p>
                     </div>
@@ -740,9 +740,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                         <div className="p-1 bg-gradient-to-br from-accent-start/20 to-accent-end/20 rounded">
                           <Building2 className="w-3 h-3 text-accent-start" />
                         </div>
-                        <p className="text-white/80 text-xs font-medium">Avg/Month</p>
+                        <p className="text-gray-800/80 text-xs font-medium">Avg/Month</p>
                       </div>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-lg font-bold text-gray-800">
                         {Math.round(monthlyUserData.reduce((sum, item) => sum + item.newUsers, 0) / monthlyUserData.length).toLocaleString()}
                       </p>
                     </div>
@@ -771,26 +771,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           ></div>
           
           {/* Modal Content */}
-          <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 w-full max-w-md">
+          <div className="relative bg-primary-start/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 w-full max-w-md">
             {/* Close Button */}
             <button
               onClick={handleCloseModal}
-              className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+              className="absolute top-4 right-4 text-gray-800/70 hover:text-gray-800 transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
             
             {/* Modal Header */}
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-white mb-2">Add Organisation</h2>
-              <p className="text-white/70 text-sm">Enter organisation details</p>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Add Organisation</h2>
+              <p className="text-gray-800/70 text-sm">Enter organisation details</p>
             </div>
             
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Organisation Name */}
               <div>
-                <label htmlFor="org_name" className="block text-sm font-medium text-white/90 mb-2">
+                <label htmlFor="org_name" className="block text-sm font-medium text-gray-800/90 mb-2">
                   Organisation Name
                 </label>
                 <input
@@ -800,14 +800,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   value={formData.org_name}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-primary-start/10 border border-white/20 rounded-xl text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent transition-all"
                   placeholder="Enter organisation name"
                 />
               </div>
               
               {/* HR Email */}
               <div>
-                <label htmlFor="hr_email" className="block text-sm font-medium text-white/90 mb-2">
+                <label htmlFor="hr_email" className="block text-sm font-medium text-gray-800/90 mb-2">
                   HR Email
                 </label>
                 <input
@@ -817,7 +817,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   value={formData.hr_email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-primary-start/10 border border-white/20 rounded-xl text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent transition-all"
                   placeholder="Enter HR email address"
                 />
               </div>
@@ -826,7 +826,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-gray-800 py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {isLoading ? 'Adding...' : 'Add Organisation'}
               </button>
@@ -840,8 +840,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         <div className="fixed top-4 right-4 z-50">
           <div className={`px-6 py-4 rounded-xl shadow-lg backdrop-blur-xl border ${
             toastType === 'success' 
-              ? 'bg-green-500/20 border-green-500/30 text-green-300' 
-              : 'bg-red-500/20 border-red-500/30 text-red-300'
+              ? 'bg-green-600 border-green-600 text-black' 
+              : 'bg-red-600 border-red-600 text-black'
           }`}>
             <p className="font-medium">{toastMessage}</p>
           </div>

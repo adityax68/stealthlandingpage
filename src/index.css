@@ -4,12 +4,12 @@
 
 @layer base {
   :root {
-    --primary-start: #667eea;
-    --primary-end: #764ba2;
-    --secondary-start: #f093fb;
-    --secondary-end: #f5576c;
-    --accent-start: #4facfe;
-    --accent-end: #00f2fe;
+    --primary-start: #a78bfa;
+    --primary-end: #8b5cf6;
+    --secondary-start: #86efac;
+    --secondary-end: #4ade80;
+    --accent-start: #fbbf24;
+    --accent-end: #f59e0b;
   }
   
   html {
@@ -20,8 +20,8 @@
   }
   
   body {
-    @apply bg-black text-white font-sans antialiased;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    @apply bg-white text-gray-800 font-sans antialiased;
+    background: linear-gradient(135deg, #fefefe 0%, #f8fafc 50%, #f1f5f9 100%);
     min-height: 100vh;
     /* Prevent horizontal scroll */
     overflow-x: hidden;
@@ -55,16 +55,16 @@
   }
   
   .glass-card {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(167, 139, 250, 0.2);
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-      inset 0 0 20px 10px rgba(255, 255, 255, 0.1);
+      0 8px 32px rgba(167, 139, 250, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      inset 0 -1px 0 rgba(167, 139, 250, 0.1),
+      inset 0 0 20px 10px rgba(167, 139, 250, 0.05);
     position: relative;
     overflow: hidden;
   }
@@ -79,7 +79,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(255, 255, 255, 0.8),
+      rgba(167, 139, 250, 0.6),
       transparent
     );
   }
@@ -93,23 +93,23 @@
     height: 100%;
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.8),
+      rgba(167, 139, 250, 0.6),
       transparent,
-      rgba(255, 255, 255, 0.3)
+      rgba(167, 139, 250, 0.2)
     );
   }
 
   .glass-card-small {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(167, 139, 250, 0.2);
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-      inset 0 0 20px 10px rgba(255, 255, 255, 0.1);
+      0 8px 32px rgba(167, 139, 250, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      inset 0 -1px 0 rgba(167, 139, 250, 0.1),
+      inset 0 0 20px 10px rgba(167, 139, 250, 0.05);
     position: relative;
     overflow: hidden;
     transform: scale(0.9);
@@ -126,7 +126,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(255, 255, 255, 0.8),
+      rgba(167, 139, 250, 0.6),
       transparent
     );
   }
@@ -140,9 +140,9 @@
     height: 100%;
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.8),
+      rgba(167, 139, 250, 0.6),
       transparent,
-      rgba(255, 255, 255, 0.3)
+      rgba(167, 139, 250, 0.2)
     );
   }
   

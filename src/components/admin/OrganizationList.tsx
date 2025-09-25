@@ -124,8 +124,8 @@ const OrganizationList: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white/70">Loading organizations...</p>
+          <Loader2 className="w-8 h-8 text-gray-800 animate-spin mx-auto mb-4" />
+          <p className="text-gray-800/70">Loading organizations...</p>
         </div>
       </div>
     );
@@ -137,7 +137,7 @@ const OrganizationList: React.FC = () => {
         <p className="text-red-300 font-medium">{error}</p>
         <button
           onClick={() => fetchOrganizations()}
-          className="mt-4 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-colors"
+          className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-black rounded-lg transition-colors"
         >
           Retry
         </button>
@@ -148,17 +148,17 @@ const OrganizationList: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+      <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 backdrop-blur-xl rounded-2xl p-6 border border-primary-start/20">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-2">Organization Management</h2>
-            <p className="text-white/70 text-sm">Manage registered organizations and their HR contacts</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Organization Management</h2>
+            <p className="text-gray-800/70 text-sm">Manage registered organizations and their HR contacts</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="text-sm text-white/60">
+            <div className="text-sm text-gray-800/60">
               Total: {totalOrganizations} organizations
             </div>
-            <button className="px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-start/90 hover:to-primary-end/90 transition-all duration-300 flex items-center gap-2">
+            <button className="px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-gray-800 rounded-lg hover:from-primary-start/90 hover:to-primary-end/90 transition-all duration-300 flex items-center gap-2">
               <Plus className="w-4 h-4" />
               Add Organization
             </button>
@@ -167,7 +167,7 @@ const OrganizationList: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+      <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 backdrop-blur-xl rounded-2xl p-6 border border-primary-start/20">
         <div className="space-y-4">
           {/* Search Type Toggle */}
           <div className="flex gap-2">
@@ -175,8 +175,8 @@ const OrganizationList: React.FC = () => {
               onClick={() => setSearchType('org_id')}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                 searchType === 'org_id'
-                  ? 'bg-primary-start text-white'
-                  : 'bg-white/10 text-white/70 hover:text-white hover:bg-white/20'
+                  ? 'bg-primary-start text-gray-800'
+                  : 'bg-primary-start/10 text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/20'
               }`}
             >
               Search by Org ID
@@ -185,8 +185,8 @@ const OrganizationList: React.FC = () => {
               onClick={() => setSearchType('hr_email')}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                 searchType === 'hr_email'
-                  ? 'bg-primary-start text-white'
-                  : 'bg-white/10 text-white/70 hover:text-white hover:bg-white/20'
+                  ? 'bg-primary-start text-gray-800'
+                  : 'bg-primary-start/10 text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/20'
               }`}
             >
               Search by HR Email
@@ -197,7 +197,7 @@ const OrganizationList: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-800/50" />
                 {searchType === 'org_id' ? (
                   <input
                     type="text"
@@ -205,7 +205,7 @@ const OrganizationList: React.FC = () => {
                     value={searchOrgId}
                     onChange={(e) => setSearchOrgId(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                    className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
                   />
                 ) : (
                   <input
@@ -214,7 +214,7 @@ const OrganizationList: React.FC = () => {
                     value={searchHrEmail}
                     onChange={(e) => setSearchHrEmail(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                    className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
                   />
                 )}
               </div>
@@ -223,7 +223,7 @@ const OrganizationList: React.FC = () => {
               <button
                 onClick={handleSearch}
                 disabled={isSearching}
-                className="px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-start/90 hover:to-primary-end/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-gray-800 rounded-lg hover:from-primary-start/90 hover:to-primary-end/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSearching ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -235,7 +235,7 @@ const OrganizationList: React.FC = () => {
               {(searchOrgId || searchHrEmail) && (
                 <button
                   onClick={handleClearSearch}
-                  className="px-4 py-2 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all duration-300"
+                  className="px-4 py-2 bg-primary-start/10 border border-white/20 text-gray-800 rounded-lg hover:bg-primary-start/20 transition-all duration-300"
                 >
                   Clear
                 </button>
@@ -246,57 +246,57 @@ const OrganizationList: React.FC = () => {
       </div>
 
       {/* Organizations Table */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+      <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden">
         {/* Desktop Table */}
         <div className="hidden lg:block">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-white/5 border-b border-white/10">
+              <thead className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 border-b border-primary-start/20">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-white/80">Organization</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-white/80">Organization ID</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-white/80">HR Email</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-white/80">Created</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-white/80">Updated</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-800/80">Organization</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-800/80">Organization ID</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-800/80">HR Email</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-800/80">Created</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-800/80">Updated</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
                 {organizations.map((org) => (
-                  <tr key={org.id} className="hover:bg-white/5 transition-colors">
+                  <tr key={org.id} className="hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gradient-to-r from-accent-start to-accent-end rounded-lg flex items-center justify-center">
-                          <Building2 className="w-4 h-4 text-white" />
+                          <Building2 className="w-4 h-4 text-gray-800" />
                         </div>
                         <div>
-                          <div className="text-white font-medium">{org.org_name}</div>
+                          <div className="text-gray-800 font-medium">{org.org_name}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <Hash className="w-4 h-4 text-white/50" />
-                        <span className="text-white/80 font-mono text-sm">{org.org_id}</span>
+                        <Hash className="w-4 h-4 text-gray-800/50" />
+                        <span className="text-gray-800/80 font-mono text-sm">{org.org_id}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <Mail className="w-4 h-4 text-white/50" />
-                        <span className="text-white/80">{org.hr_email}</span>
+                        <Mail className="w-4 h-4 text-gray-800/50" />
+                        <span className="text-gray-800/80">{org.hr_email}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <Calendar className="w-4 h-4 text-white/50" />
-                        <span className="text-white/80 text-sm">
+                        <Calendar className="w-4 h-4 text-gray-800/50" />
+                        <span className="text-gray-800/80 text-sm">
                           {new Date(org.created_at).toLocaleDateString()}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <Calendar className="w-4 h-4 text-white/50" />
-                        <span className="text-white/80 text-sm">
+                        <Calendar className="w-4 h-4 text-gray-800/50" />
+                        <span className="text-gray-800/80 text-sm">
                           {new Date(org.updated_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -312,33 +312,33 @@ const OrganizationList: React.FC = () => {
         <div className="lg:hidden">
           <div className="p-4 space-y-4">
             {organizations.map((org) => (
-              <div key={org.id} className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div key={org.id} className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-4 border border-primary-start/20">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-r from-accent-start to-accent-end rounded-lg flex items-center justify-center">
-                      <Building2 className="w-5 h-5 text-white" />
+                      <Building2 className="w-5 h-5 text-gray-800" />
                     </div>
                     <div>
-                      <div className="text-white font-medium">{org.org_name}</div>
-                      <div className="text-white/60 text-sm">ID: {org.org_id}</div>
+                      <div className="text-gray-800 font-medium">{org.org_name}</div>
+                      <div className="text-gray-800/60 text-sm">ID: {org.org_id}</div>
                     </div>
                   </div>
                 </div>
                 
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <Mail className="w-4 h-4 text-white/50" />
-                    <span className="text-white/80 text-sm">{org.hr_email}</span>
+                    <Mail className="w-4 h-4 text-gray-800/50" />
+                    <span className="text-gray-800/80 text-sm">{org.hr_email}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-white/50" />
-                    <span className="text-white/80 text-sm">
+                    <Calendar className="w-4 h-4 text-gray-800/50" />
+                    <span className="text-gray-800/80 text-sm">
                       Created: {new Date(org.created_at).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-white/50" />
-                    <span className="text-white/80 text-sm">
+                    <Calendar className="w-4 h-4 text-gray-800/50" />
+                    <span className="text-gray-800/80 text-sm">
                       Updated: {new Date(org.updated_at).toLocaleDateString()}
                     </span>
                   </div>
@@ -350,16 +350,16 @@ const OrganizationList: React.FC = () => {
 
         {/* Pagination */}
         {totalPages >= 1 && (
-          <div className="px-6 py-4 border-t border-white/10">
+          <div className="px-6 py-4 border-t border-primary-start/20">
             <div className="flex items-center justify-between">
-              <div className="text-sm text-white/60">
+              <div className="text-sm text-gray-800/60">
                 Page {currentPage} of {totalPages} ({organizations.length} organizations)
               </div>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="p-2 bg-white/10 border border-white/20 rounded-lg text-white/80 hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800/80 hover:bg-primary-start/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -372,8 +372,8 @@ const OrganizationList: React.FC = () => {
                       onClick={() => handlePageChange(page)}
                       className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                         currentPage === page
-                          ? 'bg-primary-start text-white'
-                          : 'bg-white/10 text-white/80 hover:bg-white/20'
+                          ? 'bg-primary-start text-gray-800'
+                          : 'bg-primary-start/10 text-gray-800/80 hover:bg-primary-start/20'
                       }`}
                     >
                       {page}
@@ -384,7 +384,7 @@ const OrganizationList: React.FC = () => {
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="p-2 bg-white/10 border border-white/20 rounded-lg text-white/80 hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800/80 hover:bg-primary-start/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

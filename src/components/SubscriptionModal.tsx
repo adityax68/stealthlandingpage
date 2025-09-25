@@ -190,13 +190,13 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                       onClick={() => setSelectedPlan(plan.id as 'basic' | 'premium')}
                       className={`relative p-4 border-2 rounded-2xl cursor-pointer transition-all duration-200 ${
                         isSelected
-                          ? 'border-blue-500 bg-blue-50 shadow-md'
-                          : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                          ? 'border-primary-start bg-gradient-to-br from-primary-start/20 to-primary-end/15 shadow-md'
+                          : 'border-primary-start/30 hover:border-primary-start/50 bg-gradient-to-br from-primary-start/10 to-primary-end/5 hover:shadow-sm'
                       }`}
                     >
                       {isSelected && (
                         <div className="absolute top-3 right-3">
-                          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                          <div className="w-6 h-6 bg-primary-start rounded-full flex items-center justify-center">
                             <CheckCircle className="w-4 h-4 text-white" />
                           </div>
                         </div>
@@ -219,7 +219,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                           
                           <div className="flex flex-wrap gap-1">
                             {plan.features.slice(0, 2).map((feature, index) => (
-                              <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md">
+                              <span key={index} className="text-xs bg-primary-start/20 text-gray-700 px-2 py-1 rounded-md">
                                 {feature}
                               </span>
                             ))}

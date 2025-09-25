@@ -113,13 +113,13 @@ const EmployeeRequestModal: React.FC<EmployeeRequestModalProps> = ({ onRoleUpdat
       />
       
       {/* Modal */}
-      <div className="relative bg-gray-900 border border-white/20 rounded-2xl p-6 w-full max-w-md mx-auto z-10">
+      <div className="relative bg-white/90 backdrop-blur-xl border border-primary-start/20 rounded-2xl p-6 w-full max-w-md mx-auto z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">Request Employee Access</h2>
+          <h2 className="text-xl font-bold text-gray-800">Request Employee Access</h2>
           <button
             onClick={closeEmployeeModal}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
+            className="p-2 text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10 rounded-lg transition-colors duration-200"
           >
             <X className="w-5 h-5" />
           </button>
@@ -129,18 +129,18 @@ const EmployeeRequestModal: React.FC<EmployeeRequestModalProps> = ({ onRoleUpdat
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Employee Code */}
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-2">
+            <label className="block text-sm font-medium text-gray-800/70 mb-2">
               Employee Code
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-800/50" />
               <input
                 type="text"
                 name="employee_code"
                 value={formData.employee_code}
                 onChange={handleInputChange}
                 placeholder="e.g., EMP001"
-                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary-start transition-colors duration-200"
+                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-primary-start/20 rounded-lg text-gray-800 placeholder-white/50 focus:outline-none focus:border-primary-start transition-colors duration-200"
                 required
               />
             </div>
@@ -148,18 +148,18 @@ const EmployeeRequestModal: React.FC<EmployeeRequestModalProps> = ({ onRoleUpdat
 
           {/* Organization ID */}
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-2">
+            <label className="block text-sm font-medium text-gray-800/70 mb-2">
               Organization ID
             </label>
             <div className="relative">
-              <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
+              <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-800/50" />
               <input
                 type="text"
                 name="org_id"
                 value={formData.org_id}
                 onChange={handleInputChange}
                 placeholder="e.g., ORG001"
-                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary-start transition-colors duration-200"
+                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-primary-start/20 rounded-lg text-gray-800 placeholder-white/50 focus:outline-none focus:border-primary-start transition-colors duration-200"
                 required
               />
             </div>
@@ -167,18 +167,18 @@ const EmployeeRequestModal: React.FC<EmployeeRequestModalProps> = ({ onRoleUpdat
 
           {/* HR Email */}
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-2">
+            <label className="block text-sm font-medium text-gray-800/70 mb-2">
               HR Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-800/50" />
               <input
                 type="email"
                 name="hr_email"
                 value={formData.hr_email}
                 onChange={handleInputChange}
                 placeholder="hr@company.com"
-                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary-start transition-colors duration-200"
+                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-primary-start/20 rounded-lg text-gray-800 placeholder-white/50 focus:outline-none focus:border-primary-start transition-colors duration-200"
                 required
               />
             </div>
@@ -196,14 +196,14 @@ const EmployeeRequestModal: React.FC<EmployeeRequestModalProps> = ({ onRoleUpdat
             <button
               type="button"
               onClick={closeEmployeeModal}
-              className="flex-1 px-4 py-3 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-colors duration-200"
+              className="flex-1 px-4 py-3 bg-primary-start/10 border border-primary-start/20 text-gray-800 rounded-lg hover:bg-white/20 transition-colors duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 px-4 py-3 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-3 bg-gradient-to-r from-primary-start to-primary-end text-gray-800 rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Processing...' : 'Request Access'}
             </button>

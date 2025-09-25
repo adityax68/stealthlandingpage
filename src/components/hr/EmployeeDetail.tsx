@@ -110,11 +110,11 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
   const getSeverityColor = (severity: string) => {
     const level = severity.toLowerCase()
     if (level === 'severe' || level === 'high') {
-      return 'bg-red-500/20 text-red-300 border-red-500/30'
+      return 'bg-red-600 text-black border-red-600'
     } else if (level === 'moderate' || level === 'moderately_severe') {
-      return 'bg-yellow-500/20 text-yellow-300 border-red-500/30'
+      return 'bg-yellow-600 text-black border-yellow-600'
     } else {
-      return 'bg-green-500/20 text-green-300 border-green-500/30'
+      return 'bg-green-600 text-black border-green-600'
     }
   }
 
@@ -135,26 +135,26 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
         <div className="flex items-center space-x-4 mb-8">
           <button
             onClick={onBack}
-            className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors duration-200"
+            className="p-2 bg-primary-start/10 rounded-lg hover:bg-primary-start/20 transition-colors duration-200"
           >
-            <ArrowLeft className="w-5 h-5 text-white" />
+            <ArrowLeft className="w-5 h-5 text-gray-800" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-white">Employee Details</h1>
-            <p className="text-white/70">View and manage employee information</p>
+            <h1 className="text-3xl font-bold text-gray-800">Employee Details</h1>
+            <p className="text-gray-800/70">View and manage employee information</p>
           </div>
         </div>
 
         {/* Employee Information Card */}
-        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-8">
+        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-primary-start/20 p-6 mb-8">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center space-x-4">
               <div className="w-16 h-16 bg-gradient-to-r from-primary-start to-primary-end rounded-xl flex items-center justify-center">
-                <User className="w-8 h-8 text-white" />
+                <User className="w-8 h-8 text-gray-800" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">{employee.full_name}</h2>
-                <p className="text-white/70">{employee.email}</p>
+                <h2 className="text-2xl font-bold text-gray-800">{employee.full_name}</h2>
+                <p className="text-gray-800/70">{employee.email}</p>
               </div>
             </div>
             
@@ -162,8 +162,8 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
             <div className="flex items-center space-x-3">
               <span className={`px-3 py-2 rounded-full text-sm font-medium border ${
                 employee.is_active
-                  ? 'bg-green-500/20 text-green-300 border-green-500/30'
-                  : 'bg-red-500/20 text-red-300 border-red-500/30'
+                  ? 'bg-green-600 text-black border-green-600'
+                  : 'bg-red-600 text-black border-red-600'
               }`}>
                 {employee.is_active ? 'Active' : 'Inactive'}
               </span>
@@ -172,8 +172,8 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
                 disabled={isUpdatingStatus}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   isUpdatingStatus
-                    ? 'bg-white/20 text-white/50 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-primary-start to-primary-end text-white hover:from-primary-end hover:to-primary-start'
+                    ? 'bg-white/20 text-gray-800/50 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 hover:from-primary-end hover:to-primary-start'
                 }`}
               >
                 {isUpdatingStatus ? (
@@ -195,36 +195,36 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <Hash className="w-5 h-5 text-white/60" />
+                <Hash className="w-5 h-5 text-gray-800/60" />
                 <div>
-                  <p className="text-white/70 text-sm">Employee Code</p>
-                  <p className="text-white font-medium">{employee.employee_code}</p>
+                  <p className="text-gray-800/70 text-sm">Employee Code</p>
+                  <p className="text-gray-800 font-medium">{employee.employee_code}</p>
                 </div>
               </div>
               
               <div className="flex items-center space-x-3">
-                <User className="w-5 h-5 text-white/60" />
+                <User className="w-5 h-5 text-gray-800/60" />
                 <div>
-                  <p className="text-white/70 text-sm">User ID</p>
-                  <p className="text-white font-medium">{employee.user_id}</p>
+                  <p className="text-gray-800/70 text-sm">User ID</p>
+                  <p className="text-gray-800 font-medium">{employee.user_id}</p>
                 </div>
               </div>
             </div>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <Activity className="w-5 h-5 text-white/60" />
+                <Activity className="w-5 h-5 text-gray-800/60" />
                 <div>
-                  <p className="text-white/70 text-sm">Organization ID</p>
-                  <p className="text-white font-medium">{employee.org_id}</p>
+                  <p className="text-gray-800/70 text-sm">Organization ID</p>
+                  <p className="text-gray-800 font-medium">{employee.org_id}</p>
                 </div>
               </div>
               
               <div className="flex items-center space-x-3">
-                <Calendar className="w-5 h-5 text-white/60" />
+                <Calendar className="w-5 h-5 text-gray-800/60" />
                 <div>
-                  <p className="text-white/70 text-sm">Created</p>
-                  <p className="text-white font-medium">{formatDate(employee.created_at)}</p>
+                  <p className="text-gray-800/70 text-sm">Created</p>
+                  <p className="text-gray-800 font-medium">{formatDate(employee.created_at)}</p>
                 </div>
               </div>
             </div>
@@ -232,50 +232,50 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
         </div>
 
         {/* Assessment History */}
-        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-          <div className="p-6 border-b border-white/10">
+        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden">
+          <div className="p-6 border-b border-primary-start/20">
             <div className="flex items-center space-x-3">
-              <FileText className="w-6 h-6 text-white" />
+              <FileText className="w-6 h-6 text-gray-800" />
               <div>
-                <h3 className="text-xl font-bold text-white">Assessment History</h3>
-                <p className="text-white/70">Clinical assessments completed by this employee</p>
+                <h3 className="text-xl font-bold text-gray-800">Assessment History</h3>
+                <p className="text-gray-800/70">Clinical assessments completed by this employee</p>
               </div>
             </div>
           </div>
 
           {isLoadingAssessments ? (
             <div className="p-12 text-center">
-              <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-              <p className="text-white/70">Loading assessments...</p>
+              <Loader2 className="w-8 h-8 text-gray-800 animate-spin mx-auto mb-4" />
+              <p className="text-gray-800/70">Loading assessments...</p>
             </div>
           ) : assessments.length === 0 ? (
             <div className="p-12 text-center">
-              <FileText className="w-16 h-16 text-white/30 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No Assessments Found</h3>
-              <p className="text-white/70">This employee hasn't completed any clinical assessments yet.</p>
+              <FileText className="w-16 h-16 text-gray-800/30 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">No Assessments Found</h3>
+              <p className="text-gray-800/70">This employee hasn't completed any clinical assessments yet.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-white/5 border-b border-white/10">
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Assessment</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Score</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Severity</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Date</th>
+                  <tr className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 border-b border-primary-start/20">
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Assessment</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Score</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Severity</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Date</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
                   {assessments.map((assessment) => (
-                    <tr key={assessment.id} className="hover:bg-white/5 transition-colors duration-200">
+                    <tr key={assessment.id} className="hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5 transition-colors duration-200">
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-semibold text-white">{assessment.assessment_name}</p>
-                          <p className="text-white/60 text-sm">{assessment.assessment_type}</p>
+                          <p className="font-semibold text-gray-800">{assessment.assessment_name}</p>
+                          <p className="text-gray-800/60 text-sm">{assessment.assessment_type}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-white text-sm font-medium">
+                        <span className="px-3 py-1 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 text-sm font-medium">
                           {assessment.total_score}/{assessment.max_score}
                         </span>
                       </td>
@@ -285,7 +285,7 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-white/80 text-sm">{formatDate(assessment.created_at)}</span>
+                        <span className="text-gray-800/80 text-sm">{formatDate(assessment.created_at)}</span>
                       </td>
                     </tr>
                   ))}

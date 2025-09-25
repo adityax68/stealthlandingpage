@@ -93,7 +93,7 @@ const TestAnalytics: React.FC = () => {
     return (
       <div className="text-center py-8">
         <div className="text-red-400 mb-2">Error loading test analytics</div>
-        <div className="text-white/60 text-sm">{error}</div>
+        <div className="text-gray-800/60 text-sm">{error}</div>
       </div>
     );
   }
@@ -101,7 +101,7 @@ const TestAnalytics: React.FC = () => {
   if (!analytics) {
     return (
       <div className="text-center py-8">
-        <div className="text-white/60">No test analytics data available</div>
+        <div className="text-gray-800/60">No test analytics data available</div>
       </div>
     );
   }
@@ -110,52 +110,52 @@ const TestAnalytics: React.FC = () => {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-4 border border-primary-start/20">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <TestTube className="w-5 h-5 text-white" />
+              <TestTube className="w-5 h-5 text-gray-800" />
             </div>
             <div>
-              <div className="text-white font-semibold text-lg">{analytics.total_tests}</div>
-              <div className="text-white/60 text-sm">Total Tests</div>
+              <div className="text-gray-800 font-semibold text-lg">{analytics.total_tests}</div>
+              <div className="text-gray-800/60 text-sm">Total Tests</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-4 border border-primary-start/20">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
+              <Users className="w-5 h-5 text-gray-800" />
             </div>
             <div>
-              <div className="text-white font-semibold text-lg">{analytics.employee_tests}</div>
-              <div className="text-white/60 text-sm">Employee Tests</div>
+              <div className="text-gray-800 font-semibold text-lg">{analytics.employee_tests}</div>
+              <div className="text-gray-800/60 text-sm">Employee Tests</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-4 border border-primary-start/20">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-white" />
+              <TrendingUp className="w-5 h-5 text-gray-800" />
             </div>
             <div>
-              <div className="text-white font-semibold text-lg">{analytics.recent_tests}</div>
-              <div className="text-white/60 text-sm">Recent (30 days)</div>
+              <div className="text-gray-800 font-semibold text-lg">{analytics.recent_tests}</div>
+              <div className="text-gray-800/60 text-sm">Recent (30 days)</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-4 border border-primary-start/20">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-white" />
+              <Calendar className="w-5 h-5 text-gray-800" />
             </div>
             <div>
-              <div className="text-white font-semibold text-lg">
+              <div className="text-gray-800 font-semibold text-lg">
                 {analytics.total_tests > 0 ? Math.round((analytics.employee_tests / analytics.total_tests) * 100) : 0}%
               </div>
-              <div className="text-white/60 text-sm">Employee Ratio</div>
+              <div className="text-gray-800/60 text-sm">Employee Ratio</div>
             </div>
           </div>
         </div>
@@ -164,8 +164,8 @@ const TestAnalytics: React.FC = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Tests by Type */}
-        <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-          <h3 className="text-white font-semibold mb-4 flex items-center">
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-6 border border-primary-start/20">
+          <h3 className="text-gray-800 font-semibold mb-4 flex items-center">
             <TestTube className="w-5 h-5 mr-2" />
             Tests by Type
           </h3>
@@ -203,8 +203,8 @@ const TestAnalytics: React.FC = () => {
         </div>
 
         {/* Tests by Severity */}
-        <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-          <h3 className="text-white font-semibold mb-4 flex items-center">
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-6 border border-primary-start/20">
+          <h3 className="text-gray-800 font-semibold mb-4 flex items-center">
             <AlertTriangle className="w-5 h-5 mr-2" />
             Tests by Severity
           </h3>
@@ -241,8 +241,8 @@ const TestAnalytics: React.FC = () => {
 
       {/* Tests by Organization */}
       {analytics.tests_by_organization.length > 0 && (
-        <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-          <h3 className="text-white font-semibold mb-4 flex items-center">
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-6 border border-primary-start/20">
+          <h3 className="text-gray-800 font-semibold mb-4 flex items-center">
             <Building2 className="w-5 h-5 mr-2" />
             Tests by Organization
           </h3>
@@ -283,8 +283,8 @@ const TestAnalytics: React.FC = () => {
       {/* Detailed Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Test Types Breakdown */}
-        <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-          <h3 className="text-white font-semibold mb-4">Test Types Breakdown</h3>
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-6 border border-primary-start/20">
+          <h3 className="text-gray-800 font-semibold mb-4">Test Types Breakdown</h3>
           <div className="space-y-3">
             {analytics.tests_by_type.map((item, index) => (
               <div key={index} className="flex items-center justify-between">
@@ -293,17 +293,17 @@ const TestAnalytics: React.FC = () => {
                     className="w-3 h-3 rounded-full" 
                     style={{ backgroundColor: getTypeColor(item.type) }}
                   ></div>
-                  <span className="text-white/80 capitalize">{item.type}</span>
+                  <span className="text-gray-800/80 capitalize">{item.type}</span>
                 </div>
-                <span className="text-white font-semibold">{item.count}</span>
+                <span className="text-gray-800 font-semibold">{item.count}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Severity Breakdown */}
-        <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-          <h3 className="text-white font-semibold mb-4">Severity Breakdown</h3>
+        <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-6 border border-primary-start/20">
+          <h3 className="text-gray-800 font-semibold mb-4">Severity Breakdown</h3>
           <div className="space-y-3">
             {analytics.tests_by_severity.map((item, index) => (
               <div key={index} className="flex items-center justify-between">
@@ -312,9 +312,9 @@ const TestAnalytics: React.FC = () => {
                     className="w-3 h-3 rounded-full" 
                     style={{ backgroundColor: getSeverityColor(item.severity) }}
                   ></div>
-                  <span className="text-white/80 capitalize">{item.severity || 'Unknown'}</span>
+                  <span className="text-gray-800/80 capitalize">{item.severity || 'Unknown'}</span>
                 </div>
-                <span className="text-white font-semibold">{item.count}</span>
+                <span className="text-gray-800 font-semibold">{item.count}</span>
               </div>
             ))}
           </div>

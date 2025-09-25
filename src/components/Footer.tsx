@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
   }
 
   return (
-    <footer id="footer" className="bg-gradient-to-br from-black/80 via-black/60 to-black/80 border-t border-white/10 relative overflow-hidden">
+    <footer id="footer" className="bg-gradient-to-br from-white/90 via-gray-50/80 to-white/90 border-t border-primary-start/20 relative overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-20 -right-20 w-40 h-40 md:w-80 md:h-80 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-full blur-3xl animate-float"></div>
@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
               </div>
               <h3 className="text-xl md:text-2xl font-bold gradient-text">Mind Acuity</h3>
             </div>
-            <p className="text-white/70 mb-6 max-w-md leading-relaxed text-sm md:text-base">
+            <p className="text-gray-600 mb-6 max-w-md leading-relaxed text-sm md:text-base">
               Revolutionizing mental health through AI-powered assessment, intelligent conversation, 
               and personalized solutions for stress, anxiety, and depression.
             </p>
@@ -55,31 +55,31 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-base md:text-lg font-semibold text-white mb-4 md:mb-6">Quick Links</h4>
+            <h4 className="text-base md:text-lg font-semibold text-gray-800 mb-4 md:mb-6">Quick Links</h4>
             <ul className="space-y-2 md:space-y-3">
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Home</a></li>
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">About</a></li>
-              <li><a href="#features" onClick={(e) => { e.preventDefault(); handleLinkClick('#features'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Features</a></li>
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Products</a></li>
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Contact</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Home</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">About</a></li>
+              <li><a href="#features" onClick={(e) => { e.preventDefault(); handleLinkClick('#features'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Features</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Products</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Contact</a></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-base md:text-lg font-semibold text-white mb-4 md:mb-6">Contact Info</h4>
+            <h4 className="text-base md:text-lg font-semibold text-gray-800 mb-4 md:mb-6">Contact Info</h4>
             <ul className="space-y-3 md:space-y-4">
               <li className="flex items-center space-x-2 md:space-x-3">
                 <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-primary-start/20 to-primary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail size={12} className="md:w-4 md:h-4 text-primary-start" />
                 </div>
-                <a href="mailto:contact@mindacuity.ai" className="text-white/70 hover:text-white transition-colors duration-300 text-sm md:text-base cursor-pointer">contact@mindacuity.ai</a>
+                <a href="mailto:contact@mindacuity.ai" className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm md:text-base cursor-pointer">contact@mindacuity.ai</a>
               </li>
               <li className="flex items-center space-x-2 md:space-x-3">
                 <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
                   <HelpCircle size={12} className="md:w-4 md:h-4 text-secondary-start" />
                 </div>
-                <a href="mailto:support@mindacuity.ai" className="text-white/70 hover:text-white transition-colors duration-300 text-sm md:text-base cursor-pointer">support@mindacuity.ai</a>
+                <a href="mailto:support@mindacuity.ai" className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm md:text-base cursor-pointer">support@mindacuity.ai</a>
               </li>
 
 

@@ -7,12 +7,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        'primary-start': '#30cfd0',
-        'primary-end': '#330867',
-        'secondary-start': '#667eea',
-        'secondary-end': '#764ba2',
-        'accent-start': '#f093fb',
-        'accent-end': '#f5576c',
+        'primary-start': '#a78bfa',
+        'primary-end': '#8b5cf6',
+        'secondary-start': '#86efac',
+        'secondary-end': '#4ade80',
+        'accent-start': '#fbbf24',
+        'accent-end': '#f59e0b',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

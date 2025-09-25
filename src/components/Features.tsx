@@ -55,7 +55,7 @@ const Features: React.FC = () => {
             <span className="block gradient-text">Why Choose</span>
             <span className="block gradient-text">Mind Acuity?</span>
           </h2>
-          <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto px-4">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Experience the next generation of mental health technology designed to understand, 
             support, and empower your emotional well-being.
           </p>
@@ -80,7 +80,7 @@ const Features: React.FC = () => {
                 </div>
                 
                 {/* Main Card Content */}
-                <div className="relative bg-gradient-to-br from-black/60 via-black/40 to-black/20 backdrop-blur-xl border border-white/20 rounded-2xl md:rounded-3xl p-5 md:p-6 h-full shadow-2xl group-hover:shadow-3xl group-hover:shadow-primary-start/20 transition-all duration-500">
+                <div className="relative bg-gradient-to-br from-primary-start/20 via-primary-end/15 to-primary-start/10 backdrop-blur-xl border border-primary-start/30 rounded-2xl md:rounded-3xl p-5 md:p-6 h-full shadow-2xl group-hover:shadow-3xl group-hover:shadow-primary-start/20 transition-all duration-500">
                   <div className="space-y-3 md:space-y-4">
                     <div className={`w-10 h-10 md:w-14 md:h-14 bg-gradient-to-r ${feature.gradient} rounded-xl md:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-2xl group-hover:shadow-white/20 relative overflow-hidden`}>
                       {/* 3D Icon Container */}
@@ -98,11 +98,11 @@ const Features: React.FC = () => {
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/30 rounded-b-xl md:rounded-b-2xl transform scale-x-90 group-hover:scale-x-100 transition-transform duration-300"></div>
                     </div>
                     
-                    <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/80 transition-all duration-300">
+                    <h3 className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary-end group-hover:to-primary-start transition-all duration-300">
                       {feature.title}
                     </h3>
                     
-                    <p className="text-white/70 leading-relaxed group-hover:text-white/90 transition-colors duration-300 text-sm md:text-base">
+                    <p className="text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300 text-sm md:text-base">
                       {feature.description}
                     </p>
                   </div>

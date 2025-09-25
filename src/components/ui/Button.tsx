@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   type = 'button'
 }) => {
-  const baseClasses = 'relative inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-primary-start disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group'
+  const baseClasses = 'relative inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary-start disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group'
   
   const sizeClasses = {
     sm: 'px-4 py-2 text-sm',
@@ -30,10 +30,10 @@ const Button: React.FC<ButtonProps> = ({
   }
   
   const variantClasses = {
-    primary: 'bg-black text-white border-0',
-    secondary: 'bg-black text-white border-0',
-    outline: 'bg-black text-white border-0',
-    ghost: 'bg-transparent text-white border-0'
+    primary: 'bg-white text-gray-800 border-0',
+    secondary: 'bg-white text-gray-800 border-0',
+    outline: 'bg-white text-gray-800 border-0',
+    ghost: 'bg-transparent text-gray-800 border-0'
   }
 
   // Animated luminous border effect
@@ -42,7 +42,7 @@ const Button: React.FC<ButtonProps> = ({
     before:from-primary-start before:via-secondary-start before:to-accent-start 
     before:animate-spin-slow before:opacity-0 before:group-hover:opacity-100 
     before:transition-opacity before:duration-500 before:z-0
-    after:absolute after:inset-[2px] after:rounded-xl after:bg-black after:z-10
+    after:absolute after:inset-[2px] after:rounded-xl after:bg-white after:z-10
   `
 
   // Shimmer effect wrapper

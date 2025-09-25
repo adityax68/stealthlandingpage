@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
   HR_UPDATE_EMPLOYEE_STATUS: `${API_BASE_URL}/api/v1/hr/employees`,
   HR_EMPLOYEE_ASSESSMENTS: `${API_BASE_URL}/api/v1/hr/employees`,
   HR_EMPLOYEE_COMPLAINTS: `${API_BASE_URL}/api/v1/hr/employees`,
+  HR_BULK_EMPLOYEE_ACCESS: `${API_BASE_URL}/api/v1/hr/bulk-employee-access`,
   
   // Complaints endpoints
   COMPLAINTS_CREATE: `${API_BASE_URL}/api/v1/complaints`,

@@ -155,21 +155,21 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="p-6">
+      <div className="p-6 bg-white/90 backdrop-blur-xl border border-primary-start/20 rounded-3xl shadow-2xl">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white mb-1">Create Account</h2>
-          <p className="text-white/70 text-sm">Join us to start your mental health journey</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-1">Create Account</h2>
+          <p className="text-gray-600 text-sm">Join us to start your mental health journey</p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+          <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded-lg">
             <div className="flex items-start space-x-2">
-              <div className="flex-shrink-0 w-4 h-4 bg-red-400 rounded-full flex items-center justify-center mt-0.5">
-                <span className="text-red-900 text-xs font-bold">!</span>
+              <div className="flex-shrink-0 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center mt-0.5">
+                <span className="text-white text-xs font-bold">!</span>
               </div>
               <div>
-                <p className="text-red-300 text-sm font-medium">Registration Error</p>
-                <p className="text-red-300/80 text-xs mt-1">{error}</p>
+                <p className="text-red-700 text-sm font-medium">Registration Error</p>
+                <p className="text-red-600 text-xs mt-1">{error}</p>
               </div>
             </div>
           </div>
@@ -179,17 +179,17 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
           {/* Name and Email in one row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label htmlFor="name" className="block text-xs font-medium text-white/80 mb-1">
+              <label htmlFor="name" className="block text-xs font-medium text-gray-700 mb-1">
                 Full Name
               </label>
               <div className="relative">
-                <User className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <User className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300 text-sm"
+                  className="w-full pl-8 pr-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300 text-sm"
                   placeholder="Full name"
                   required
                 />
@@ -197,17 +197,17 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-white/80 mb-1">
+              <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <Mail className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300 text-sm"
+                  className="w-full pl-8 pr-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300 text-sm"
                   placeholder="Email address"
                   required
                 />
@@ -218,17 +218,17 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
           {/* Age and Location in one row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label htmlFor="age" className="block text-xs font-medium text-white/80 mb-1">
+              <label htmlFor="age" className="block text-xs font-medium text-gray-700 mb-1">
                 Age
               </label>
               <div className="relative">
-                <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   id="age"
                   type="number"
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300 text-sm"
+                  className="w-full pl-8 pr-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300 text-sm"
                   placeholder="Age"
                   min="1"
                   max="120"
@@ -241,20 +241,20 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-white/80 mb-1">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
                 Country
               </label>
               <div className="relative" ref={countryRef}>
-                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   value={countrySearch}
                   onChange={(e) => setCountrySearch(e.target.value)}
                   onFocus={() => setShowCountryDropdown(true)}
-                  className="w-full pl-8 pr-8 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300 text-sm"
+                  className="w-full pl-8 pr-8 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300 text-sm"
                   placeholder="Search country"
                 />
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 
                 {showCountryDropdown && (
                   <div className="absolute z-10 w-full mt-1 bg-gray-800 border border-white/20 rounded-lg shadow-lg max-h-40 overflow-y-auto">
@@ -281,21 +281,21 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
           {/* State and City in one row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-white/80 mb-1">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
                 State
               </label>
               <div className="relative" ref={stateRef}>
-                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   value={stateSearch}
                   onChange={(e) => setStateSearch(e.target.value)}
                   onFocus={() => setShowStateDropdown(true)}
                   disabled={!country}
-                  className="w-full pl-8 pr-8 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full pl-8 pr-8 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Search state"
                 />
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 
                 {showStateDropdown && country && (
                   <div className="absolute z-10 w-full mt-1 bg-gray-800 border border-white/20 rounded-lg shadow-lg max-h-40 overflow-y-auto">
@@ -319,21 +319,21 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-white/80 mb-1">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
                 City
               </label>
               <div className="relative" ref={cityRef}>
-                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   value={citySearch}
                   onChange={(e) => setCitySearch(e.target.value)}
                   onFocus={() => setShowCityDropdown(true)}
                   disabled={!state}
-                  className="w-full pl-8 pr-8 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full pl-8 pr-8 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Search city"
                 />
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 
                 {showCityDropdown && state && (
                   <div className="absolute z-10 w-full mt-1 bg-gray-800 border border-white/20 rounded-lg shadow-lg max-h-40 overflow-y-auto">
@@ -360,24 +360,24 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
           {/* Password fields in one row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label htmlFor="password" className="block text-xs font-medium text-white/80 mb-1">
+              <label htmlFor="password" className="block text-xs font-medium text-gray-700 mb-1">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <Lock className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-8 pr-8 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300 text-sm"
+                  className="w-full pl-8 pr-8 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300 text-sm"
                   placeholder="Create password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white transition-colors duration-300"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-300"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -385,17 +385,17 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-xs font-medium text-white/80 mb-1">
+              <label htmlFor="confirmPassword" className="block text-xs font-medium text-gray-700 mb-1">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                <Lock className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   id="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`w-full pl-8 pr-8 py-2 bg-white/10 border rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent transition-all duration-300 text-sm ${
+                  className={`w-full pl-8 pr-8 py-2 bg-white/10 border rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300 text-sm ${
                     confirmPassword && !passwordsMatch
                       ? 'border-red-500/50 focus:ring-red-500'
                       : 'border-white/20'
@@ -406,7 +406,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white transition-colors duration-300"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-300"
                 >
                   {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -457,7 +457,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogin, isLo
         </form>
 
         <div className="mt-4 text-center">
-          <p className="text-white/70 text-sm">
+          <p className="text-gray-600 text-sm">
             Already have an account?{' '}
             <button
               onClick={onSwitchToLogin}

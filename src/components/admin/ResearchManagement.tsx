@@ -267,7 +267,7 @@ const ResearchManagement: React.FC = () => {
       <div className="flex items-center justify-center py-12">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-12 h-12 border-4 border-primary-start/30 border-t-primary-start rounded-full animate-spin"></div>
-          <p className="text-white/70 text-lg">Loading researches...</p>
+          <p className="text-gray-800/70 text-lg">Loading researches...</p>
         </div>
       </div>
     )
@@ -278,12 +278,12 @@ const ResearchManagement: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white">Research Management</h2>
-          <p className="text-white/70">Manage research articles and studies</p>
+          <h2 className="text-2xl font-bold text-gray-800">Research Management</h2>
+          <p className="text-gray-800/70">Manage research articles and studies</p>
         </div>
         <button
           onClick={handleAddResearch}
-          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
+          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-gray-800 rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
         >
           <Plus className="w-4 h-4" />
           <span>Add Research</span>
@@ -304,30 +304,30 @@ const ResearchManagement: React.FC = () => {
       {researches.length === 0 ? (
         <div className="text-center py-12">
           <div className="w-20 h-20 bg-gradient-to-r from-primary-start/20 to-primary-end/20 rounded-3xl flex items-center justify-center mx-auto mb-4">
-            <BookOpen className="w-10 h-10 text-white/50" />
+            <BookOpen className="w-10 h-10 text-gray-800/50" />
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2">No Researches Found</h3>
-          <p className="text-white/70">No research articles available at the moment.</p>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">No Researches Found</h3>
+          <p className="text-gray-800/70">No research articles available at the moment.</p>
         </div>
       ) : (
         <>
           {/* Research Table */}
-          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-white/5 border-b border-white/10">
+                <thead className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 border-b border-primary-start/20">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Thumbnail</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Title</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Description</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Created</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Status</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Actions</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Thumbnail</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Title</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Description</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Created</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Status</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
                   {researches.map((research) => (
-                    <tr key={research.id} className="hover:bg-white/5 transition-colors duration-200">
+                    <tr key={research.id} className="hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5 transition-colors duration-200">
                       <td className="px-6 py-4">
                         <div className="w-16 h-12 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-lg overflow-hidden">
                           <img
@@ -340,7 +340,7 @@ const ResearchManagement: React.FC = () => {
                               if (parent) {
                                 parent.innerHTML = `
                                   <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-start/20 to-primary-end/20">
-                                    <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-gray-800/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
                                   </div>
@@ -352,16 +352,16 @@ const ResearchManagement: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="max-w-xs">
-                          <h3 className="text-white font-medium text-sm line-clamp-2">{research.title}</h3>
+                          <h3 className="text-gray-800 font-medium text-sm line-clamp-2">{research.title}</h3>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="max-w-xs">
-                          <p className="text-white/70 text-sm line-clamp-2">{research.description}</p>
+                          <p className="text-gray-800/70 text-sm line-clamp-2">{research.description}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2 text-white/60 text-sm">
+                        <div className="flex items-center space-x-2 text-gray-800/60 text-sm">
                           <Calendar className="w-4 h-4" />
                           <span>{formatDate(research.created_at)}</span>
                         </div>
@@ -369,8 +369,8 @@ const ResearchManagement: React.FC = () => {
                       <td className="px-6 py-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           research.is_active
-                            ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-                            : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                            ? 'bg-green-600 text-black border border-green-600'
+                            : 'bg-red-600 text-black border border-red-600'
                         }`}>
                           {research.is_active ? 'Active' : 'Inactive'}
                         </span>
@@ -379,14 +379,14 @@ const ResearchManagement: React.FC = () => {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => window.open(research.source_url, '_blank')}
-                            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                            className="p-2 text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10 rounded-lg transition-all duration-200"
                             title="View Source"
                           >
                             <ExternalLink className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleEditResearch(research)}
-                            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                            className="p-2 text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10 rounded-lg transition-all duration-200"
                             title="Edit"
                           >
                             <Edit className="w-4 h-4" />
@@ -413,7 +413,7 @@ const ResearchManagement: React.FC = () => {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center space-x-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center space-x-2 px-4 py-2 bg-primary-start/10 border border-white/20 text-gray-800 rounded-lg hover:bg-primary-start/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Previous</span>
               </button>
@@ -425,8 +425,8 @@ const ResearchManagement: React.FC = () => {
                     onClick={() => handlePageChange(page)}
                     className={`px-3 py-2 rounded-lg transition-all duration-300 ${
                       page === currentPage
-                        ? 'bg-gradient-to-r from-primary-start to-primary-end text-white'
-                        : 'bg-white/10 border border-white/20 text-white/70 hover:bg-white/20 hover:text-white'
+                        ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800'
+                        : 'bg-primary-start/10 border border-white/20 text-gray-800/70 hover:bg-primary-start/20 hover:text-gray-800'
                     }`}
                   >
                     {page}
@@ -437,7 +437,7 @@ const ResearchManagement: React.FC = () => {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center space-x-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center space-x-2 px-4 py-2 bg-primary-start/10 border border-white/20 text-gray-800 rounded-lg hover:bg-primary-start/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Next</span>
               </button>
@@ -446,7 +446,7 @@ const ResearchManagement: React.FC = () => {
 
           {/* Results Info */}
           <div className="text-center">
-            <p className="text-white/60 text-sm">
+            <p className="text-gray-800/60 text-sm">
               Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, total)} of {total} researches
             </p>
           </div>
@@ -458,7 +458,7 @@ const ResearchManagement: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl border border-white/20 p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-gray-800">
                 {isEditModalOpen ? 'Edit Research' : 'Add New Research'}
               </h3>
               <button
@@ -469,7 +469,7 @@ const ResearchManagement: React.FC = () => {
                   setThumbnailFile(null)
                   setEditingResearch(null)
                 }}
-                className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                className="p-2 text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10 rounded-lg transition-all duration-200"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -477,49 +477,49 @@ const ResearchManagement: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-gray-800/80 mb-2">
                   Title *
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
                   placeholder="Enter research title"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-gray-800/80 mb-2">
                   Description *
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent resize-none"
+                  className="w-full px-4 py-3 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent resize-none"
                   placeholder="Enter research description"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-gray-800/80 mb-2">
                   Source URL *
                 </label>
                 <input
                   type="url"
                   value={formData.source_url}
                   onChange={(e) => setFormData({ ...formData, source_url: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start/50 focus:border-transparent"
                   placeholder="https://example.com/research"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-gray-800/80 mb-2">
                   Thumbnail Image {!isEditModalOpen && '*'}
                 </label>
                 
@@ -529,9 +529,9 @@ const ResearchManagement: React.FC = () => {
                     type="file"
                     accept="image/*"
                     onChange={handleFileSelect}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-start file:text-white file:cursor-pointer hover:file:bg-primary-end transition-all duration-300"
+                    className="w-full px-4 py-3 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-start file:text-gray-800 file:cursor-pointer hover:file:bg-primary-end transition-all duration-300"
                   />
-                  <Upload className="absolute right-3 top-3 w-5 h-5 text-white/50 pointer-events-none" />
+                  <Upload className="absolute right-3 top-3 w-5 h-5 text-gray-800/50 pointer-events-none" />
                 </div>
 
                 {/* Upload Button and Status */}
@@ -541,7 +541,7 @@ const ResearchManagement: React.FC = () => {
                       type="button"
                       onClick={handleUploadToS3}
                       disabled={isUploading}
-                      className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-gray-800 rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isUploading ? (
                         <>
@@ -555,7 +555,7 @@ const ResearchManagement: React.FC = () => {
                         </>
                       )}
                     </button>
-                    <span className="text-white/60 text-sm">
+                    <span className="text-gray-800/60 text-sm">
                       {thumbnailFile.name}
                     </span>
                   </div>
@@ -572,7 +572,7 @@ const ResearchManagement: React.FC = () => {
                 {/* Preview */}
                 {thumbnailUrl && (
                   <div className="mb-3">
-                    <p className="text-white/60 text-sm mb-2">Preview:</p>
+                    <p className="text-gray-800/60 text-sm mb-2">Preview:</p>
                     <div className="relative">
                       <img
                         src={thumbnailUrl}
@@ -591,12 +591,12 @@ const ResearchManagement: React.FC = () => {
                               <div class="w-32 h-20 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-lg border border-white/20 flex items-center justify-center">
                                 <div class="text-center">
                                   <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-1">
-                                    <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-gray-800/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
                                   </div>
-                                  <p class="text-white/60 text-xs">Image uploaded</p>
-                                  <p class="text-white/40 text-xs">(Preview unavailable)</p>
+                                  <p class="text-gray-800/60 text-xs">Image uploaded</p>
+                                  <p class="text-gray-800/40 text-xs">(Preview unavailable)</p>
                                 </div>
                               </div>
                             `
@@ -604,15 +604,15 @@ const ResearchManagement: React.FC = () => {
                         }}
                       />
                     </div>
-                    <div className="mt-2 p-2 bg-white/5 rounded-lg">
-                      <p className="text-white/60 text-xs mb-1">S3 URL:</p>
-                      <p className="text-white/40 text-xs break-all font-mono">{thumbnailUrl}</p>
+                    <div className="mt-2 p-2 bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-lg">
+                      <p className="text-gray-800/60 text-xs mb-1">S3 URL:</p>
+                      <p className="text-gray-800/40 text-xs break-all font-mono">{thumbnailUrl}</p>
                     </div>
                   </div>
                 )}
 
                 {isEditModalOpen && (
-                  <p className="text-white/60 text-sm mt-1">
+                  <p className="text-gray-800/60 text-sm mt-1">
                     Leave empty to keep current thumbnail
                   </p>
                 )}
@@ -628,14 +628,14 @@ const ResearchManagement: React.FC = () => {
                     setThumbnailFile(null)
                     setEditingResearch(null)
                   }}
-                  className="px-6 py-3 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all duration-300"
+                  className="px-6 py-3 bg-primary-start/10 border border-white/20 text-gray-800 rounded-lg hover:bg-primary-start/20 transition-all duration-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-3 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-gradient-to-r from-primary-start to-primary-end text-gray-800 rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Saving...' : (isEditModalOpen ? 'Update Research' : 'Add Research')}
                 </button>

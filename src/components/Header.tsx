@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
 
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-primary-start/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
                   e.preventDefault()
                   handleLinkClick(item.href)
                 }}
-                className="text-white/70 hover:text-white transition-colors duration-300 text-sm font-medium cursor-pointer"
+                className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm font-medium cursor-pointer"
               >
                 {item.label}
               </a>
@@ -113,7 +113,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="w-8 h-8 flex items-center justify-center text-white hover:text-primary-start transition-colors duration-300"
+              className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary-start transition-colors duration-300"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -122,7 +122,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-white/10">
+          <nav className="md:hidden py-4 border-t border-primary-start/20">
             <div className="flex flex-col space-y-3">
               {navItems.map((item) => (
                 <a
@@ -132,7 +132,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
                     e.preventDefault()
                     handleLinkClick(item.href)
                   }}
-                  className="text-white/70 hover:text-white transition-colors duration-300 text-base font-medium py-2 px-3 rounded-lg hover:bg-white/5 cursor-pointer"
+                  className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-base font-medium py-2 px-3 rounded-lg hover:bg-primary-start/10 cursor-pointer"
                 >
                   {item.label}
                 </a>

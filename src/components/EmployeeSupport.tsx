@@ -122,11 +122,11 @@ const EmployeeSupport: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'resolved':
-        return 'bg-green-500/20 text-green-300 border-green-500/30'
+        return 'bg-green-600 text-black border-green-600'
       case 'pending':
-        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+        return 'bg-yellow-600 text-black border-yellow-600'
       default:
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+        return 'bg-blue-600 text-black border-blue-600'
     }
   }
 
@@ -142,43 +142,43 @@ const EmployeeSupport: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white/70">Loading complaints...</p>
+          <Loader2 className="w-8 h-8 text-gray-800 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Loading complaints...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black overflow-auto">
+    <div className="h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 overflow-auto">
       <div className="p-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">Employee Support</h1>
-          <p className="text-white/70">Report workplace concerns and track their status</p>
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Employee Support</h1>
+          <p className="text-gray-800/70">Report workplace concerns and track their status</p>
         </div>
 
         {/* Submit New Complaint */}
-        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-8">
+        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-primary-start/20 p-6 mb-8">
           <div className="flex items-center space-x-3 mb-6">
-            <AlertCircle className="w-6 h-6 text-white" />
+            <AlertCircle className="w-6 h-6 text-gray-800" />
             <div>
-              <h2 className="text-xl font-bold text-white">Report a Concern</h2>
-              <p className="text-white/70">Share any workplace issues, harassment concerns, or work pressure</p>
+              <h2 className="text-xl font-bold text-gray-800">Report a Concern</h2>
+              <p className="text-gray-800/70">Share any workplace issues, harassment concerns, or work pressure</p>
             </div>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-              <p className="text-red-300 text-sm">{error}</p>
+            <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded-lg">
+              <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmitComplaint} className="space-y-4">
             <div>
-              <label htmlFor="complaint" className="block text-sm font-medium text-white/80 mb-2">
+              <label htmlFor="complaint" className="block text-sm font-medium text-gray-800/80 mb-2">
                 Describe your concern
               </label>
               <textarea
@@ -186,7 +186,7 @@ const EmployeeSupport: React.FC = () => {
                 value={newComplaint}
                 onChange={(e) => setNewComplaint(e.target.value)}
                 placeholder="Please describe your concern in detail..."
-                className="w-full h-32 px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent resize-none"
+                className="w-full h-32 px-4 py-3 bg-gradient-to-br from-primary-start/10 to-primary-end/5 border border-primary-start/20 rounded-lg text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent resize-none"
                 disabled={isSubmitting}
               />
             </div>
@@ -197,9 +197,9 @@ const EmployeeSupport: React.FC = () => {
                 id="shareEmployeeId"
                 checked={shareEmployeeId}
                 onChange={(e) => setShareEmployeeId(e.target.checked)}
-                className="w-4 h-4 text-primary-start bg-white/5 border-white/20 rounded focus:ring-primary-start focus:ring-2"
+                className="w-4 h-4 text-primary-start bg-gradient-to-br from-primary-start/10 to-primary-end/5 border-primary-start/20 rounded focus:ring-primary-start focus:ring-2"
               />
-              <label htmlFor="shareEmployeeId" className="text-sm text-white/80">
+              <label htmlFor="shareEmployeeId" className="text-sm text-gray-800/80">
                 Share my employee ID with HR (uncheck for anonymous report)
               </label>
             </div>
@@ -209,8 +209,8 @@ const EmployeeSupport: React.FC = () => {
               disabled={isSubmitting || !newComplaint.trim()}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 ${
                 isSubmitting || !newComplaint.trim()
-                  ? 'bg-white/20 text-white/50 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-primary-start to-primary-end text-white hover:from-primary-end hover:to-primary-start'
+                  ? 'bg-white/20 text-gray-800/50 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 hover:from-primary-end hover:to-primary-start'
               }`}
             >
               {isSubmitting ? (
@@ -229,38 +229,38 @@ const EmployeeSupport: React.FC = () => {
         </div>
 
         {/* Complaints List */}
-        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-          <div className="p-6 border-b border-white/10">
+        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden">
+          <div className="p-6 border-b border-primary-start/20">
             <div className="flex items-center space-x-3">
-              <FileText className="w-6 h-6 text-white" />
+              <FileText className="w-6 h-6 text-gray-800" />
               <div>
-                <h3 className="text-xl font-bold text-white">Your Reports</h3>
-                <p className="text-white/70">Track the status of your submitted concerns</p>
+                <h3 className="text-xl font-bold text-gray-800">Your Reports</h3>
+                <p className="text-gray-800/70">Track the status of your submitted concerns</p>
               </div>
             </div>
           </div>
 
           {complaints.length === 0 ? (
             <div className="p-12 text-center">
-              <FileText className="w-16 h-16 text-white/30 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No Reports Yet</h3>
-              <p className="text-white/70">Submit your first concern using the form above</p>
+              <FileText className="w-16 h-16 text-gray-800/30 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">No Reports Yet</h3>
+              <p className="text-gray-800/70">Submit your first concern using the form above</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-white/5 border-b border-white/10">
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Status</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Report</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Type</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Date</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">HR Response</th>
+                  <tr className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 border-b border-primary-start/20">
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Status</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Report</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Type</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Date</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">HR Response</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
                   {complaints.map((complaint) => (
-                    <tr key={complaint.id} className="hover:bg-white/5 transition-colors duration-200">
+                    <tr key={complaint.id} className="hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5 transition-colors duration-200">
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-2">
                           {getStatusIcon(complaint.status)}
@@ -271,24 +271,24 @@ const EmployeeSupport: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="max-w-md">
-                          <p className="text-white text-sm leading-relaxed">{complaint.complaint_text}</p>
+                          <p className="text-gray-800 text-sm leading-relaxed">{complaint.complaint_text}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-white/80 text-sm">
+                        <span className="text-gray-800/80 text-sm">
                           {complaint.employee_id ? 'Identified' : 'Anonymous'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-white/80 text-sm">{formatDate(complaint.created_at)}</span>
+                        <span className="text-gray-800/80 text-sm">{formatDate(complaint.created_at)}</span>
                       </td>
                       <td className="px-6 py-4">
                         {complaint.hr_notes ? (
                           <div className="max-w-md">
-                            <p className="text-white/80 text-sm leading-relaxed">{complaint.hr_notes}</p>
+                            <p className="text-gray-800/80 text-sm leading-relaxed">{complaint.hr_notes}</p>
                           </div>
                         ) : (
-                          <span className="text-white/40 text-sm">No response yet</span>
+                          <span className="text-gray-800/40 text-sm">No response yet</span>
                         )}
                       </td>
                     </tr>

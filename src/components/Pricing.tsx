@@ -108,7 +108,7 @@ const Pricing: React.FC = () => {
             <span className="block gradient-text">Choose Your</span>
             <span className="block gradient-text">Perfect Plan</span>
           </h2>
-          <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto px-4">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Select the plan that best fits your mental health journey. 
             All plans include our advanced AI-powered assessment and support.
           </p>
@@ -129,8 +129,8 @@ const Pricing: React.FC = () => {
                     onClick={() => setSelectedPlan(plan.id as 'basic' | 'premium')}
                     className={`relative p-8 border-2 rounded-3xl cursor-pointer transition-all duration-300 group ${
                       isSelected
-                        ? 'border-primary-start bg-gradient-to-br from-primary-start/20 to-primary-end/20 shadow-2xl shadow-primary-start/20'
-                        : 'border-white/20 hover:border-white/40 bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-xl'
+                        ? 'border-primary-start bg-gradient-to-br from-primary-start/30 to-primary-end/25 shadow-2xl shadow-primary-start/20'
+                        : 'border-primary-start/30 hover:border-primary-start/50 bg-gradient-to-br from-primary-start/15 to-primary-end/10 backdrop-blur-xl'
                     }`}
                   >
                     {isSelected && (
@@ -146,16 +146,16 @@ const Pricing: React.FC = () => {
                         <Icon className="w-8 h-8 text-white" />
                       </div>
                       
-                      <h3 className="text-2xl font-bold text-white mb-3">{plan.name}</h3>
-                      <p className="text-white/70 mb-6">{plan.description}</p>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-3">{plan.name}</h3>
+                      <p className="text-gray-700 mb-6">{plan.description}</p>
                       
-                      <div className="text-4xl font-bold text-white mb-2">{plan.price}</div>
-                      <div className="text-white/60 mb-8">{plan.messages}</div>
+                      <div className="text-4xl font-bold text-gray-800 mb-2">{plan.price}</div>
+                      <div className="text-gray-600 mb-8">{plan.messages}</div>
                       
                       <ul className="space-y-3 text-left">
                         {plan.features.map((feature, index) => (
-                          <li key={index} className="flex items-center text-white/80">
-                            <CheckCircle className="w-5 h-5 text-green-400 mr-3 flex-shrink-0" />
+                          <li key={index} className="flex items-center text-gray-700">
+                            <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
                             {feature}
                           </li>
                         ))}
@@ -183,7 +183,7 @@ const Pricing: React.FC = () => {
               
               <button
                 onClick={() => setShowAccessCodeInput(true)}
-                className="flex-1 bg-white/10 text-white py-4 px-8 rounded-2xl font-semibold hover:bg-white/20 transition-colors border border-white/20"
+                className="flex-1 bg-primary-start/10 text-gray-800 py-4 px-8 rounded-2xl font-semibold hover:bg-primary-start/20 transition-colors border border-primary-start/30"
               >
                 I Have an Access Code
               </button>
@@ -193,8 +193,8 @@ const Pricing: React.FC = () => {
           <>
             {/* Access Code Input */}
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-white mb-3">Enter Access Code</h3>
-              <p className="text-white/70 text-lg">
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Enter Access Code</h3>
+              <p className="text-gray-600 text-lg">
                 Already have a subscription? Enter your code below.
               </p>
             </div>
@@ -206,7 +206,7 @@ const Pricing: React.FC = () => {
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
                   placeholder="e.g., BASIC-ABC123"
-                  className="w-full px-6 py-4 border-2 border-white/20 rounded-2xl focus:ring-2 focus:ring-primary-start focus:border-primary-start text-center font-mono text-lg bg-black/40 backdrop-blur-xl text-white placeholder-white/50"
+                  className="w-full px-6 py-4 border-2 border-primary-start/30 rounded-2xl focus:ring-2 focus:ring-primary-start focus:border-primary-start text-center font-mono text-lg bg-white/80 backdrop-blur-xl text-gray-800 placeholder-gray-500"
                   maxLength={20}
                 />
               </div>
@@ -226,7 +226,7 @@ const Pricing: React.FC = () => {
                 
                 <button
                   onClick={() => setShowAccessCodeInput(false)}
-                  className="px-6 py-4 text-white/70 hover:text-white transition-colors font-medium"
+                  className="px-6 py-4 text-gray-600 hover:text-gray-800 transition-colors font-medium"
                 >
                   Back
                 </button>

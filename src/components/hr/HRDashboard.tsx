@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Users, User, Mail, Loader2, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react'
+import { Users, User, Mail, Loader2, ChevronLeft, ChevronRight, AlertCircle, Upload } from 'lucide-react'
 import { API_ENDPOINTS } from '../../config/api'
 import EmployeeDetail from './EmployeeDetail'
 import HRComplaints from './HRComplaints'
+import BulkEmployeeUpload from './BulkEmployeeUpload'
 
 interface HRDashboardProps {
   user: any
@@ -21,7 +22,7 @@ interface Employee {
   updated_at: string
 }
 
-type HRTab = 'employees' | 'complaints'
+type HRTab = 'employees' | 'complaints' | 'bulk-upload'
 
 const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
   const [employees, setEmployees] = useState<Employee[]>([])
@@ -149,10 +150,10 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white/70">Loading employees...</p>
+          <Loader2 className="w-8 h-8 text-gray-800 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Loading employees...</p>
         </div>
       </div>
     )
@@ -160,13 +161,13 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
 
   if (error) {
     return (
-      <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Error</h1>
-          <p className="text-red-400 mb-4">{error}</p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Error</h1>
+          <p className="text-red-600 mb-4">{error}</p>
           <button
             onClick={fetchEmployees}
-            className="px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
+            className="px-4 py-2 bg-gradient-to-r from-primary-start to-primary-end text-gray-800 rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300"
           >
             Try Again
           </button>
@@ -176,12 +177,12 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black overflow-auto">
+    <div className="h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 overflow-auto">
       <div className="p-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">HR Dashboard</h1>
-          <p className="text-white/70">Manage your organization's employees and complaints</p>
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">HR Dashboard</h1>
+          <p className="text-gray-800/70">Manage your organization's employees and complaints</p>
           
           {/* Tab Navigation */}
           <div className="flex justify-center mt-6 space-x-2">
@@ -189,8 +190,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
               onClick={() => setActiveTab('employees')}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 activeTab === 'employees'
-                  ? 'bg-gradient-to-r from-primary-start to-primary-end text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800'
+                  : 'bg-primary-start/10 text-gray-800/70 hover:bg-primary-start/20'
               }`}
             >
               <div className="flex items-center space-x-2">
@@ -203,8 +204,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
               onClick={() => setActiveTab('complaints')}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 activeTab === 'complaints'
-                  ? 'bg-gradient-to-r from-primary-start to-primary-end text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800'
+                  : 'bg-primary-start/10 text-gray-800/70 hover:bg-primary-start/20'
               }`}
             >
               <div className="flex items-center space-x-2">
@@ -212,45 +213,59 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                 <span>Complaints</span>
               </div>
             </button>
+            
+            <button
+              onClick={() => setActiveTab('bulk-upload')}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                activeTab === 'bulk-upload'
+                  ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800'
+                  : 'bg-primary-start/10 text-gray-800/70 hover:bg-primary-start/20'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <Upload className="w-5 h-5" />
+                <span>Bulk Upload</span>
+              </div>
+            </button>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/10 backdrop-blur-xl rounded-xl p-6 border border-white/10">
+          <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/10 backdrop-blur-xl rounded-xl p-6 border border-primary-start/20">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-white" />
+                <Users className="w-6 h-6 text-gray-800" />
               </div>
               <div>
-                <p className="text-white/70 text-sm">Total Employees</p>
-                <p className="text-2xl font-bold text-white">{employees.length}</p>
+                <p className="text-gray-800/70 text-sm">Total Employees</p>
+                <p className="text-2xl font-bold text-gray-800">{employees.length}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-green-500/10 to-green-600/10 backdrop-blur-xl rounded-xl p-6 border border-white/10">
+          <div className="bg-gradient-to-br from-green-500/10 to-green-600/10 backdrop-blur-xl rounded-xl p-6 border border-primary-start/20">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                <User className="w-6 h-6 text-white" />
+                <User className="w-6 h-6 text-gray-800" />
               </div>
               <div>
-                <p className="text-white/70 text-sm">Active Employees</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-gray-800/70 text-sm">Active Employees</p>
+                <p className="text-2xl font-bold text-gray-800">
                   {employees.filter(emp => emp.is_active).length}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 backdrop-blur-xl rounded-xl p-6 border border-white/10">
+          <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 backdrop-blur-xl rounded-xl p-6 border border-primary-start/20">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-white" />
+                <Users className="w-6 h-6 text-gray-800" />
               </div>
               <div>
-                <p className="text-white/70 text-sm">Organization</p>
-                <p className="text-lg font-bold text-white">
+                <p className="text-gray-800/70 text-sm">Organization</p>
+                <p className="text-lg font-bold text-gray-800">
                   {employees.length > 0 ? employees[0].org_id : 'N/A'}
                 </p>
               </div>
@@ -261,17 +276,17 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
         {/* Tab Content */}
         {activeTab === 'employees' ? (
           // Employee List Content
-          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-            <div className="p-6 border-b border-white/10">
-              <h2 className="text-2xl font-bold text-white">Employee List</h2>
-              <p className="text-white/70 mt-1">Click on any employee row to view details</p>
+          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden">
+            <div className="p-6 border-b border-primary-start/20">
+              <h2 className="text-2xl font-bold text-gray-800">Employee List</h2>
+              <p className="text-gray-800/70 mt-1">Click on any employee row to view details</p>
             </div>
 
           {employees.length === 0 ? (
             <div className="p-12 text-center">
-              <Users className="w-16 h-16 text-white/30 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No Employees Found</h3>
-              <p className="text-white/70">No employees have been assigned to your organization yet.</p>
+              <Users className="w-16 h-16 text-gray-800/30 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">No Employees Found</h3>
+              <p className="text-gray-800/70">No employees have been assigned to your organization yet.</p>
             </div>
           ) : (
             <>
@@ -280,47 +295,47 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                 <div className="hidden lg:block">
                   <table className="w-full">
                     <thead>
-                      <tr className="bg-white/5 border-b border-white/10">
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Employee</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Code</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Email</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-white/80">Status</th>
+                      <tr className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 border-b border-primary-start/20">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Employee</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Code</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Email</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/10">
                       {currentEmployees.map((employee) => (
                         <tr 
                           key={employee.id} 
-                          className="hover:bg-white/5 transition-colors duration-200 cursor-pointer"
+                          className="hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5 transition-colors duration-200 cursor-pointer"
                           onClick={() => handleEmployeeClick(employee)}
                         >
                           <td className="px-6 py-4">
                             <div className="flex items-center space-x-3">
                               <div className="w-10 h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                                <User className="w-5 h-5 text-white" />
+                                <User className="w-5 h-5 text-gray-800" />
                               </div>
                               <div>
-                                <p className="font-semibold text-white">{employee.full_name}</p>
-                                <p className="text-white/60 text-sm">ID: {employee.user_id}</p>
+                                <p className="font-semibold text-gray-800">{employee.full_name}</p>
+                                <p className="text-gray-800/60 text-sm">ID: {employee.user_id}</p>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <span className="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-white text-sm font-medium">
+                            <span className="px-3 py-1 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 text-sm font-medium">
                               {employee.employee_code}
                             </span>
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center space-x-2">
-                              <Mail className="w-4 h-4 text-white/60" />
-                              <span className="text-white">{employee.email}</span>
+                              <Mail className="w-4 h-4 text-gray-800/60" />
+                              <span className="text-gray-800">{employee.email}</span>
                             </div>
                           </td>
                           <td className="px-6 py-4">
                             <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
                               employee.is_active
-                                ? 'bg-green-500/20 text-green-300 border-green-500/30'
-                                : 'bg-red-500/20 text-red-300 border-red-500/30'
+                                ? 'bg-green-600 text-black border-green-600'
+                                : 'bg-red-600 text-black border-red-600'
                             }`}>
                               {employee.is_active ? 'Active' : 'Inactive'}
                             </span>
@@ -336,21 +351,21 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                   {currentEmployees.map((employee) => (
                     <div 
                       key={employee.id} 
-                      className="bg-white/5 rounded-xl p-4 border border-white/10 cursor-pointer hover:bg-white/10 transition-colors duration-200"
+                      className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-4 border border-primary-start/20 cursor-pointer hover:bg-primary-start/10 transition-colors duration-200"
                       onClick={() => handleEmployeeClick(employee)}
                     >
                       <div className="flex items-center space-x-3 mb-3">
                         <div className="w-12 h-12 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                          <User className="w-6 h-6 text-white" />
+                          <User className="w-6 h-6 text-gray-800" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-white">{employee.full_name}</h3>
-                          <p className="text-white/60 text-sm">{employee.employee_code}</p>
+                          <h3 className="font-semibold text-gray-800">{employee.full_name}</h3>
+                          <p className="text-gray-800/60 text-sm">{employee.employee_code}</p>
                         </div>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium border ${
                           employee.is_active
-                            ? 'bg-green-500/20 text-green-300 border-green-500/30'
-                            : 'bg-red-500/20 text-red-300 border-red-500/30'
+                            ? 'bg-green-600 text-black border-green-600'
+                            : 'bg-red-600 text-black border-red-600'
                         }`}>
                           {employee.is_active ? 'Active' : 'Inactive'}
                         </span>
@@ -358,8 +373,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                       
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center space-x-2">
-                          <Mail className="w-4 h-4 text-white/60" />
-                          <span className="text-white/80">{employee.email}</span>
+                          <Mail className="w-4 h-4 text-gray-800/60" />
+                          <span className="text-gray-800/80">{employee.email}</span>
                         </div>
                       </div>
                     </div>
@@ -369,10 +384,10 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
 
               {/* Pagination Controls */}
               {totalPages > 1 && (
-                <div className="p-6 border-t border-white/10">
+                <div className="p-6 border-t border-primary-start/20">
                   <div className="flex flex-col items-center gap-4">
                     {/* Page Info */}
-                    <div className="text-white/70 text-sm text-center">
+                    <div className="text-gray-800/70 text-sm text-center">
                       Showing {indexOfFirstEmployee + 1} to {Math.min(indexOfLastEmployee, employees.length)} of {employees.length} employees
                     </div>
 
@@ -384,8 +399,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                         disabled={currentPage === 1}
                         className={`p-2 rounded-lg border transition-all duration-200 ${
                           currentPage === 1
-                            ? 'border-white/20 text-white/40 cursor-not-allowed'
-                            : 'border-white/30 text-white hover:border-white/50 hover:bg-white/5'
+                            ? 'border-white/20 text-gray-800/40 cursor-not-allowed'
+                            : 'border-white/30 text-gray-800 hover:border-white/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
                         }`}
                       >
                         <ChevronLeft className="w-4 h-4" />
@@ -399,8 +414,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                             onClick={() => goToPage(pageNumber)}
                             className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200 ${
                               pageNumber === currentPage
-                                ? 'bg-gradient-to-r from-primary-start to-primary-end text-white border-primary-end'
-                                : 'border-white/30 text-white/70 hover:border-white/50 hover:bg-white/5'
+                                ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 border-primary-end'
+                                : 'border-white/30 text-gray-800/70 hover:border-white/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
                             }`}
                           >
                             {pageNumber}
@@ -414,8 +429,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                         disabled={currentPage === totalPages}
                         className={`p-2 rounded-lg border transition-all duration-200 ${
                           currentPage === totalPages
-                            ? 'border-white/20 text-white/40 cursor-not-allowed'
-                            : 'border-white/30 text-white hover:border-white/50 hover:bg-white/5'
+                            ? 'border-white/20 text-gray-800/40 cursor-not-allowed'
+                            : 'border-white/30 text-gray-800 hover:border-white/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
                         }`}
                       >
                         <ChevronRight className="w-4 h-4" />
@@ -427,8 +442,10 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
             </>
           )}
         </div>
-        ) : (
+        ) : activeTab === 'complaints' ? (
           <HRComplaints />
+        ) : (
+          <BulkEmployeeUpload onUploadComplete={fetchEmployees} />
         )}
       </div>
     </div>

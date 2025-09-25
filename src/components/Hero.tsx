@@ -20,7 +20,9 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
   const [ripples, setRipples] = useState<Ripple[]>([])
   const [showMoodAssessment, setShowMoodAssessment] = useState(false)
   const [, setHasShownMoodAssessment] = useState(false)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const heroRef = useRef<HTMLElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const rippleId = useRef(0)
   const { setMoodData } = useMood()
 
@@ -34,6 +36,13 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
       clearTimeout(glowTimer)
     }
   }, [])
+
+  // Ensure video plays when component mounts
+  useEffect(() => {
+    if (videoRef.current && isVideoLoaded) {
+      videoRef.current.play().catch(console.error)
+    }
+  }, [isVideoLoaded])
 
   // Auto-show mood assessment after splash screen completes
   useEffect(() => {
@@ -86,14 +95,61 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
     setShowMoodAssessment(false)
   }, [])
 
+  const handleVideoLoad = () => {
+    console.log('Video loaded successfully')
+    setIsVideoLoaded(true)
+    if (videoRef.current) {
+      videoRef.current.play().catch((error) => {
+        console.error('Video play failed:', error)
+      })
+    }
+  }
+
+  const handleVideoError = () => {
+    console.error('Video failed to load')
+    setIsVideoLoaded(false)
+  }
+
   return (
     <section 
       ref={heroRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black pt-20"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100 pt-20"
     >
+      {/* Background Video */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ 
+          zIndex: 1,
+          opacity: 0.3,
+          filter: 'blur(2px)'
+        }}
+        onLoadedData={handleVideoLoad}
+        onError={handleVideoError}
+        onCanPlay={() => console.log('Video can play')}
+        onLoadStart={() => console.log('Video load started')}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+      >
+        <source src="/landing.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      
+      {/* Video Overlay for better text readability */}
+      <div className="absolute inset-0 bg-white/20" style={{ zIndex: 2 }}></div>
+      {/* Video Loading Indicator */}
+      {!isVideoLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: -8 }}>
+          <div className="w-8 h-8 border-2 border-primary-start/30 border-t-primary-start rounded-full animate-spin"></div>
+        </div>
+      )}
+
       {/* Enhanced Background Orbs with Multiple Floating Layers */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 3 }}>
         {/* Primary Floating Orbs */}
         <div className="absolute top-10 left-10 w-48 h-48 md:top-20 md:left-20 md:w-72 md:h-72 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-full blur-3xl animate-float"></div>
         <div className="absolute bottom-10 right-10 w-64 h-64 md:bottom-20 md:right-20 md:w-96 md:h-96 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded-full blur-3xl animate-float-delayed"></div>
@@ -116,17 +172,18 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
           style={{
             left: ripple.x - 8,
             top: ripple.y - 8,
+            zIndex: 15,
           }}
         />
       ))}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ zIndex: 10 }}>
         <div className="mb-8 md:mb-12">
           <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold mb-6 md:mb-8">
-            <span className="block text-white rubik-pixels-regular">Mind Acuity</span>
+            <span className="block text-gray-800 rubik-pixels-regular">Mind Acuity</span>
           </h1>
           
-          <p className="text-lg sm:text-xl md:text-2xl text-white/70 max-w-4xl mx-auto mb-12 md:mb-16 leading-relaxed px-4">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto mb-12 md:mb-16 leading-relaxed px-4">
             Advanced AI-powered assessment and personalized solutions for stress, anxiety, and depression. 
             Experience the future of mental health care.
           </p>
@@ -140,7 +197,7 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
           }`}></div>
           
           {/* Main Container */}
-          <div className="relative bg-gradient-to-br from-black/40 via-black/20 to-transparent backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 shadow-2xl">
+          <div className="relative bg-gradient-to-br from-white/90 via-white/70 to-white/50 backdrop-blur-xl border border-primary-start/20 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 shadow-2xl">
             {/* Subtle Border Animation */}
             <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             
@@ -201,7 +258,7 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
             <div className={`mt-4 md:mt-6 transition-all duration-1000 delay-1000 ${
               isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
             }`}>
-              <p className="text-white/60 text-base sm:text-lg md:text-xl font-light px-2">
+              <p className="text-gray-600 text-base sm:text-lg md:text-xl font-light px-2">
                 Experience the future of mental health technology
               </p>
             </div>
@@ -245,21 +302,21 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
               <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse">99%</div>
               <div className="absolute inset-0 bg-gradient-to-r from-primary-start/20 to-primary-end/20 blur-xl rounded-full animate-float"></div>
             </div>
-            <div className="text-white/70 text-sm sm:text-lg">Accuracy Rate</div>
+            <div className="text-gray-600 text-sm sm:text-lg">Accuracy Rate</div>
           </div>
           <div className="text-center group hover:scale-105 transition-transform duration-300">
             <div className="relative">
               <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse" style={{ animationDelay: '0.5s' }}>24/7</div>
               <div className="absolute inset-0 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 blur-xl rounded-full animate-float-delayed"></div>
             </div>
-            <div className="text-white/70 text-sm sm:text-lg">Available Support</div>
+            <div className="text-gray-600 text-sm sm:text-lg">Available Support</div>
           </div>
           <div className="text-center group hover:scale-105 transition-transform duration-300">
             <div className="relative">
               <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse" style={{ animationDelay: '1s' }}>10K+</div>
               <div className="absolute inset-0 bg-gradient-to-r from-accent-start/20 to-accent-end/20 blur-xl rounded-full animate-float-slow"></div>
             </div>
-            <div className="text-white/70 text-sm sm:text-lg">Users Helped</div>
+            <div className="text-gray-600 text-sm sm:text-lg">Users Helped</div>
           </div>
         </div>
       </div>

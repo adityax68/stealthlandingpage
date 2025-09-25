@@ -346,7 +346,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             <span className="gradient-text">Mental Health Assessment</span>
           </h1>
-          <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto px-4">
+          <p className="text-lg sm:text-xl text-gray-800/70 max-w-3xl mx-auto px-4">
             Take a comprehensive mental health assessment to understand your current state and get personalized recommendations.
           </p>
         </div>
@@ -361,7 +361,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               <div className="flex items-center justify-center py-12">
                 <div className="flex flex-col items-center space-y-4">
                   <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <p className="text-white/70 text-lg">Loading tests...</p>
+                  <p className="text-gray-800/70 text-lg">Loading tests...</p>
                 </div>
               </div>
             ) : !selectedCategory ? (
@@ -375,12 +375,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                   >
                     {/* Category Header */}
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="p-3 bg-white/10 rounded-xl">
+                      <div className="p-3 bg-primary-start/10 rounded-xl">
                         {getCategoryIcon(category)}
                       </div>
                       <div>
-                        <h2 className="text-2xl font-bold text-white capitalize">{category}</h2>
-                        <p className="text-white/60 text-sm">{categoryTests.length} test{categoryTests.length !== 1 ? 's' : ''} available</p>
+                        <h2 className="text-2xl font-bold text-gray-800 capitalize">{category}</h2>
+                        <p className="text-gray-800/60 text-sm">{categoryTests.length} test{categoryTests.length !== 1 ? 's' : ''} available</p>
                       </div>
                     </div>
                   </div>
@@ -392,7 +392,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 {/* Back Button */}
                 <button
                   onClick={handleBackToCategories}
-                  className="flex items-center text-white/70 hover:text-white transition-colors duration-300 mb-6"
+                  className="flex items-center text-gray-800/70 hover:text-gray-800 transition-colors duration-300 mb-6"
                 >
                   <ChevronRight className="w-5 h-5 mr-2 rotate-180" />
                   Back to Categories
@@ -405,17 +405,17 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                     <div
                       key={test.id}
                       onClick={() => navigate(`/tests?test=${test.test_code}`)}
-                      className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 cursor-pointer transition-all duration-300 hover:bg-white/20 hover:scale-102 group"
+                      className="bg-primary-start/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 cursor-pointer transition-all duration-300 hover:bg-primary-start/20 hover:scale-102 group"
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-white mb-2">{test.test_name}</h3>
-                          <p className="text-white/70 text-sm leading-relaxed mb-3">{test.description}</p>
+                          <h3 className="text-xl font-semibold text-gray-800 mb-2">{test.test_name}</h3>
+                          <p className="text-gray-800/70 text-sm leading-relaxed mb-3">{test.description}</p>
                         </div>
-                        <ChevronRight className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 ml-4" />
+                        <ChevronRight className="w-6 h-6 text-gray-800/50 group-hover:text-gray-800 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 ml-4" />
                       </div>
 
-                      <div className="flex items-center justify-between text-white/60 text-sm">
+                      <div className="flex items-center justify-between text-gray-800/60 text-sm">
                         <div className="flex items-center">
                           <Clock className="w-4 h-4 mr-1" />
                           <span>{test.total_questions} questions</span>
@@ -441,7 +441,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     <div className="flex items-center justify-center py-12">
       <div className="flex flex-col items-center space-y-4">
         <div className="w-12 h-12 border-4 border-primary-start/30 border-t-primary-start rounded-full animate-spin"></div>
-        <p className="text-white/70 text-lg">Loading...</p>
+        <p className="text-gray-800/70 text-lg">Loading...</p>
       </div>
     </div>
   )
@@ -457,11 +457,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             <button
               onClick={loadAssessmentHistory}
               disabled={isLoadingHistory}
-              className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 bg-primary-start/10 hover:bg-primary-start/20 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               title="Refresh assessment history"
             >
               <svg 
-                className={`w-5 h-5 text-white ${isLoadingHistory ? 'animate-spin' : ''}`} 
+                className={`w-5 h-5 text-gray-800 ${isLoadingHistory ? 'animate-spin' : ''}`} 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -470,7 +470,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               </svg>
             </button>
           </div>
-          <p className="text-base sm:text-lg lg:text-xl text-white/70 max-w-3xl mx-auto px-4">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-800/70 max-w-3xl mx-auto px-4">
             Review your past assessments and track your mental health progress over time.
           </p>
         </div>
@@ -481,10 +481,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           ) : assessmentHistory.length > 0 ? (
             <>
               {/* Desktop Table View */}
-              <div className="hidden lg:block bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+              <div className="hidden lg:block bg-gradient-to-br from-primary-start/10 to-primary-end/5 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden">
                 {/* Table Header */}
-                <div className="bg-white/5 border-b border-white/10 px-6 py-4">
-                  <div className="grid grid-cols-12 gap-4 items-center text-sm font-semibold text-white/80">
+                <div className="bg-white/5 border-b border-primary-start/20 px-6 py-4">
+                  <div className="grid grid-cols-12 gap-4 items-center text-sm font-semibold text-gray-800/80">
                     <div className="col-span-1"></div>
                     <div className="col-span-3 text-left">Assessment</div>
                     <div className="col-span-2 text-left">Date & Time</div>
@@ -505,12 +505,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                           <div className="col-span-1">
                             <button
                               onClick={() => toggleRowExpansion(assessment.id)}
-                              className="p-1 rounded-lg hover:bg-white/10 transition-colors duration-200"
+                              className="p-1 rounded-lg hover:bg-primary-start/10 transition-colors duration-200"
                             >
                               {expandedRows.has(assessment.id) ? (
-                                <ChevronDown className="w-4 h-4 text-white/60" />
+                                <ChevronDown className="w-4 h-4 text-gray-800/60" />
                               ) : (
-                                <ChevronRight className="w-4 h-4 text-white/60" />
+                                <ChevronRight className="w-4 h-4 text-gray-800/60" />
                               )}
                             </button>
                           </div>
@@ -519,24 +519,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                           <div className="col-span-3">
                             <div className="flex items-center space-x-3">
                               <div className="w-10 h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center flex-shrink-0">
-                                <BarChart3 className="w-5 h-5 text-white" />
+                                <BarChart3 className="w-5 h-5 text-gray-800" />
                               </div>
                               <div>
-                                <h3 className="font-semibold text-white text-sm lg:text-base">
+                                <h3 className="font-semibold text-gray-800 text-sm lg:text-base">
                                   {assessment.assessment_name} Assessment
                                 </h3>
-                                <p className="text-white/60 text-xs lg:text-sm">ID: {assessment.id}</p>
+                                <p className="text-gray-800/60 text-xs lg:text-sm">ID: {assessment.id}</p>
                               </div>
                             </div>
                           </div>
 
                           {/* Date & Time */}
                           <div className="col-span-2">
-                            <div className="flex items-center space-x-2 text-white/80">
+                            <div className="flex items-center space-x-2 text-gray-800/80">
                               <Calendar className="w-4 h-4" />
                               <div className="text-sm">
                                 <div>{new Date(assessment.created_at).toLocaleDateString()}</div>
-                                <div className="text-white/60 text-xs">
+                                <div className="text-gray-800/60 text-xs">
                                   {new Date(assessment.created_at).toLocaleTimeString()}
                                 </div>
                               </div>
@@ -549,7 +549,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                               <div className="text-xl font-bold gradient-text">
                                 {assessment.total_score}/{assessment.max_score}
                               </div>
-                              <div className="text-xs text-white/60">Total Score</div>
+                              <div className="text-xs text-gray-800/60">Total Score</div>
                             </div>
                           </div>
 
@@ -567,7 +567,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                             <div className="flex justify-center space-x-2">
                               <button
                                 onClick={() => toggleRowExpansion(assessment.id)}
-                                className="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-white/80 hover:bg-white/20 transition-all duration-200 text-xs"
+                                className="px-3 py-1 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800/80 hover:bg-primary-start/20 transition-all duration-200 text-xs"
                               >
                                 {expandedRows.has(assessment.id) ? 'Hide' : 'View'} Details
                               </button>
@@ -578,19 +578,19 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
                       {/* Expanded Details */}
                       {expandedRows.has(assessment.id) && (
-                        <div className="bg-white/5 border-t border-white/10 px-6 py-4">
+                        <div className="bg-white/5 border-t border-primary-start/20 px-6 py-4">
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Assessment Details */}
                             <div className="space-y-4">
-                              <h4 className="text-lg font-semibold text-white mb-3">Assessment Details</h4>
+                              <h4 className="text-lg font-semibold text-gray-800 mb-3">Assessment Details</h4>
                               <div className="space-y-3">
                                 <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-                                  <span className="text-white/70">Assessment Type:</span>
-                                  <span className="text-white font-medium">{assessment.assessment_name}</span>
+                                  <span className="text-gray-800/70">Assessment Type:</span>
+                                  <span className="text-gray-800 font-medium">{assessment.assessment_name}</span>
                                 </div>
                                 <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-                                  <span className="text-white/70">Completion Date:</span>
-                                  <span className="text-white font-medium">
+                                  <span className="text-gray-800/70">Completion Date:</span>
+                                  <span className="text-gray-800 font-medium">
                                     {new Date(assessment.created_at).toLocaleDateString('en-US', {
                                       weekday: 'long',
                                       year: 'numeric',
@@ -600,8 +600,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                                   </span>
                                 </div>
                                 <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-                                  <span className="text-white/70">Completion Time:</span>
-                                  <span className="text-white font-medium">
+                                  <span className="text-gray-800/70">Completion Time:</span>
+                                  <span className="text-gray-800 font-medium">
                                     {new Date(assessment.created_at).toLocaleTimeString()}
                                   </span>
                                 </div>
@@ -610,16 +610,16 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
                             {/* Score Breakdown */}
                             <div className="space-y-4">
-                              <h4 className="text-lg font-semibold text-white mb-3">Score Breakdown</h4>
+                              <h4 className="text-lg font-semibold text-gray-800 mb-3">Score Breakdown</h4>
                               <div className="space-y-3">
                                 <div className="p-3 bg-white/5 rounded-lg">
                                   <div className="flex justify-between items-center mb-2">
-                                    <span className="text-white/70">Total Score:</span>
+                                    <span className="text-gray-800/70">Total Score:</span>
                                     <span className="text-xl font-bold gradient-text">
                                       {assessment.total_score}/{assessment.max_score}
                                     </span>
                                   </div>
-                                  <div className="w-full bg-white/10 rounded-full h-2">
+                                  <div className="w-full bg-primary-start/10 rounded-full h-2">
                                     <div 
                                       className="bg-gradient-to-r from-primary-start to-primary-end h-2 rounded-full transition-all duration-500"
                                       style={{ width: `${(assessment.total_score / assessment.max_score) * 100}%` }}
@@ -629,7 +629,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                                 
                                 <div className="p-3 bg-white/5 rounded-lg">
                                   <div className="flex justify-between items-center mb-2">
-                                    <span className="text-white/70">Overall Severity:</span>
+                                    <span className="text-gray-800/70">Overall Severity:</span>
                                     <span className={`px-2 py-1 rounded text-xs font-medium border ${getSeverityColor(assessment.severity_level)}`}>
                                       {assessment.severity_level.replace('_', ' ').toUpperCase()}
                                     </span>
@@ -641,8 +641,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
                           {/* Interpretation */}
                           <div className="mt-6 p-4 bg-gradient-to-r from-primary-start/10 to-primary-end/10 rounded-lg border border-primary-start/20">
-                            <h4 className="text-lg font-semibold text-white mb-3">Interpretation</h4>
-                            <p className="text-white/80 leading-relaxed">{assessment.interpretation}</p>
+                            <h4 className="text-lg font-semibold text-gray-800 mb-3">Interpretation</h4>
+                            <p className="text-gray-800/80 leading-relaxed">{assessment.interpretation}</p>
                           </div>
                         </div>
                       )}
@@ -654,30 +654,30 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               {/* Mobile Card View */}
               <div className="lg:hidden space-y-4">
                 {assessmentHistory.map((assessment, index) => (
-                  <div key={`mobile-assessment-${assessment.id}-${assessment.created_at}-${index}`} className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden">
+                  <div key={`mobile-assessment-${assessment.id}-${assessment.created_at}-${index}`} className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 backdrop-blur-xl rounded-xl border border-primary-start/20 overflow-hidden">
                     {/* Main Card Content */}
                     <div className="p-4">
                       {/* Header Row */}
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                            <BarChart3 className="w-5 h-5 text-white" />
+                            <BarChart3 className="w-5 h-5 text-gray-800" />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-white text-sm">
+                            <h3 className="font-semibold text-gray-800 text-sm">
                               {assessment.assessment_name} Assessment
                             </h3>
-                            <p className="text-white/60 text-xs">ID: {assessment.id}</p>
+                            <p className="text-gray-800/60 text-xs">ID: {assessment.id}</p>
                           </div>
                         </div>
                         <button
                           onClick={() => toggleRowExpansion(assessment.id)}
-                          className="p-2 rounded-lg hover:bg-white/10 transition-colors duration-200"
+                          className="p-2 rounded-lg hover:bg-primary-start/10 transition-colors duration-200"
                         >
                           {expandedRows.has(assessment.id) ? (
-                            <ChevronDown className="w-4 h-4 text-white/60" />
+                            <ChevronDown className="w-4 h-4 text-gray-800/60" />
                           ) : (
-                            <ChevronRight className="w-4 h-4 text-white/60" />
+                            <ChevronRight className="w-4 h-4 text-gray-800/60" />
                           )}
                         </button>
                       </div>
@@ -685,11 +685,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                       {/* Info Grid */}
                       <div className="grid grid-cols-2 gap-3 mb-3">
                         {/* Date & Time */}
-                        <div className="flex items-center space-x-2 text-white/80">
+                        <div className="flex items-center space-x-2 text-gray-800/80">
                           <Calendar className="w-4 h-4" />
                           <div className="text-xs">
                             <div>{new Date(assessment.created_at).toLocaleDateString()}</div>
-                            <div className="text-white/60">
+                            <div className="text-gray-800/60">
                               {new Date(assessment.created_at).toLocaleTimeString()}
                             </div>
                           </div>
@@ -700,7 +700,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                           <div className="text-lg font-bold gradient-text">
                             {assessment.total_score}/{assessment.max_score}
                           </div>
-                          <div className="text-xs text-white/60">Total Score</div>
+                          <div className="text-xs text-gray-800/60">Total Score</div>
                         </div>
                       </div>
 
@@ -711,7 +711,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                         </span>
                         <button
                           onClick={() => toggleRowExpansion(assessment.id)}
-                          className="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-white/80 hover:bg-white/20 transition-all duration-200 text-xs"
+                          className="px-3 py-1 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800/80 hover:bg-primary-start/20 transition-all duration-200 text-xs"
                         >
                           {expandedRows.has(assessment.id) ? 'Hide' : 'View'} Details
                         </button>
@@ -720,25 +720,25 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
                     {/* Expanded Details - Mobile */}
                     {expandedRows.has(assessment.id) && (
-                      <div className="bg-white/5 border-t border-white/10 p-4">
+                      <div className="bg-white/5 border-t border-primary-start/20 p-4">
                         <div className="space-y-4">
                           {/* Assessment Details */}
                           <div>
-                            <h4 className="text-base font-semibold text-white mb-3">Assessment Details</h4>
+                            <h4 className="text-base font-semibold text-gray-800 mb-3">Assessment Details</h4>
                             <div className="space-y-2">
                               <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-sm">
-                                <span className="text-white/70">Type:</span>
-                                <span className="text-white font-medium">{assessment.assessment_name}</span>
+                                <span className="text-gray-800/70">Type:</span>
+                                <span className="text-gray-800 font-medium">{assessment.assessment_name}</span>
                               </div>
                               <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-sm">
-                                <span className="text-white/70">Date:</span>
-                                <span className="text-white font-medium">
+                                <span className="text-gray-800/70">Date:</span>
+                                <span className="text-gray-800 font-medium">
                                   {new Date(assessment.created_at).toLocaleDateString()}
                                 </span>
                               </div>
                               <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-sm">
-                                <span className="text-white/70">Time:</span>
-                                <span className="text-white font-medium">
+                                <span className="text-gray-800/70">Time:</span>
+                                <span className="text-gray-800 font-medium">
                                   {new Date(assessment.created_at).toLocaleTimeString()}
                                 </span>
                               </div>
@@ -747,22 +747,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
                           {/* Score Breakdown */}
                           <div>
-                            <h4 className="text-base font-semibold text-white mb-3">Score Breakdown</h4>
+                            <h4 className="text-base font-semibold text-gray-800 mb-3">Score Breakdown</h4>
                             <div className="p-3 bg-white/5 rounded-lg">
                               <div className="flex justify-between items-center mb-2">
-                                <span className="text-white/70 text-sm">Total Score:</span>
+                                <span className="text-gray-800/70 text-sm">Total Score:</span>
                                 <span className="text-lg font-bold gradient-text">
                                   {assessment.total_score}/{assessment.max_score}
                                 </span>
                               </div>
-                              <div className="w-full bg-white/10 rounded-full h-2 mb-2">
+                              <div className="w-full bg-primary-start/10 rounded-full h-2 mb-2">
                                 <div 
                                   className="bg-gradient-to-r from-primary-start to-primary-end h-2 rounded-full transition-all duration-500"
                                   style={{ width: `${(assessment.total_score / assessment.max_score) * 100}%` }}
                                 ></div>
                               </div>
                               <div className="flex justify-between items-center">
-                                <span className="text-white/70 text-sm">Severity:</span>
+                                <span className="text-gray-800/70 text-sm">Severity:</span>
                                 <span className={`px-2 py-1 rounded text-xs font-medium border ${getSeverityColor(assessment.severity_level)}`}>
                                   {assessment.severity_level.replace('_', ' ').toUpperCase()}
                                 </span>
@@ -772,8 +772,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
                           {/* Interpretation */}
                           <div className="p-3 bg-gradient-to-r from-primary-start/10 to-primary-end/10 rounded-lg border border-primary-start/20">
-                            <h4 className="text-base font-semibold text-white mb-2">Interpretation</h4>
-                            <p className="text-white/80 text-sm leading-relaxed">{assessment.interpretation}</p>
+                            <h4 className="text-base font-semibold text-gray-800 mb-2">Interpretation</h4>
+                            <p className="text-gray-800/80 text-sm leading-relaxed">{assessment.interpretation}</p>
                           </div>
                         </div>
                       </div>
@@ -785,15 +785,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           ) : (
             <div className="text-center py-12 sm:py-16">
               <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-primary-start/20 to-primary-end/20 rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <History className="w-10 h-10 sm:w-12 sm:h-12 text-white/50" />
+                <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-800/50" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">No Assessments Yet</h3>
-              <p className="text-white/70 mb-6 sm:mb-8 text-sm sm:text-base px-4">
+              <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">No Assessments Yet</h3>
+              <p className="text-gray-800/70 mb-6 sm:mb-8 text-sm sm:text-base px-4">
                 Start your first assessment to begin tracking your mental health journey.
               </p>
               <button
                 onClick={() => handleTabSwitch('assessment')}
-                className="px-6 py-3 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-xl hover:from-primary-end hover:to-primary-start transition-all duration-300 font-semibold text-sm sm:text-base"
+                className="px-6 py-3 bg-gradient-to-r from-primary-start to-primary-end text-gray-800 rounded-xl hover:from-primary-end hover:to-primary-start transition-all duration-300 font-semibold text-sm sm:text-base"
               >
                 Start Your First Assessment
               </button>
@@ -811,15 +811,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6">
             <span className="gradient-text">Settings</span>
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-white/70 max-w-3xl mx-auto px-4">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-800/70 max-w-3xl mx-auto px-4">
             Manage your account settings and request additional access levels.
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
           {/* Current Role Display */}
-          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10 mb-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Current Access Level</h2>
+          <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-primary-start/20 mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Current Access Level</h2>
             <div className={`inline-flex items-center px-4 py-2 rounded-lg border ${
               user?.role === 'hr' ? 'border-blue-500/30 bg-blue-500/20 text-blue-300' :
               user?.role === 'employee' ? 'border-green-500/30 bg-green-500/20 text-green-300' :
@@ -833,9 +833,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
           {/* Access Request Options - Only show for basic users */}
           {user?.role === 'user' && (
-            <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10">
-              <h2 className="text-xl font-semibold text-white mb-4">Request Additional Access</h2>
-              <p className="text-white/70 mb-6">Request elevated access levels for additional features and permissions.</p>
+            <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-primary-start/20">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Request Additional Access</h2>
+              <p className="text-gray-800/70 mb-6">Request elevated access levels for additional features and permissions.</p>
               
               <div className="grid md:grid-cols-3 gap-4">
                 {/* Employee Access */}
@@ -847,8 +847,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 >
                   <div className="text-center">
                     <Building className="w-12 h-12 text-green-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
-                    <h3 className="text-lg font-semibold text-white mb-2">Employee Access</h3>
-                    <p className="text-white/70 text-sm">Access to employee features and organization tools</p>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Employee Access</h3>
+                    <p className="text-gray-800/70 text-sm">Access to employee features and organization tools</p>
                   </div>
                 </button>
 
@@ -862,8 +862,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 >
                   <div className="text-center">
                     <UserCheck className="w-12 h-12 text-blue-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
-                    <h3 className="text-lg font-semibold text-white mb-2">HR Access</h3>
-                    <p className="text-white/70 text-sm">Access to HR management and employee oversight</p>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">HR Access</h3>
+                    <p className="text-gray-800/70 text-sm">Access to HR management and employee oversight</p>
                     {isRequestingAccess && (
                       <div className="mt-3 text-blue-400 text-sm">Processing request...</div>
                     )}
@@ -880,8 +880,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 >
                   <div className="text-center">
                     <Shield className="w-12 h-12 text-orange-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
-                    <h3 className="text-lg font-semibold text-white mb-2">Counsellor Access</h3>
-                    <p className="text-white/70 text-sm">Access to counselling and mental health tools</p>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Counsellor Access</h3>
+                    <p className="text-gray-800/70 text-sm">Access to counselling and mental health tools</p>
                     {isRequestingAccess && (
                       <div className="mt-3 text-orange-400 text-sm">Processing request...</div>
                     )}
@@ -893,11 +893,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
 
           {/* Elevated Access Message */}
           {user?.role !== 'user' && (
-            <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/10">
+            <div className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-primary-start/20">
               <div className="text-center">
                 <Shield className="w-16 h-16 text-green-400 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-white mb-2">You Already Have Elevated Access</h2>
-                <p className="text-white/70">You currently have {user?.role?.toUpperCase()} access. No additional access is needed.</p>
+                <h2 className="text-xl font-semibold text-gray-800 mb-2">You Already Have Elevated Access</h2>
+                <p className="text-gray-800/70">You currently have {user?.role?.toUpperCase()} access. No additional access is needed.</p>
               </div>
             </div>
           )}
@@ -931,31 +931,31 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black flex overflow-hidden relative">
+    <div className="h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 flex overflow-hidden relative">
       {/* Mobile Menu Button */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-lg text-white hover:bg-white/10 transition-all duration-300"
+          className="p-2 bg-white/90 backdrop-blur-xl border border-primary-start/20 rounded-lg text-gray-800 hover:bg-primary-start/10 transition-all duration-300"
         >
           {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex md:relative w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 flex-col h-full overflow-hidden">
+      <div className="hidden md:flex md:relative w-64 bg-white/90 backdrop-blur-xl border-r border-primary-start/20 flex-col h-full overflow-hidden">
         {/* Background overlay to ensure consistent color */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-xl pointer-events-none"></div>
+        <div className="absolute inset-0 bg-white/90 backdrop-blur-xl pointer-events-none"></div>
         
         {/* Header */}
-        <div className="p-4 border-b border-white/10 relative z-10 flex-shrink-0">
+        <div className="p-4 border-b border-primary-start/20 relative z-10 flex-shrink-0">
           <div className="flex items-center space-x-3 mb-3">
             <div className="w-8 h-8 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-              <Brain className="w-4 h-4 text-white" />
+              <Brain className="w-4 h-4 text-gray-800" />
             </div>
-            <span className="text-lg font-bold text-white">Mind Acuity</span>
+            <span className="text-lg font-bold text-gray-800">Mind Acuity</span>
           </div>
-          <div className="flex items-center space-x-2 text-white/70">
+          <div className="flex items-center space-x-2 text-gray-800/70">
             <User className="w-4 h-4" />
             <span className="text-sm truncate">{user?.full_name || 'User'}</span>
             {user?.role && user.role !== 'user' && (
@@ -978,8 +978,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             onClick={() => handleTabSwitch('assessment')}
             className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'assessment'
-                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                : 'text-white/70 hover:text-white hover:bg-white/5'
+                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
             }`}
           >
             <Brain className="w-4 h-4" />
@@ -990,8 +990,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             onClick={() => handleTabSwitch('history')}
             className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'history'
-                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                : 'text-white/70 hover:text-white hover:bg-white/5'
+                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
             }`}
           >
             <History className="w-4 h-4" />
@@ -1004,8 +1004,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               onClick={() => handleTabSwitch('support')}
               className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                 activeTab === 'support'
-                  ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                  : 'text-white/70 hover:text-white hover:bg-white/5'
+                  ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                  : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
               }`}
             >
               <AlertCircle className="w-4 h-4" />
@@ -1019,8 +1019,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               onClick={() => handleTabSwitch('hr')}
               className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                 activeTab === 'hr'
-                  ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                  : 'text-white/70 hover:text-white hover:bg-white/5'
+                  ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                  : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -1033,7 +1033,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           {user?.role === 'admin' && (
             <button
               onClick={() => navigate('/admin')}
-              className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-white/70 hover:text-white hover:bg-white/5"
+              className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-gray-800/70 hover:text-gray-800 hover:bg-white/5"
             >
               <Shield className="w-4 h-4" />
               <span className="font-medium text-sm">Admin Panel</span>
@@ -1045,8 +1045,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             onClick={() => handleTabSwitch('settings')}
             className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
               activeTab === 'settings'
-                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                : 'text-white/70 hover:text-white hover:bg-white/5'
+                ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
             }`}
           >
             <Settings className="w-4 h-4" />
@@ -1055,7 +1055,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         </div>
 
         {/* Logout Button */}
-        <div className="p-3 border-t border-white/10 relative z-10 flex-shrink-0">
+        <div className="p-3 border-t border-primary-start/20 relative z-10 flex-shrink-0">
           <button
             onClick={onLogout}
             className="w-full flex items-center space-x-2 px-3 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-all duration-300"
@@ -1071,24 +1071,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         <div className="md:hidden fixed inset-0 z-40">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-white/50"
             onClick={() => setIsSidebarOpen(false)}
           />
           
           {/* Sidebar */}
-          <div className="absolute left-0 top-0 h-full w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 flex flex-col">
+          <div className="absolute left-0 top-0 h-full w-64 bg-white/90 backdrop-blur-xl border-r border-primary-start/20 flex flex-col">
             {/* Background overlay */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-xl pointer-events-none"></div>
+            <div className="absolute inset-0 bg-white/90 backdrop-blur-xl pointer-events-none"></div>
             
             {/* Header */}
-            <div className="p-4 border-b border-white/10 relative z-10 flex-shrink-0">
+            <div className="p-4 border-b border-primary-start/20 relative z-10 flex-shrink-0">
               <div className="flex items-center space-x-3 mb-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                  <Brain className="w-4 h-4 text-white" />
+                  <Brain className="w-4 h-4 text-gray-800" />
                 </div>
-                <span className="text-lg font-bold text-white">Mind Acuity</span>
+                <span className="text-lg font-bold text-gray-800">Mind Acuity</span>
               </div>
-              <div className="flex items-center space-x-2 text-white/70">
+              <div className="flex items-center space-x-2 text-gray-800/70">
                 <User className="w-4 h-4" />
                 <span className="text-sm truncate">{user?.full_name || 'User'}</span>
                 {user?.role && user.role !== 'user' && (
@@ -1114,8 +1114,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 }}
                 className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                   activeTab === 'assessment'
-                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
                 }`}
               >
                 <Brain className="w-4 h-4" />
@@ -1129,8 +1129,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 }}
                 className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                   activeTab === 'history'
-                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
                 }`}
               >
                 <History className="w-4 h-4" />
@@ -1146,8 +1146,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                   }}
                   className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                     activeTab === 'support'
-                      ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                      ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                      : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
                   }`}
                 >
                   <AlertCircle className="w-4 h-4" />
@@ -1164,8 +1164,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                   }}
                   className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                     activeTab === 'hr'
-                      ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                      ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                      : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
                   }`}
                 >
                   <Users className="w-4 h-4" />
@@ -1181,7 +1181,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                     navigate('/admin')
                     setIsSidebarOpen(false)
                   }}
-                  className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-white/70 hover:text-white hover:bg-white/5"
+                  className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-gray-800/70 hover:text-gray-800 hover:bg-white/5"
                 >
                   <Shield className="w-4 h-4" />
                   <span className="font-medium text-sm">Admin Panel</span>
@@ -1196,8 +1196,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                 }}
                 className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                   activeTab === 'settings'
-                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-white/5'
                 }`}
               >
                 <Settings className="w-4 h-4" />
@@ -1206,7 +1206,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
             </div>
 
             {/* Logout Button */}
-            <div className="p-3 border-t border-white/10 relative z-10 flex-shrink-0">
+            <div className="p-3 border-t border-primary-start/20 relative z-10 flex-shrink-0">
               <button
                 onClick={() => {
                   onLogout()

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Menu, X, User } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 interface HeaderProps {
   isAuthenticated?: boolean
@@ -9,9 +9,10 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
 
   const navItems = [
-    { label: 'Home', href: '#home' },
+    { label: 'Home', href: '/' },
     { label: 'About', href: '#home' },
     { label: 'Features', href: '#features' },
     { label: 'Researches', href: '/researches' },
@@ -21,6 +22,33 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
 
   const handleLinkClick = (href: string) => {
     setIsMenuOpen(false)
+    
+    // Handle direct navigation to home page
+    if (href === '/') {
+      navigate('/')
+      return
+    }
+    
+    // If we're not on the home page and trying to navigate to sections, go to home first
+    if (location.pathname !== '/' && (href === '#home' || href === '#features' || href === '#pricing' || href === '#footer')) {
+      navigate('/')
+      // Wait for navigation to complete, then scroll to the section
+      setTimeout(() => {
+        if (href === '#features') {
+          document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+        } else if (href === '#pricing') {
+          document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+        } else if (href === '#footer') {
+          document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })
+        } else if (href === '#home') {
+          // Scroll to the top of the page
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+      }, 100)
+      return
+    }
+    
+    // Handle navigation when already on the home page
     if (href === '#features') {
       document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
     } else if (href === '#pricing') {
@@ -29,12 +57,9 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
       document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })
     } else if (href === '/researches') {
       navigate('/researches')
-    } else {
-      // Scroll to the Coming Soon section in the hero
-      const heroSection = document.querySelector('section')
-      if (heroSection) {
-        heroSection.scrollIntoView({ behavior: 'smooth' })
-      }
+    } else if (href === '#home') {
+      // Scroll to the top of the page
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
@@ -48,7 +73,10 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <div 
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={() => navigate('/')}
+          >
             <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-sm md:text-base">MA</span>
             </div>

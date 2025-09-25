@@ -155,6 +155,8 @@ const ResearchManagement: React.FC = () => {
       source_url: research.source_url
     })
     setThumbnailFile(null)
+    setThumbnailUrl(research.thumbnail_url) // Set current thumbnail URL
+    setUploadSuccess(true) // Mark as already uploaded
     setIsEditModalOpen(true)
   }
 
@@ -178,7 +180,13 @@ const ResearchManagement: React.FC = () => {
       }
 
       showToastMessage('Research deleted successfully', 'success')
-      loadResearches()
+      
+      // Check if we need to go back a page (if this was the last item on the current page)
+      if (researches.length === 1 && currentPage > 1) {
+        setCurrentPage(currentPage - 1)
+      } else {
+        loadResearches()
+      }
     } catch (err) {
       console.error('Error deleting research:', err)
       showToastMessage('Failed to delete research', 'error')
@@ -206,7 +214,7 @@ const ResearchManagement: React.FC = () => {
         title: formData.title,
         description: formData.description,
         source_url: formData.source_url,
-        thumbnail_url: thumbnailUrl
+        thumbnail_url: thumbnailUrl || (editingResearch ? editingResearch.thumbnail_url : null)
       }
 
       const url = isEditModalOpen && editingResearch 

@@ -71,10 +71,10 @@ const ResearchesPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-12 h-12 border-4 border-primary-start/30 border-t-primary-start rounded-full animate-spin"></div>
-          <p className="text-white/70 text-lg">Loading researches...</p>
+          <p className="text-gray-600 text-lg">Loading researches...</p>
         </div>
       </div>
     )
@@ -82,13 +82,13 @@ const ResearchesPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="w-20 h-20 bg-red-500/20 rounded-3xl flex items-center justify-center mx-auto mb-4">
-            <BookOpen className="w-10 h-10 text-red-400" />
+            <BookOpen className="w-10 h-10 text-red-500" />
           </div>
-          <h3 className="text-2xl font-semibold text-white mb-3">Error Loading Researches</h3>
-          <p className="text-white/70 mb-6">{error}</p>
+          <h3 className="text-2xl font-semibold text-gray-800 mb-3">Error Loading Researches</h3>
+          <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={loadResearches}
             className="px-6 py-3 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-xl hover:from-primary-end hover:to-primary-start transition-all duration-300 font-semibold"
@@ -101,14 +101,14 @@ const ResearchesPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100">
       {/* Header */}
       <div className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
             <span className="gradient-text">Research & Studies</span>
           </h1>
-          <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
             Explore the latest research and studies in mental health, psychology, and wellness.
           </p>
         </div>
@@ -119,10 +119,10 @@ const ResearchesPage: React.FC = () => {
         {researches.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-20 h-20 bg-gradient-to-r from-primary-start/20 to-primary-end/20 rounded-3xl flex items-center justify-center mx-auto mb-6">
-              <BookOpen className="w-10 h-10 text-white/50" />
+              <BookOpen className="w-10 h-10 text-gray-500" />
             </div>
-            <h3 className="text-2xl font-semibold text-white mb-3">No Researches Available</h3>
-            <p className="text-white/70">Check back later for new research content.</p>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-3">No Researches Available</h3>
+            <p className="text-gray-600">Check back later for new research content.</p>
           </div>
         ) : (
           <>
@@ -131,7 +131,7 @@ const ResearchesPage: React.FC = () => {
               {researches.map((research) => (
                 <div
                   key={research.id}
-                  className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300 group"
+                  className="bg-gradient-to-br from-white/80 to-white/60 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden hover:border-primary-start/40 transition-all duration-300 group shadow-lg hover:shadow-xl"
                 >
                   {/* Thumbnail */}
                   <div className="aspect-video bg-gradient-to-br from-primary-start/20 to-primary-end/20 relative overflow-hidden">
@@ -146,23 +146,23 @@ const ResearchesPage: React.FC = () => {
                       }}
                     />
                     <div className="hidden absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary-start/20 to-primary-end/20">
-                      <BookOpen className="w-12 h-12 text-white/50" />
+                      <BookOpen className="w-12 h-12 text-gray-500" />
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-white mb-3 line-clamp-2">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-3 line-clamp-2">
                       {research.title}
                     </h3>
-                    <p className="text-white/70 text-sm leading-relaxed mb-4 line-clamp-3">
+                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
                       {research.description}
                     </p>
 
                     {/* Read Button */}
                     <button
                       onClick={() => handleReadResearch(research.source_url)}
-                      className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-white rounded-lg hover:from-primary-start/30 hover:to-primary-end/30 transition-all duration-300 group"
+                      className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-primary-start/20 to-primary-end/20 border border-primary-start/30 text-gray-800 rounded-lg hover:from-primary-start/30 hover:to-primary-end/30 hover:text-white transition-all duration-300 group"
                     >
                       <span className="font-medium">Read Research</span>
                       <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
@@ -178,7 +178,7 @@ const ResearchesPage: React.FC = () => {
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="flex items-center space-x-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center space-x-2 px-4 py-2 bg-white/80 border border-primary-start/20 text-gray-800 rounded-lg hover:bg-primary-start/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span>Previous</span>
@@ -192,7 +192,7 @@ const ResearchesPage: React.FC = () => {
                       className={`px-3 py-2 rounded-lg transition-all duration-300 ${
                         page === currentPage
                           ? 'bg-gradient-to-r from-primary-start to-primary-end text-white'
-                          : 'bg-white/10 border border-white/20 text-white/70 hover:bg-white/20 hover:text-white'
+                          : 'bg-white/80 border border-primary-start/20 text-gray-800 hover:bg-primary-start/10'
                       }`}
                     >
                       {page}
@@ -203,7 +203,7 @@ const ResearchesPage: React.FC = () => {
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="flex items-center space-x-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center space-x-2 px-4 py-2 bg-white/80 border border-primary-start/20 text-gray-800 rounded-lg hover:bg-primary-start/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span>Next</span>
                   <ChevronRight className="w-4 h-4" />
@@ -213,7 +213,7 @@ const ResearchesPage: React.FC = () => {
 
             {/* Results Info */}
             <div className="text-center mt-8">
-              <p className="text-white/60 text-sm">
+              <p className="text-gray-500 text-sm">
                 Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, total)} of {total} researches
               </p>
             </div>

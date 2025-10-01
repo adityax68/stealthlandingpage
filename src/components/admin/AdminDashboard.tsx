@@ -254,7 +254,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:8000/api/v1/admin/organisations', {
+      const response = await fetch(API_ENDPOINTS.ADMIN_ORGANISATIONS, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

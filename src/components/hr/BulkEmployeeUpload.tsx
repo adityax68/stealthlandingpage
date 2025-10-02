@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Upload, Download, CheckCircle, XCircle, AlertCircle, FileText, Users } from 'lucide-react'
 import { API_ENDPOINTS } from '../../config/api'
+import { useToast } from '../../contexts/ToastContext'
 
 interface BulkEmployeeUploadProps {
   onUploadComplete: () => void
@@ -29,10 +30,13 @@ const BulkEmployeeUpload: React.FC<BulkEmployeeUploadProps> = ({ onUploadComplet
   const [error, setError] = useState('')
   const [dragActive, setDragActive] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { showToast } = useToast()
 
   const handleFileUpload = async (file: File) => {
     if (!file.name.endsWith('.csv')) {
-      setError('Please select a CSV file')
+      const errorMessage = 'Please select a CSV file'
+      setError(errorMessage)
+      showToast(errorMessage, 'error')
       return
     }
 
@@ -40,7 +44,9 @@ const BulkEmployeeUpload: React.FC<BulkEmployeeUploadProps> = ({ onUploadComplet
     const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
     if (file.size > MAX_FILE_SIZE) {
       const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1)
-      setError(`File size exceeds 10MB limit. Your file is ${fileSizeMB}MB. Please use a smaller file.`)
+      const errorMessage = `File size exceeds 10MB limit. Your file is ${fileSizeMB}MB. Please use a smaller file.`
+      setError(errorMessage)
+      showToast(errorMessage, 'error')
       return
     }
 
@@ -69,8 +75,20 @@ const BulkEmployeeUpload: React.FC<BulkEmployeeUploadProps> = ({ onUploadComplet
       if (response.ok) {
         const result: BulkEmployeeResponse = await response.json()
         setUploadResult(result)
+        
+        // Show success toast
         if (result.successful > 0) {
+          if (result.failed === 0) {
+            // All employees uploaded successfully
+            showToast(`Successfully uploaded ${result.successful} employee(s)!`, 'success')
+          } else {
+            // Partial success
+            showToast(`Uploaded ${result.successful} employee(s) successfully. ${result.failed} failed.`, 'success')
+          }
           onUploadComplete() // Refresh employee list
+        } else {
+          // No successful uploads
+          showToast('No employees were uploaded successfully.', 'error')
         }
       } else {
         let errorMessage = 'Upload failed'
@@ -84,10 +102,13 @@ const BulkEmployeeUpload: React.FC<BulkEmployeeUploadProps> = ({ onUploadComplet
         }
         
         setError(errorMessage)
+        showToast(errorMessage, 'error')
       }
     } catch (error) {
       console.error('Error uploading file:', error)
-      setError('Failed to upload file. Please try again.')
+      const errorMessage = 'Failed to upload file. Please try again.'
+      setError(errorMessage)
+      showToast(errorMessage, 'error')
     } finally {
       setIsUploading(false)
     }

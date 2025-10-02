@@ -36,6 +36,14 @@ const BulkEmployeeUpload: React.FC<BulkEmployeeUploadProps> = ({ onUploadComplet
       return
     }
 
+    // Check file size (10MB limit)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+    if (file.size > MAX_FILE_SIZE) {
+      const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1)
+      setError(`File size exceeds 10MB limit. Your file is ${fileSizeMB}MB. Please use a smaller file.`)
+      return
+    }
+
     setIsUploading(true)
     setError('')
     setUploadResult(null)
@@ -65,8 +73,17 @@ const BulkEmployeeUpload: React.FC<BulkEmployeeUploadProps> = ({ onUploadComplet
           onUploadComplete() // Refresh employee list
         }
       } else {
-        const errorData = await response.json()
-        setError(errorData.detail || 'Upload failed')
+        let errorMessage = 'Upload failed'
+        
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.detail || errorData.error || 'Upload failed'
+        } catch {
+          // If response is not JSON, use status text
+          errorMessage = response.statusText || 'Upload failed'
+        }
+        
+        setError(errorMessage)
       }
     } catch (error) {
       console.error('Error uploading file:', error)
@@ -170,6 +187,9 @@ bob.wilson@company.com,EMP003,Bob Wilson,30,Finance,Analyst,2024-01-25,USA,TX,Ho
               <p className="text-gray-800/70 mb-4">
                 Drag and drop your CSV file here, or click to browse
               </p>
+              <p className="text-gray-800/50 text-sm">
+                Maximum file size: 10MB • Maximum employees: 100 per upload
+              </p>
             </div>
 
             <input
@@ -197,10 +217,48 @@ bob.wilson@company.com,EMP003,Bob Wilson,30,Finance,Analyst,2024-01-25,USA,TX,Ho
             </button>
 
             {error && (
-              <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                <div className="flex items-center space-x-2 text-red-400">
+              <div className={`mt-4 p-4 rounded-lg border ${
+                error.includes('Rate limit') 
+                  ? 'bg-yellow-500/10 border-yellow-500/20' 
+                  : error.includes('file size') || error.includes('Too many employees')
+                  ? 'bg-orange-500/10 border-orange-500/20'
+                  : error.includes('Access denied') || error.includes('permission')
+                  ? 'bg-red-500/10 border-red-500/20'
+                  : 'bg-red-500/10 border-red-500/20'
+              }`}>
+                <div className={`flex items-center space-x-2 ${
+                  error.includes('Rate limit') 
+                    ? 'text-yellow-600' 
+                    : error.includes('file size') || error.includes('Too many employees')
+                    ? 'text-orange-600'
+                    : error.includes('Access denied') || error.includes('permission')
+                    ? 'text-red-600'
+                    : 'text-red-600'
+                }`}>
                   <AlertCircle className="w-5 h-5" />
-                  <span>{error}</span>
+                  <div>
+                    <p className="font-medium">{error}</p>
+                    {error.includes('Rate limit') && (
+                      <p className="text-sm mt-1 opacity-80">
+                        Please wait a few minutes before trying again.
+                      </p>
+                    )}
+                    {error.includes('file size') && (
+                      <p className="text-sm mt-1 opacity-80">
+                        Please reduce your file size to under 10MB.
+                      </p>
+                    )}
+                    {error.includes('Too many employees') && (
+                      <p className="text-sm mt-1 opacity-80">
+                        Please split your CSV into smaller files with maximum 100 employees each.
+                      </p>
+                    )}
+                    {error.includes('Missing required CSV headers') && (
+                      <p className="text-sm mt-1 opacity-80">
+                        Please download the template and ensure your CSV has the required columns.
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

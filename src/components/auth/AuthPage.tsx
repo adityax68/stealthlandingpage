@@ -1,20 +1,26 @@
 import React, { useState } from 'react'
 import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
+import ForgotPasswordForm from './ForgotPasswordForm'
+import ResetPasswordForm from './ResetPasswordForm'
 import { useAuth } from '../../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { API_ENDPOINTS } from '../../config/api'
 
 interface AuthPageProps {
-  initialMode?: 'login' | 'signup'
+  initialMode?: 'login' | 'signup' | 'forgot-password' | 'reset-password'
 }
 
 const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signup' }) => {
-  const [isLogin, setIsLogin] = useState(initialMode === 'login')
+  const [mode, setMode] = useState<'login' | 'signup' | 'forgot-password' | 'reset-password'>(initialMode)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const [searchParams] = useSearchParams()
+  const { login, loginWithGoogle } = useAuth()
+
+  // Get reset token from URL params if in reset-password mode
+  const resetToken = searchParams.get('token')
 
   const clearError = () => {
     setError('')
@@ -38,6 +44,29 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signup' }) => {
     } catch (err: any) {
       console.error('Login error:', err)
       setError(err.message || 'Login failed. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true)
+    setError('')
+    
+    try {
+      await loginWithGoogle()
+      
+      // Check if there's pending mood data
+      const hasPendingMood = localStorage.getItem('moodAssessment') !== null
+      if (hasPendingMood) {
+        // Navigate to home to trigger mood assessment flow
+        navigate('/')
+      } else {
+        navigate('/dashboard')
+      }
+    } catch (err: any) {
+      console.error('Google login error:', err)
+      setError(err.message || 'Google login failed. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -126,12 +155,25 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signup' }) => {
 
   const switchToSignup = () => {
     clearError()
-    setIsLogin(false)
+    setMode('signup')
   }
 
   const switchToLogin = () => {
     clearError()
-    setIsLogin(true)
+    setMode('login')
+  }
+
+  const switchToForgotPassword = () => {
+    clearError()
+    setMode('forgot-password')
+  }
+
+  const handleForgotPasswordSuccess = () => {
+    setMode('login')
+  }
+
+  const handleResetPasswordSuccess = () => {
+    setMode('login')
   }
 
   return (
@@ -144,20 +186,50 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signup' }) => {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-start/5 via-transparent to-accent-start/5 animate-water-flow"></div>
       </div>
       <div className="w-full max-w-md relative z-10">
-        {isLogin ? (
+        {mode === 'login' && (
           <LoginForm
             onLogin={handleLogin}
             onSwitchToSignup={switchToSignup}
+            onForgotPassword={switchToForgotPassword}
+            onGoogleLogin={handleGoogleLogin}
             isLoading={isLoading}
             error={error}
           />
-        ) : (
+        )}
+        {mode === 'signup' && (
           <SignupForm
             onSignup={handleSignup}
             onSwitchToLogin={switchToLogin}
             isLoading={isLoading}
             error={error}
           />
+        )}
+        {mode === 'forgot-password' && (
+          <ForgotPasswordForm
+            onBackToLogin={switchToLogin}
+            onSuccess={handleForgotPasswordSuccess}
+          />
+        )}
+        {mode === 'reset-password' && resetToken && (
+          <ResetPasswordForm
+            token={resetToken}
+            onSuccess={handleResetPasswordSuccess}
+            onBackToLogin={switchToLogin}
+          />
+        )}
+        {mode === 'reset-password' && !resetToken && (
+          <div className="p-8 bg-white/90 backdrop-blur-xl border border-primary-start/20 rounded-3xl shadow-2xl text-center">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Invalid Reset Link</h2>
+            <p className="text-gray-600 mb-6">
+              The password reset link is invalid or has expired.
+            </p>
+            <button
+              onClick={switchToLogin}
+              className="w-full py-3 px-6 bg-gradient-to-r from-primary-start to-primary-end text-white font-semibold rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105"
+            >
+              Back to Login
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -139,6 +139,20 @@ function AppContent() {
             <AuthPage initialMode="login" />
           )
         } />
+        <Route path="/forgot-password" element={
+          isAuthenticated ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <AuthPage initialMode="forgot-password" />
+          )
+        } />
+        <Route path="/reset-password" element={
+          isAuthenticated ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <AuthPage initialMode="reset-password" />
+          )
+        } />
         <Route path="/" element={
             <main>
             <Header isAuthenticated={isAuthenticated} />

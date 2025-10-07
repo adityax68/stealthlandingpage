@@ -6,6 +6,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isRefreshing: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   updateUserRole: (newRole: string) => void;
   hasPrivilege: (privilege: string) => boolean;
@@ -51,6 +52,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string): Promise<void> => {
     try {
       const tokenResponse = await authService.login(email, password);
+      setUser(tokenResponse.user);
+      setIsAuthenticated(true);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const loginWithGoogle = async (): Promise<void> => {
+    try {
+      const tokenResponse = await authService.loginWithGoogle();
       setUser(tokenResponse.user);
       setIsAuthenticated(true);
     } catch (error) {
@@ -123,6 +134,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isAuthenticated, 
       isRefreshing,
       login, 
+      loginWithGoogle,
       logout, 
       updateUserRole, 
       hasPrivilege, 

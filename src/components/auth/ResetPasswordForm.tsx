@@ -1,0 +1,193 @@
+import React, { useState } from 'react'
+import { Lock, Eye, EyeOff, CheckCircle, ArrowLeft } from 'lucide-react'
+import { API_ENDPOINTS } from '../../config/api'
+
+interface ResetPasswordFormProps {
+  token: string
+  onSuccess: () => void
+  onBackToLogin: () => void
+}
+
+const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token, onSuccess, onBackToLogin }) => {
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError('')
+
+    // Validate passwords match
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match')
+      setIsLoading(false)
+      return
+    }
+
+    // Validate password length
+    if (newPassword.length < 1) {
+      setError('Password must be at least 1 character long')
+      setIsLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch(API_ENDPOINTS.RESET_PASSWORD, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          token,
+          new_password: newPassword 
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setIsSuccess(true)
+        setTimeout(() => {
+          onSuccess()
+        }, 3000) // Show success message for 3 seconds then go to login
+      } else {
+        if (response.status === 400) {
+          setError(data.detail || 'Invalid or expired reset token')
+        } else {
+          setError(data.detail || 'Failed to reset password. Please try again.')
+        }
+      }
+    } catch (err) {
+      console.error('Reset password error:', err)
+      setError('Connection error. Please check your internet and try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="w-full max-w-md mx-auto">
+        <div className="p-8 bg-white/90 backdrop-blur-xl border border-primary-start/20 rounded-3xl shadow-2xl">
+          <div className="text-center">
+            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Password Reset Successfully</h2>
+            <p className="text-gray-600 mb-6">
+              Your password has been updated successfully. You can now log in with your new password.
+            </p>
+            <button
+              onClick={onBackToLogin}
+              className="w-full py-3 px-6 bg-gradient-to-r from-primary-start to-primary-end text-white font-semibold rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105"
+            >
+              Go to Login
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full max-w-md mx-auto">
+      <div className="p-8 bg-white/90 backdrop-blur-xl border border-primary-start/20 rounded-3xl shadow-2xl">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Set New Password</h2>
+          <p className="text-gray-600">Enter your new password below</p>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-100 border border-red-300 rounded-lg">
+            <div className="flex items-start space-x-2">
+              <div className="flex-shrink-0 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center mt-0.5">
+                <span className="text-white text-xs font-bold">!</span>
+              </div>
+              <div>
+                <p className="text-red-700 text-sm font-medium">Error</p>
+                <p className="text-red-600 text-sm mt-1">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              New Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                id="newPassword"
+                type={showPassword ? 'text' : 'password'}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full pl-10 pr-12 py-3 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300"
+                placeholder="Enter new password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-300"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              Confirm New Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full pl-10 pr-12 py-3 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-primary-start transition-all duration-300"
+                placeholder="Confirm new password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-300"
+              >
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-3 px-6 bg-gradient-to-r from-primary-start to-primary-end text-white font-semibold rounded-lg hover:from-primary-end hover:to-primary-start transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          >
+            {isLoading ? 'Updating...' : 'Update Password'}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <button
+            onClick={onBackToLogin}
+            className="flex items-center justify-center space-x-2 text-gray-600 hover:text-primary-start transition-colors duration-300"
+          >
+            <ArrowLeft size={16} />
+            <span>Back to Login</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default ResetPasswordForm

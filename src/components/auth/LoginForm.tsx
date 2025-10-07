@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
+import GoogleSignInButton from '../GoogleSignInButton'
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => void
   onSwitchToSignup: () => void
+  onForgotPassword: () => void
+  onGoogleLogin?: () => void
   isLoading?: boolean
   error?: string
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, isLoading = false, error }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, onForgotPassword, onGoogleLogin, isLoading = false, error }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -92,6 +95,40 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, isLoad
             {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
+
+        {/* Divider */}
+        <div className="mt-6 mb-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Google Sign-In Button */}
+        {onGoogleLogin && (
+          <GoogleSignInButton
+            className="w-full"
+            disabled={isLoading}
+          />
+        )}
+
+        <div className="mt-4 text-center">
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onForgotPassword()
+            }}
+            className="text-sm text-primary-start hover:text-primary-end font-medium transition-colors duration-300 cursor-pointer hover:underline"
+            type="button"
+          >
+            Forgot your password?
+          </button>
+        </div>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">

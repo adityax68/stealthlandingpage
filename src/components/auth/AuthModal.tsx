@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { X } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
 import { API_ENDPOINTS } from '../../config/api'
@@ -15,6 +16,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess, i
   const [isLogin, setIsLogin] = useState(initialMode === 'login')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const clearError = () => {
     setError('')
@@ -162,6 +164,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess, i
     setIsLogin(true)
   }
 
+  const handleForgotPassword = () => {
+    onClose() // Close the modal
+    navigate('/forgot-password') // Navigate to forgot password page
+  }
+
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose()
@@ -201,6 +208,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess, i
               <LoginForm
                 onLogin={handleLogin}
                 onSwitchToSignup={switchToSignup}
+                onForgotPassword={handleForgotPassword}
                 isLoading={isLoading}
                 error={error}
               />

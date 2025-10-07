@@ -1,18 +1,21 @@
 import { API_ENDPOINTS } from '../config/api';
+import GoogleOAuthService from './GoogleOAuthService';
 
 export interface User {
   id: number;
   email: string;
-  username: string;
-  full_name: string;
+  username?: string;  // Optional for Google OAuth users
+  full_name?: string;  // Optional for Google OAuth users
   role: string;
   privileges: string[];
   is_active: boolean;
-  age: number;
+  age?: number;  // Optional for Google OAuth users
   country?: string;
   state?: string;
   city?: string;
   pincode?: string;
+  google_id?: string;  // NEW: Google OAuth fields
+  auth_provider: string;
   created_at: string;
 }
 
@@ -21,6 +24,14 @@ export interface TokenResponse {
   refresh_token: string;
   token_type: string;
   user: User;
+}
+
+export interface GoogleOAuthResponse {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  user: User;
+  is_new_user: boolean;
 }
 
 export interface RefreshTokenResponse {
@@ -146,6 +157,41 @@ class AuthService {
     const data: TokenResponse = await response.json();
     this.setTokens(data.access_token, data.refresh_token, data.user);
     return data;
+  }
+
+  // NEW: Google OAuth login
+  public async loginWithGoogle(): Promise<GoogleOAuthResponse> {
+    try {
+      const googleService = GoogleOAuthService.getInstance();
+      
+      if (!googleService.isConfigured()) {
+        throw new Error('Google OAuth is not configured');
+      }
+
+      // Get Google ID token
+      const googleToken = await googleService.signInWithGoogle();
+      
+      // Send token to backend
+      const response = await fetch(API_ENDPOINTS.GOOGLE_OAUTH, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ google_token: googleToken }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Google login failed');
+      }
+
+      const data: GoogleOAuthResponse = await response.json();
+      this.setTokens(data.access_token, data.refresh_token, data.user);
+      return data;
+    } catch (error) {
+      console.error('Google OAuth login error:', error);
+      throw error;
+    }
   }
 
   public async refreshToken(): Promise<string> {

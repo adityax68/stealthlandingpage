@@ -134,22 +134,22 @@ const HRComplaints: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'resolved':
-        return 'bg-green-600 text-black border-green-600'
+        return 'bg-green-100 text-green-800 border-green-200'
       case 'pending':
-        return 'bg-yellow-600 text-black border-yellow-600'
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
       default:
-        return 'bg-blue-600 text-black border-blue-600'
+        return 'bg-blue-100 text-blue-800 border-blue-200'
     }
   }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'resolved':
-        return <CheckCircle className="w-4 h-4 text-green-400" />
+        return <CheckCircle className="w-4 h-4 text-green-600" />
       case 'pending':
-        return <Clock className="w-4 h-4 text-yellow-400" />
+        return <Clock className="w-4 h-4 text-yellow-600" />
       default:
-        return <AlertCircle className="w-4 h-4 text-blue-400" />
+        return <AlertCircle className="w-4 h-4 text-blue-600" />
     }
   }
 
@@ -246,13 +246,13 @@ const HRComplaints: React.FC = () => {
         )}
 
         {/* Complaints List */}
-        <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden">
-          <div className="p-6 border-b border-primary-start/20">
+        <div className="bg-gradient-to-br from-white/90 to-white/95 backdrop-blur-xl rounded-2xl border border-primary-start/30 overflow-hidden shadow-lg">
+          <div className="p-6 border-b border-primary-start/20 bg-gradient-to-r from-primary-start/5 to-primary-end/5">
             <div className="flex items-center space-x-3">
               <AlertCircle className="w-6 h-6 text-gray-800" />
               <div>
                 <h3 className="text-xl font-bold text-gray-800">All Complaints</h3>
-                <p className="text-gray-800/70">Both identified and anonymous workplace concerns</p>
+                <p className="text-gray-600">Both identified and anonymous workplace concerns</p>
               </div>
             </div>
           </div>
@@ -267,20 +267,20 @@ const HRComplaints: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 border-b border-primary-start/20">
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Status</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Employee</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Complaint</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Date</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">HR Notes</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Action</th>
+                  <tr className="bg-gradient-to-br from-primary-start/10 to-primary-end/8 border-b border-primary-start/20">
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Employee</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Complaint</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Date</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">HR Notes</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/10">
+                <tbody className="divide-y divide-gray-200/50">
                   {complaints.map((complaint) => {
                     const employeeInfo = getEmployeeInfo(complaint.employee_id)
                     return (
-                      <tr key={complaint.id} className="hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5 transition-colors duration-200">
+                      <tr key={complaint.id} className="hover:bg-gradient-to-br from-primary-start/8 to-primary-end/5 transition-colors duration-200">
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-2">
                             {getStatusIcon(complaint.status)}
@@ -292,32 +292,32 @@ const HRComplaints: React.FC = () => {
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-2">
                             {complaint.employee_id ? (
-                              <User className="w-4 h-4 text-blue-400" />
+                              <User className="w-4 h-4 text-primary-start" />
                             ) : (
                               <UserX className="w-4 h-4 text-gray-400" />
                             )}
                             <div>
                               <p className="font-semibold text-gray-800">{employeeInfo.name}</p>
-                              <p className="text-gray-800/60 text-sm">{employeeInfo.code}</p>
-                              <p className="text-gray-800/60 text-xs">{employeeInfo.email}</p>
+                              <p className="text-gray-500 text-sm">{employeeInfo.code}</p>
+                              <p className="text-gray-500 text-xs">{employeeInfo.email}</p>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="max-w-md">
-                            <p className="text-gray-800 text-sm leading-relaxed">{complaint.complaint_text}</p>
+                            <p className="text-gray-700 text-sm leading-relaxed">{complaint.complaint_text}</p>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="text-gray-800/80 text-sm">{formatDate(complaint.created_at)}</span>
+                          <span className="text-gray-600 text-sm">{formatDate(complaint.created_at)}</span>
                         </td>
                         <td className="px-6 py-4">
                           {complaint.hr_notes ? (
                             <div className="max-w-md">
-                              <p className="text-gray-800/80 text-sm leading-relaxed">{complaint.hr_notes}</p>
+                              <p className="text-gray-600 text-sm leading-relaxed">{complaint.hr_notes}</p>
                             </div>
                           ) : (
-                            <span className="text-gray-800/40 text-sm">No notes yet</span>
+                            <span className="text-gray-400 text-sm">No notes yet</span>
                           )}
                         </td>
                         <td className="px-6 py-4">
@@ -327,7 +327,7 @@ const HRComplaints: React.FC = () => {
                                 value={hrNotes}
                                 onChange={(e) => setHrNotes(e.target.value)}
                                 placeholder="Add HR notes..."
-                                className="w-full px-3 py-2 bg-gradient-to-br from-primary-start/10 to-primary-end/5 border border-primary-start/20 rounded-lg text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent resize-none text-sm"
+                                className="w-full px-3 py-2 bg-white/80 border border-primary-start/30 rounded-lg text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-start focus:border-transparent resize-none text-sm shadow-sm"
                                 rows={2}
                               />
                               <button
@@ -335,8 +335,8 @@ const HRComplaints: React.FC = () => {
                                 disabled={isResolvingComplaint === complaint.id}
                                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                                   isResolvingComplaint === complaint.id
-                                    ? 'bg-white/20 text-gray-800/50 cursor-not-allowed'
-                                    : 'bg-gradient-to-r from-green-500 to-green-600 text-gray-800 hover:from-green-600 hover:to-green-700'
+                                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                    : 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 shadow-md'
                                 }`}
                               >
                                 {isResolvingComplaint === complaint.id ? (

@@ -276,10 +276,10 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
         {/* Tab Content */}
         {activeTab === 'employees' ? (
           // Employee List Content
-          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-2xl border border-primary-start/20 overflow-hidden">
-            <div className="p-6 border-b border-primary-start/20">
+          <div className="bg-gradient-to-br from-white/90 to-white/95 backdrop-blur-xl rounded-2xl border border-primary-start/30 overflow-hidden shadow-lg">
+            <div className="p-6 border-b border-primary-start/20 bg-gradient-to-r from-primary-start/5 to-primary-end/5">
               <h2 className="text-2xl font-bold text-gray-800">Employee List</h2>
-              <p className="text-gray-800/70 mt-1">Click on any employee row to view details</p>
+              <p className="text-gray-600 mt-1">Click on any employee row to view details</p>
             </div>
 
           {employees.length === 0 ? (
@@ -295,47 +295,47 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                 <div className="hidden lg:block">
                   <table className="w-full">
                     <thead>
-                      <tr className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 border-b border-primary-start/20">
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Employee</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Code</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Email</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800/80">Status</th>
+                      <tr className="bg-gradient-to-br from-primary-start/10 to-primary-end/8 border-b border-primary-start/20">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Employee</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Code</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Email</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/10">
+                    <tbody className="divide-y divide-gray-200/50">
                       {currentEmployees.map((employee) => (
                         <tr 
                           key={employee.id} 
-                          className="hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5 transition-colors duration-200 cursor-pointer"
+                          className="hover:bg-gradient-to-br from-primary-start/8 to-primary-end/5 transition-colors duration-200 cursor-pointer"
                           onClick={() => handleEmployeeClick(employee)}
                         >
                           <td className="px-6 py-4">
                             <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                                <User className="w-5 h-5 text-gray-800" />
+                              <div className="w-10 h-10 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center shadow-md">
+                                <User className="w-5 h-5 text-white" />
                               </div>
                               <div>
                                 <p className="font-semibold text-gray-800">{employee.full_name}</p>
-                                <p className="text-gray-800/60 text-sm">ID: {employee.user_id}</p>
+                                <p className="text-gray-500 text-sm">ID: {employee.user_id}</p>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <span className="px-3 py-1 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800 text-sm font-medium">
+                            <span className="px-3 py-1 bg-primary-start/15 border border-primary-start/30 rounded-lg text-gray-700 text-sm font-medium">
                               {employee.employee_code}
                             </span>
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center space-x-2">
-                              <Mail className="w-4 h-4 text-gray-800/60" />
-                              <span className="text-gray-800">{employee.email}</span>
+                              <Mail className="w-4 h-4 text-gray-500" />
+                              <span className="text-gray-700">{employee.email}</span>
                             </div>
                           </td>
                           <td className="px-6 py-4">
                             <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
                               employee.is_active
-                                ? 'bg-green-600 text-black border-green-600'
-                                : 'bg-red-600 text-black border-red-600'
+                                ? 'bg-green-100 text-green-800 border-green-200'
+                                : 'bg-red-100 text-red-800 border-red-200'
                             }`}>
                               {employee.is_active ? 'Active' : 'Inactive'}
                             </span>
@@ -351,21 +351,21 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                   {currentEmployees.map((employee) => (
                     <div 
                       key={employee.id} 
-                      className="bg-gradient-to-br from-primary-start/10 to-primary-end/5 rounded-xl p-4 border border-primary-start/20 cursor-pointer hover:bg-primary-start/10 transition-colors duration-200"
+                      className="bg-gradient-to-br from-white/80 to-white/90 rounded-xl p-4 border border-primary-start/20 cursor-pointer hover:bg-primary-start/8 transition-colors duration-200 shadow-md"
                       onClick={() => handleEmployeeClick(employee)}
                     >
                       <div className="flex items-center space-x-3 mb-3">
-                        <div className="w-12 h-12 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center">
-                          <User className="w-6 h-6 text-gray-800" />
+                        <div className="w-12 h-12 bg-gradient-to-r from-primary-start to-primary-end rounded-lg flex items-center justify-center shadow-md">
+                          <User className="w-6 h-6 text-white" />
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-gray-800">{employee.full_name}</h3>
-                          <p className="text-gray-800/60 text-sm">{employee.employee_code}</p>
+                          <p className="text-gray-500 text-sm">{employee.employee_code}</p>
                         </div>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium border ${
                           employee.is_active
-                            ? 'bg-green-600 text-black border-green-600'
-                            : 'bg-red-600 text-black border-red-600'
+                            ? 'bg-green-100 text-green-800 border-green-200'
+                            : 'bg-red-100 text-red-800 border-red-200'
                         }`}>
                           {employee.is_active ? 'Active' : 'Inactive'}
                         </span>
@@ -373,8 +373,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                       
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center space-x-2">
-                          <Mail className="w-4 h-4 text-gray-800/60" />
-                          <span className="text-gray-800/80">{employee.email}</span>
+                          <Mail className="w-4 h-4 text-gray-500" />
+                          <span className="text-gray-600">{employee.email}</span>
                         </div>
                       </div>
                     </div>
@@ -384,10 +384,10 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
 
               {/* Pagination Controls */}
               {totalPages > 1 && (
-                <div className="p-6 border-t border-primary-start/20">
+                <div className="p-6 border-t border-primary-start/20 bg-gradient-to-r from-primary-start/3 to-primary-end/3">
                   <div className="flex flex-col items-center gap-4">
                     {/* Page Info */}
-                    <div className="text-gray-800/70 text-sm text-center">
+                    <div className="text-gray-600 text-sm text-center">
                       Showing {indexOfFirstEmployee + 1} to {Math.min(indexOfLastEmployee, employees.length)} of {employees.length} employees
                     </div>
 
@@ -399,8 +399,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                         disabled={currentPage === 1}
                         className={`p-2 rounded-lg border transition-all duration-200 ${
                           currentPage === 1
-                            ? 'border-white/20 text-gray-800/40 cursor-not-allowed'
-                            : 'border-white/30 text-gray-800 hover:border-white/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
+                            ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+                            : 'border-primary-start/30 text-gray-700 hover:border-primary-start/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
                         }`}
                       >
                         <ChevronLeft className="w-4 h-4" />
@@ -414,8 +414,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                             onClick={() => goToPage(pageNumber)}
                             className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200 ${
                               pageNumber === currentPage
-                                ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 border-primary-end'
-                                : 'border-white/30 text-gray-800/70 hover:border-white/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
+                                ? 'bg-gradient-to-r from-primary-start to-primary-end text-white border-primary-end shadow-md'
+                                : 'border-primary-start/30 text-gray-700 hover:border-primary-start/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
                             }`}
                           >
                             {pageNumber}
@@ -429,8 +429,8 @@ const HRDashboard: React.FC<HRDashboardProps> = ({ user: _user }) => {
                         disabled={currentPage === totalPages}
                         className={`p-2 rounded-lg border transition-all duration-200 ${
                           currentPage === totalPages
-                            ? 'border-white/20 text-gray-800/40 cursor-not-allowed'
-                            : 'border-white/30 text-gray-800 hover:border-white/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
+                            ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+                            : 'border-primary-start/30 text-gray-700 hover:border-primary-start/50 hover:bg-gradient-to-br from-primary-start/10 to-primary-end/5'
                         }`}
                       >
                         <ChevronRight className="w-4 h-4" />

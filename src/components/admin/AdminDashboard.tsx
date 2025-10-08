@@ -21,11 +21,12 @@ import EmployeeList from './EmployeeList';
 import OrganizationList from './OrganizationList';
 import TestAnalytics from './TestAnalytics';
 import ResearchManagement from './ResearchManagement';
+import RAGKnowledgeBase from './RAGKnowledgeBase';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface AdminDashboardProps {}
 
-type AdminTab = 'overview' | 'users' | 'employees' | 'organizations' | 'test-analytics' | 'researches'
+type AdminTab = 'overview' | 'users' | 'employees' | 'organizations' | 'test-analytics' | 'researches' | 'rag-knowledge'
 
 interface OrganisationForm {
   org_name: string;
@@ -539,6 +540,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               >
                 Researches
               </button>
+              <button
+                onClick={() => handleTabChange('rag-knowledge')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'rag-knowledge'
+                    ? 'bg-gradient-to-r from-primary-start to-primary-end text-gray-800 shadow-lg'
+                    : 'text-gray-800/70 hover:text-gray-800 hover:bg-primary-start/10'
+                }`}
+              >
+                RAG Knowledge Base
+              </button>
             </div>
           </div>
         </div>
@@ -758,6 +769,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           {activeTab === 'organizations' && loadedTabs.has('organizations') && <OrganizationList />}
           {activeTab === 'test-analytics' && loadedTabs.has('test-analytics') && <TestAnalytics />}
           {activeTab === 'researches' && loadedTabs.has('researches') && <ResearchManagement />}
+          {activeTab === 'rag-knowledge' && loadedTabs.has('rag-knowledge') && <RAGKnowledgeBase />}
         </div>
       </div>
 

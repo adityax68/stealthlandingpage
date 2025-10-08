@@ -93,7 +93,7 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
         </div>
 
         {/* Content */}
-        <div className="p-4 sm:p-8 bg-white/5">
+        <div className="p-4 sm:p-8 bg-slate-900/20">
           {currentStep === 1 && (
             <div className="space-y-4 sm:space-y-6 animate-fadeIn">
               <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -103,13 +103,13 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
                     <button
                       key={mood.id}
                       onClick={() => handleMoodSelect(mood.id)}
-                      className={`p-2 sm:p-3 rounded-xl border border-white/30 bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:bg-white/20 hover:border-white/50 active:scale-95 ${mood.borderColor}`}
+                      className={`p-2 sm:p-3 rounded-xl border border-slate-300/40 bg-slate-800/60 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:bg-slate-700/70 hover:border-slate-200/60 active:scale-95 ${mood.borderColor}`}
                     >
                       <div className="flex flex-col items-center space-y-1 sm:space-y-2">
-                        <div className={`p-1 sm:p-2 rounded-lg bg-gradient-to-r ${mood.color} text-white transition-transform duration-200 hover:scale-105`}>
+                        <div className={`p-1 sm:p-2 rounded-lg bg-gradient-to-r ${mood.color} text-white transition-transform duration-200 hover:scale-105 shadow-md`}>
                           <IconComponent size={14} className="sm:w-4 sm:h-4" />
                         </div>
-                        <span className="font-light text-white text-xs tracking-wide">{mood.label}</span>
+                        <span className="font-medium text-slate-100 text-xs tracking-wide drop-shadow-sm">{mood.label}</span>
                       </div>
                     </button>
                   );
@@ -117,10 +117,10 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
               </div>
               
               {/* Custom Mood Input */}
-              <div className="mt-4 pt-4 border-t border-white/20">
+              <div className="mt-4 pt-4 border-t border-slate-300/30">
                 <div className="flex items-center space-x-2 mb-2">
-                  <Edit3 className="w-4 h-4 text-white/60" />
-                  <span className="text-white/80 text-sm font-light">Or describe your mood:</span>
+                  <Edit3 className="w-4 h-4 text-slate-200" />
+                  <span className="text-slate-100 text-sm font-medium">Or describe your mood:</span>
                 </div>
                 <div className="flex space-x-2">
                   <input
@@ -129,7 +129,7 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
                     value={customMood}
                     onChange={handleCustomMoodChange}
                     placeholder="e.g., frustrated, overwhelmed, grateful..."
-                    className="flex-1 px-3 py-2 bg-white/10 border border-white/30 rounded-lg text-white placeholder-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50"
+                    className="flex-1 px-3 py-2 bg-slate-800/60 border border-slate-300/40 rounded-lg text-slate-100 placeholder-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200/50 focus:border-slate-200/50 backdrop-blur-sm"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         handleCustomMoodSelect();
@@ -139,7 +139,7 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
                   <button
                     onClick={handleCustomMoodSelect}
                     disabled={!customMood.trim()}
-                    className="px-4 py-2 bg-gradient-to-r from-white/20 to-white/30 hover:from-white/30 hover:to-white/40 disabled:from-white/10 disabled:to-white/10 text-white rounded-lg font-light transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center border border-white/30 backdrop-blur-sm active:scale-95"
+                    className="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-600/80 hover:from-slate-600/90 hover:to-slate-500/90 disabled:from-slate-800/50 disabled:to-slate-700/50 text-slate-100 rounded-lg font-medium transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center border border-slate-300/40 backdrop-blur-sm active:scale-95 shadow-md"
                   >
                     <Send size={14} />
                   </button>
@@ -161,7 +161,7 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
 
               {/* Reason Input */}
               <div>
-                <label className="block text-white font-light mb-3 sm:mb-4 text-xs sm:text-sm tracking-wide">
+                <label className="block text-slate-100 font-medium mb-3 sm:mb-4 text-xs sm:text-sm tracking-wide drop-shadow-sm">
                   Why are you feeling this way?
                 </label>
                 <textarea
@@ -169,7 +169,7 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Share what's on your mind..."
-                  className="w-full p-3 sm:p-5 border border-white/30 bg-white/10 backdrop-blur-sm rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 resize-none text-white placeholder-white/60 font-light text-xs sm:text-sm leading-relaxed"
+                  className="w-full p-3 sm:p-5 border border-slate-300/40 bg-slate-800/60 backdrop-blur-sm rounded-2xl focus:outline-none focus:ring-2 focus:ring-slate-200/50 focus:border-slate-200/50 resize-none text-slate-100 placeholder-slate-300 font-light text-xs sm:text-sm leading-relaxed shadow-md"
                   rows={3}
                 />
               </div>
@@ -178,14 +178,14 @@ const MoodAssessment: React.FC<MoodAssessmentProps> = ({ onComplete, onSkip, isV
               <div className="flex space-x-3 sm:space-x-4">
                 <button
                   onClick={handleBack}
-                  className="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-white/70 hover:text-white font-light transition-colors text-xs sm:text-sm tracking-wide border border-white/30 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 active:scale-95"
+                  className="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-slate-200 hover:text-slate-100 font-medium transition-colors text-xs sm:text-sm tracking-wide border border-slate-300/40 bg-slate-800/60 backdrop-blur-sm rounded-2xl hover:bg-slate-700/70 active:scale-95 shadow-md"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={!reason.trim()}
-                  className="flex-1 bg-gradient-to-r from-white/20 to-white/30 hover:from-white/30 hover:to-white/40 disabled:from-white/10 disabled:to-white/10 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-2xl font-light transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center border border-white/30 backdrop-blur-sm active:scale-95"
+                  className="flex-1 bg-gradient-to-r from-slate-700/80 to-slate-600/80 hover:from-slate-600/90 hover:to-slate-500/90 disabled:from-slate-800/50 disabled:to-slate-700/50 text-slate-100 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl font-medium transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center border border-slate-300/40 backdrop-blur-sm active:scale-95 shadow-md"
                 >
                   <Send size={16} className="sm:w-[18px] sm:h-[18px]" />
                 </button>

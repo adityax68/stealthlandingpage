@@ -119,10 +119,12 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signup' }) => {
           // Show verification message instead of auto-login
           setVerificationEmail(data.email)
           setMode('verification-sent')
+          setIsLoading(false)  // Reset loading state
           return
         } else if (data.verification_required && !data.verification_sent) {
           // Verification required but email not sent - show error
           setError('Account created but verification email could not be sent. Please try logging in.')
+          setIsLoading(false)  // Reset loading state
           return
         } else {
           // No verification required (e.g., Google OAuth) - proceed with auto-login

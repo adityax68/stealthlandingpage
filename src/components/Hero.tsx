@@ -189,7 +189,7 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
           </p>
         </div>
 
-        {/* Enhanced Coming Soon Animation */}
+        {/* Enhanced Launch Status Animation */}
         <div className="mb-12 md:mb-16 relative px-4">
           {/* Background Glow Effect */}
           <div className={`absolute inset-0 bg-gradient-to-r from-primary-start/10 via-secondary-start/10 to-accent-start/10 rounded-2xl md:rounded-3xl blur-3xl transition-all duration-1000 ${
@@ -206,10 +206,10 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
               <div className="relative group text-center">
                 {/* Main Text with Enhanced Styling */}
                 <div className="relative">
-                  {/* Line 1: "Launching" - Large */}
+                  {/* Line 1: "Launched" - Large */}
                   <div className="relative">
                     <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent drop-shadow-2xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
-                      Launching
+                      Launched
                     </span>
                   </div>
                   
@@ -220,10 +220,10 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
                     </span>
                   </div>
                   
-                  {/* Line 3: "15 September" - Same size as Launching */}
+                  {/* Line 3: "2nd October" - Same size as Launched */}
                   <div className="relative mt-2">
                     <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent drop-shadow-2xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
-                      2 October
+                      2nd October
                     </span>
                   </div>
                   

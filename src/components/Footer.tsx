@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
     if (href === '#features') {
       document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
     } else {
-      // Scroll to the Coming Soon section in the hero
+      // Scroll to the Launch Status section in the hero
       const heroSection = document.querySelector('section')
       if (heroSection) {
         heroSection.scrollIntoView({ behavior: 'smooth' })

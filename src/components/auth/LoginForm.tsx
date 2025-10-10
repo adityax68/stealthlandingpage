@@ -7,11 +7,24 @@ interface LoginFormProps {
   onSwitchToSignup: () => void
   onForgotPassword: () => void
   onGoogleLogin?: () => void
+  onResendVerification?: (email: string) => void
   isLoading?: boolean
   error?: string
+  verificationRequired?: boolean
+  canResendVerification?: boolean
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, onForgotPassword, onGoogleLogin, isLoading = false, error }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ 
+  onLogin, 
+  onSwitchToSignup, 
+  onForgotPassword, 
+  onGoogleLogin, 
+  onResendVerification,
+  isLoading = false, 
+  error,
+  verificationRequired = false,
+  canResendVerification = false
+}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -30,14 +43,36 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup, onForg
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-100 border border-red-300 rounded-lg">
+          <div className={`mb-6 p-4 border rounded-lg ${
+            verificationRequired 
+              ? 'bg-yellow-50 border-yellow-300' 
+              : 'bg-red-100 border-red-300'
+          }`}>
             <div className="flex items-start space-x-2">
-              <div className="flex-shrink-0 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center mt-0.5">
+              <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${
+                verificationRequired ? 'bg-yellow-500' : 'bg-red-500'
+              }`}>
                 <span className="text-white text-xs font-bold">!</span>
               </div>
               <div>
-                <p className="text-red-700 text-sm font-medium">Login Error</p>
-                <p className="text-red-600 text-sm mt-1">{error}</p>
+                <p className={`text-sm font-medium ${
+                  verificationRequired ? 'text-yellow-700' : 'text-red-700'
+                }`}>
+                  {verificationRequired ? 'Email Verification Required' : 'Login Error'}
+                </p>
+                <p className={`text-sm mt-1 ${
+                  verificationRequired ? 'text-yellow-600' : 'text-red-600'
+                }`}>
+                  {error}
+                </p>
+                {verificationRequired && onResendVerification && canResendVerification && (
+                  <button
+                    onClick={() => onResendVerification(email)}
+                    className="mt-2 text-sm text-blue-600 hover:text-blue-800 underline"
+                  >
+                    Resend verification email
+                  </button>
+                )}
               </div>
             </div>
           </div>

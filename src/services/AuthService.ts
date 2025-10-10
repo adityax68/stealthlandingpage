@@ -26,6 +26,17 @@ export interface TokenResponse {
   user: User;
 }
 
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  access_token?: string;
+  refresh_token?: string;
+  token_type?: string;
+  user?: User;
+  verification_required?: boolean;
+  can_resend_verification?: boolean;
+}
+
 export interface GoogleOAuthResponse {
   access_token: string;
   refresh_token: string;
@@ -136,7 +147,7 @@ class AuthService {
   }
 
   // Authentication methods
-  public async login(email: string, password: string): Promise<TokenResponse> {
+  public async login(email: string, password: string): Promise<LoginResponse> {
     const formData = new URLSearchParams();
     formData.append('username', email);
     formData.append('password', password);
@@ -149,13 +160,20 @@ class AuthService {
       body: formData,
     });
 
+    const data: LoginResponse = await response.json();
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || 'Login failed');
+      // If it's a verification error, return the response data instead of throwing
+      if (data.verification_required) {
+        return data;
+      }
+      throw new Error(data.message || 'Login failed');
     }
 
-    const data: TokenResponse = await response.json();
-    this.setTokens(data.access_token, data.refresh_token, data.user);
+    // If successful, set tokens and return the response
+    if (data.access_token && data.refresh_token && data.user) {
+      this.setTokens(data.access_token, data.refresh_token, data.user);
+    }
     return data;
   }
 

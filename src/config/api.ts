@@ -15,6 +15,10 @@ export const API_ENDPOINTS = {
   TOKEN_STATUS: `${API_BASE_URL}/api/v1/auth/token-status`,
   FORGOT_PASSWORD: `${API_BASE_URL}/api/v1/auth/forgot-password`,
   RESET_PASSWORD: `${API_BASE_URL}/api/v1/auth/reset-password`,
+  // Email verification endpoints
+  VERIFY_EMAIL: `${API_BASE_URL}/api/v1/email-verification/verify`,
+  RESEND_VERIFICATION: `${API_BASE_URL}/api/v1/email-verification/resend`,
+  VERIFICATION_STATUS: `${API_BASE_URL}/api/v1/email-verification/status`,
   CLINICAL_ASSESSMENTS: `${API_BASE_URL}/api/v1/clinical/my-assessments`,
   UNIFIED_ASSESSMENTS: `${API_BASE_URL}/api/v1/clinical/unified-assessments`,
   COMPREHENSIVE_ASSESSMENT: `${API_BASE_URL}/api/v1/clinical/comprehensive-assessment`,

@@ -130,6 +130,13 @@ const RAGKnowledgeBase: React.FC = () => {
       formData.append('category', category);
 
       const token = localStorage.getItem('access_token');
+      
+      // Debug logging
+      console.log('🚀 Making POST request to upload-document');
+      console.log('📁 File:', selectedFile.name);
+      console.log('📂 Category:', category);
+      console.log('🔑 Token exists:', !!token);
+      
       const response = await fetch('/api/v1/admin/rag/upload-document', {
         method: 'POST',
         headers: {
@@ -137,6 +144,9 @@ const RAGKnowledgeBase: React.FC = () => {
         },
         body: formData
       });
+      
+      console.log('📡 Response status:', response.status);
+      console.log('📡 Response method:', response.status === 405 ? 'GET (ERROR!)' : 'POST (OK)');
 
       const data = await response.json();
 
@@ -325,6 +335,7 @@ const RAGKnowledgeBase: React.FC = () => {
           </div>
 
           <button
+            type="button"
             onClick={handleUpload}
             disabled={!selectedFile || uploading}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"

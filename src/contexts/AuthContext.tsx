@@ -5,7 +5,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isRefreshing: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ success: boolean; verificationRequired?: boolean; canResendVerification?: boolean; message?: string }>;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   updateUserRole: (newRole: string) => void;
@@ -49,11 +49,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => clearInterval(interval);
   }, []);
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; verificationRequired?: boolean; canResendVerification?: boolean; message?: string }> => {
     try {
-      const tokenResponse = await authService.login(email, password);
-      setUser(tokenResponse.user);
-      setIsAuthenticated(true);
+      const loginResponse = await authService.login(email, password);
+      
+      if (loginResponse.verification_required) {
+        return {
+          success: false,
+          verificationRequired: true,
+          canResendVerification: loginResponse.can_resend_verification || false,
+          message: loginResponse.message
+        };
+      }
+      
+      if (loginResponse.user) {
+        setUser(loginResponse.user);
+        setIsAuthenticated(true);
+        return { success: true };
+      }
+      
+      throw new Error('Login failed - no user data received');
     } catch (error) {
       throw error;
     }

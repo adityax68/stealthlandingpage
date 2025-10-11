@@ -227,12 +227,14 @@ function AppContent() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       
-      {/* SessionChatBot - Always visible, works for both authenticated and guest users */}
-      <SessionChatBot 
-        isAuthenticated={isAuthenticated} 
-        moodData={moodData} 
-        onMoodDataClear={clearMoodData}
-      />
+      {/* SessionChatBot - Only visible to authenticated users */}
+      {isAuthenticated && (
+        <SessionChatBot 
+          isAuthenticated={isAuthenticated} 
+          moodData={moodData} 
+          onMoodDataClear={clearMoodData}
+        />
+      )}
       
       {/* Employee Request Modal - Rendered at app level */}
       <EmployeeRequestModal onRoleUpdate={handleUserRoleUpdate} />

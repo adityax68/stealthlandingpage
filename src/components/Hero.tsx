@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from 'lucide-react'
-import MoodAssessment from './MoodAssessment'
-import { useMood } from '../contexts/MoodContext'
 
 interface Ripple {
   id: number
@@ -18,13 +16,10 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
   const navigate = useNavigate()
   const [isGlowing, setIsGlowing] = useState(false)
   const [ripples, setRipples] = useState<Ripple[]>([])
-  const [showMoodAssessment, setShowMoodAssessment] = useState(false)
-  const [, setHasShownMoodAssessment] = useState(false)
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const heroRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const rippleId = useRef(0)
-  const { setMoodData } = useMood()
 
   useEffect(() => {
     // Start glow animation immediately
@@ -43,24 +38,6 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
       videoRef.current.play().catch(console.error)
     }
   }, [isVideoLoaded])
-
-  // Auto-show mood assessment for new sessions
-  useEffect(() => {
-    const hasShownBefore = sessionStorage.getItem('hasShownMoodAssessment')
-    
-    // Show mood assessment if not shown before in this session
-    if (!hasShownBefore) {
-      const moodTimer = setTimeout(() => {
-        setShowMoodAssessment(true)
-        setHasShownMoodAssessment(true)
-        sessionStorage.setItem('hasShownMoodAssessment', 'true')
-      }, 2000) // Show after 2 seconds to let the page load
-
-      return () => {
-        clearTimeout(moodTimer)
-      }
-    }
-  }, [])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!heroRef.current) return
@@ -82,18 +59,6 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
       setRipples(prev => prev.filter(ripple => ripple.id !== newRipple.id))
     }, 1500)
   }
-
-  const handleMoodAssessmentComplete = useCallback((mood: string, reason: string) => {
-    setMoodData(mood, reason)
-    setShowMoodAssessment(false)
-    
-    // For both authenticated and guest users, SessionChatBot will automatically detect moodData change and open
-    // No need to redirect to login - users can chat immediately
-  }, [setMoodData])
-
-  const handleMoodAssessmentSkip = useCallback(() => {
-    setShowMoodAssessment(false)
-  }, [])
 
   const handleVideoLoad = () => {
     console.log('Video loaded successfully')
@@ -320,14 +285,6 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
           </div>
         </div>
       </div>
-
-
-      {/* Mood Assessment Modal */}
-      <MoodAssessment
-        isVisible={showMoodAssessment}
-        onComplete={handleMoodAssessmentComplete}
-        onSkip={handleMoodAssessmentSkip}
-      />
     </section>
   )
 }

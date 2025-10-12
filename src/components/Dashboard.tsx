@@ -70,9 +70,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const [copied, setCopied] = useState(false)
   
 
-  // Load tests on component mount
+  // Load tests and check free access on component mount
   useEffect(() => {
     loadTests()
+    checkExistingFreeAccess()
   }, [])
 
   const loadTests = async () => {
@@ -125,6 +126,34 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       setTests([])
     } finally {
       setLoadingTests(false)
+    }
+  }
+
+  // Check if user already has a free access code
+  const checkExistingFreeAccess = async () => {
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        return
+      }
+      
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/check-free-access`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.has_code && data.access_code) {
+          setFreeAccessCode(data.access_code)
+        }
+      }
+    } catch (error) {
+      console.error('Error checking existing free access code:', error)
+      // Silently fail - this is just a check on mount
     }
   }
 

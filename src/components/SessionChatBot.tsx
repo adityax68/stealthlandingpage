@@ -338,6 +338,13 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     }
   }, [isOpen]);
 
+  // Auto-show access code input when no plan
+  useEffect(() => {
+    if (usageInfo.plan_type === 'none' && !showAccessCodeInput && !isLoadingUsage) {
+      setShowAccessCodeInput(true);
+    }
+  }, [usageInfo.plan_type, isLoadingUsage]);
+
   // Add retry mechanism for failed loads
   const retryLoadConversation = () => {
     if (!isLoadingUsage) {
@@ -365,11 +372,12 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
 
   const getPlanBadge = (planType: string) => {
     const badges = {
+      none: { text: 'NO PLAN', color: 'bg-red-500 text-white' },
       free: { text: 'FREE', color: 'bg-gray-500 text-white' },
       basic: { text: 'BASIC', color: 'bg-blue-500 text-white' },
       premium: { text: 'PREMIUM', color: 'bg-purple-500 text-white' }
     };
-    return badges[planType as keyof typeof badges] || { text: 'FREE', color: 'bg-gray-500 text-white' };
+    return badges[planType as keyof typeof badges] || { text: 'NO PLAN', color: 'bg-red-500 text-white' };
   };
 
   const isInputDisabled = () => {
@@ -434,6 +442,10 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
                         Retry
                       </button>
                     </div>
+                  ) : usageInfo.plan_type === 'none' ? (
+                    <span className="text-yellow-300">
+                      Enter access code to start chatting
+                    </span>
                   ) : usageInfo.plan_type === 'free' ? (
                     <span className={getUsageColor()}>
                       {getRemainingMessagesText()} messages left

@@ -22,6 +22,9 @@ import {
   Target,
   Activity,
   Clock,
+  Gift,
+  Copy,
+  CheckCircle,
 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 import { testCacheService } from '../services/testCacheService'
@@ -60,6 +63,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const [tests, setTests] = useState<any[]>([])
   const [loadingTests, setLoadingTests] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  
+  // Free access code state
+  const [freeAccessCode, setFreeAccessCode] = useState<string | null>(null)
+  const [isGeneratingCode, setIsGeneratingCode] = useState(false)
+  const [copied, setCopied] = useState(false)
   
 
   // Load tests on component mount
@@ -117,6 +125,56 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
       setTests([])
     } finally {
       setLoadingTests(false)
+    }
+  }
+
+  // Generate free access code
+  const handleGenerateFreeAccess = async () => {
+    try {
+      setIsGeneratingCode(true)
+      
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        showToast('Please login to generate access code', 'error')
+        return
+      }
+      
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/generate-free-access`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setFreeAccessCode(data.access_code)
+        
+        if (data.already_generated) {
+          showToast('Your access code (already generated)', 'success')
+        } else {
+          showToast('Free access code generated successfully!', 'success')
+        }
+      } else {
+        const errorData = await response.json()
+        showToast(errorData.detail || 'Failed to generate access code', 'error')
+      }
+    } catch (error) {
+      console.error('Error generating free access code:', error)
+      showToast('An error occurred. Please try again.', 'error')
+    } finally {
+      setIsGeneratingCode(false)
+    }
+  }
+  
+  // Copy access code to clipboard
+  const handleCopyAccessCode = () => {
+    if (freeAccessCode) {
+      navigator.clipboard.writeText(freeAccessCode)
+      setCopied(true)
+      showToast('Access code copied to clipboard!', 'success')
+      setTimeout(() => setCopied(false), 2000)
     }
   }
 
@@ -970,6 +1028,41 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
               </span>
             )}
           </div>
+          
+          {/* Free Access Code Section */}
+          <div className="mt-3 pt-3 border-t border-primary-start/10">
+            {!freeAccessCode ? (
+              <button
+                onClick={handleGenerateFreeAccess}
+                disabled={isGeneratingCode}
+                className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Gift className="w-4 h-4" />
+                <span>{isGeneratingCode ? 'Generating...' : 'Get Free Access Code'}</span>
+              </button>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs text-gray-600 font-medium">
+                  <span>Your Free Access Code:</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg">
+                    <code className="text-sm font-mono text-gray-800 break-all">{freeAccessCode}</code>
+                  </div>
+                  <button
+                    onClick={handleCopyAccessCode}
+                    className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                    title="Copy code"
+                  >
+                    {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500">
+                  Use this code in the chatbot to get 10 free messages!
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Navigation Tabs */}
@@ -1101,6 +1194,41 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                   }`}>
                     {user.role.toUpperCase()}
                   </span>
+                )}
+              </div>
+              
+              {/* Free Access Code Section */}
+              <div className="mt-3 pt-3 border-t border-primary-start/10">
+                {!freeAccessCode ? (
+                  <button
+                    onClick={handleGenerateFreeAccess}
+                    disabled={isGeneratingCode}
+                    className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Gift className="w-4 h-4" />
+                    <span>{isGeneratingCode ? 'Generating...' : 'Get Free Access Code'}</span>
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs text-gray-600 font-medium">
+                      <span>Your Free Access Code:</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg">
+                        <code className="text-sm font-mono text-gray-800 break-all">{freeAccessCode}</code>
+                      </div>
+                      <button
+                        onClick={handleCopyAccessCode}
+                        className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                        title="Copy code"
+                      >
+                        {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Use this code in the chatbot to get 10 free messages!
+                    </p>
+                  </div>
                 )}
               </div>
             </div>

@@ -68,7 +68,7 @@ class GoogleOAuthService {
                 }
               },
               auto_select: false,
-              cancel_on_tap_outside: true,
+              cancel_on_tap_outside: false, // ✅ FIXED: Don't cancel on outside click
               use_fedcm_for_prompt: false, // Disable FedCM to avoid CORS issues
               itp_support: true, // Enable ITP support
               context: 'signin', // Set context for better popup handling

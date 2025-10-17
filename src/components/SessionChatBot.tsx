@@ -33,6 +33,7 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     can_send: false
   });
   const [hasInitializedWithMood, setHasInitializedWithMood] = useState(false);
+  const [hasSentGreeting, setHasSentGreeting] = useState(false);
   const [showAccessCodeInput, setShowAccessCodeInput] = useState(false);
   const [accessCode, setAccessCode] = useState('');
   const [isLoadingUsage, setIsLoadingUsage] = useState(false);
@@ -70,6 +71,14 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     };
   }, []);
 
+  // Auto-send greeting when chatbot opens
+  useEffect(() => {
+    if (isOpen && !hasSentGreeting && !hasInitializedWithMood) {
+      setHasSentGreeting(true);
+      sendGreetingMessage();
+    }
+  }, [isOpen, hasSentGreeting, hasInitializedWithMood]);
+
   // Handle mood data initialization
   useEffect(() => {
     if (moodData && !hasInitializedWithMood) {
@@ -92,6 +101,30 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
       });
     }
   }, [moodData, hasInitializedWithMood, onMoodDataClear]);
+
+  const sendGreetingMessage = async () => {
+    try {
+      setIsLoading(true);
+      const greetingText = "Hello, I am Acutie your mental health companion. How can I help you today?";
+      const response = await sessionChatService.sendMessage(greetingText);
+      
+      // Add AI greeting message
+      const greetingMessage: Message = {
+        id: `ai-${Date.now()}`,
+        role: 'assistant',
+        content: response.message,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, greetingMessage]);
+      updateUsageInfo(response);
+      
+    } catch (error) {
+      console.error('Failed to send greeting message:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const sendMoodMessage = async (moodMessage: string) => {
     try {

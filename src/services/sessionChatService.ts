@@ -9,6 +9,7 @@ export interface SessionChatResponse {
   message: string;
   conversation_id: string;
   requires_subscription: boolean;
+  requires_assessment: boolean;
   messages_used: number;
   message_limit: number | null;
   plan_type: string;
@@ -83,6 +84,16 @@ class SessionChatService {
       this.initializeSession();
     }
     return this.sessionId!;
+  }
+
+  getCurrentSessionId(): string {
+    return this.getSessionId();
+  }
+
+  generateNewSessionId(): string {
+    this.sessionId = this.generateSessionId();
+    localStorage.setItem('sessionId', this.sessionId);
+    return this.sessionId;
   }
 
   async sendMessage(message: string): Promise<SessionChatResponse> {

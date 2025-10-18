@@ -3,6 +3,7 @@ import { MessageCircle, Send, X, AlertCircle } from 'lucide-react';
 import { sessionChatService } from '../services/sessionChatService';
 import type { SessionChatResponse, SubscriptionResponse } from '../services/sessionChatService';
 import SubscriptionModal from './SubscriptionModal';
+import { API_ENDPOINTS } from '../config/api';
 
 interface SessionChatBotProps {
   isAuthenticated?: boolean;
@@ -169,7 +170,7 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
       // Get user email from localStorage or auth context
       const userEmail = localStorage.getItem('userEmail') || 'anonymous@example.com';
       
-      const response = await fetch('/api/v1/assessment/generate', {
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/assessment/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -75,13 +75,13 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     };
   }, []);
 
-  // Auto-send greeting when chatbot opens (only if no conversation history)
+  // Auto-send greeting after plan loads and if no conversation history
   useEffect(() => {
-    if (isOpen && !hasSentGreeting && !hasInitializedWithMood && messages.length === 0) {
+    if (isOpen && !hasSentGreeting && !hasInitializedWithMood && messages.length === 0 && !isLoadingUsage && usageInfo.can_send) {
       setHasSentGreeting(true);
       sendGreetingMessage();
     }
-  }, [isOpen, hasSentGreeting, hasInitializedWithMood, messages.length]);
+  }, [isOpen, hasSentGreeting, hasInitializedWithMood, messages.length, isLoadingUsage, usageInfo.can_send]);
 
   // Handle mood data initialization
   useEffect(() => {

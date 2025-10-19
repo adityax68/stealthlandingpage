@@ -167,7 +167,7 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     
     setIsGeneratingAssessment(true);
     try {
-      // Get user email from localStorage or auth context
+      // Get user email from logged-in user
       const userEmail = localStorage.getItem('userEmail') || 'anonymous@example.com';
       
       const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/assessment/generate`, {
@@ -197,32 +197,89 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     }
   };
 
-  const startNewSession = () => {
-    // Reset all state
-    setMessages([]);
-    setHasSentGreeting(false);
-    setRequiresAssessment(false);
-    setShowAssessmentModal(false);
-    setAssessmentData(null);
-    setIsGeneratingAssessment(false);
-    
-    // Clear localStorage
-    localStorage.removeItem('sessionId');
-    localStorage.removeItem('chatHistory');
-    
-    // Generate new session ID
-    sessionChatService.generateNewSessionId();
-    
-    // Reset usage info
-    setUsageInfo({
-      messages_used: 0,
-      message_limit: null,
-      plan_type: 'loading',
-      can_send: false
-    });
-    
-    // Close modal
-    setShowAssessmentModal(false);
+  const startNewSession = async () => {
+    try {
+      // Reset all state
+      setMessages([]);
+      setHasSentGreeting(false);
+      setRequiresAssessment(false);
+      setShowAssessmentModal(false);
+      setAssessmentData(null);
+      setIsGeneratingAssessment(false);
+      
+      // Clear localStorage
+      localStorage.removeItem('sessionId');
+      localStorage.removeItem('chatHistory');
+      
+      // Generate new session ID
+      const newSessionId = sessionChatService.generateNewSessionId();
+      
+      // Get current user email and access code
+      const userEmail = localStorage.getItem('userEmail') || 'anonymous@example.com';
+      const currentAccessCode = localStorage.getItem('accessCode') || '';
+      
+      // Auto-link access code to new session if available
+      if (currentAccessCode && userEmail !== 'anonymous@example.com') {
+        try {
+          // Step 1: Validate access code to get subscription token
+          const validateResponse = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/access-code`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              access_code: currentAccessCode
+            })
+          });
+          
+          if (validateResponse.ok) {
+            const validateData = await validateResponse.json();
+            
+            // Step 2: Link session to subscription
+            const linkResponse = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/link-session`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                session_identifier: newSessionId,
+                subscription_token: validateData.subscription_token
+              })
+            });
+            
+            if (linkResponse.ok) {
+              // Update usage info with new subscription
+              setUsageInfo({
+                messages_used: 0,
+                message_limit: validateData.message_limit,
+                plan_type: validateData.plan_type,
+                can_send: true
+              });
+              console.log('✅ Access code auto-linked to new session');
+            }
+          }
+        } catch (error) {
+          console.error('Failed to auto-link access code:', error);
+          // Continue with new session even if linking fails
+        }
+      }
+      
+      // Reset usage info if no access code
+      if (!currentAccessCode) {
+        setUsageInfo({
+          messages_used: 0,
+          message_limit: null,
+          plan_type: 'loading',
+          can_send: false
+        });
+      }
+      
+      // Close modal
+      setShowAssessmentModal(false);
+      
+    } catch (error) {
+      console.error('Failed to start new session:', error);
+    }
   };
 
   const sendMessage = async () => {
@@ -737,13 +794,21 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
                   <p className="text-gray-600 mb-4">
                     You've reached the assessment limit. Generate your mental health assessment to continue.
                   </p>
-                  <button
-                    onClick={generateAssessment}
-                    disabled={isGeneratingAssessment}
-                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                  >
-                    {isGeneratingAssessment ? 'Generating Assessment...' : 'Generate Assessment'}
-                  </button>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={generateAssessment}
+                      disabled={isGeneratingAssessment}
+                      className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                    >
+                      {isGeneratingAssessment ? 'Generating Assessment...' : 'Generate Assessment'}
+                    </button>
+                    <button
+                      onClick={startNewSession}
+                      className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    >
+                      Start New Session
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (

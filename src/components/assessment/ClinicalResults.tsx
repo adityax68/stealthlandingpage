@@ -18,6 +18,11 @@ interface ClinicalResultsProps {
 
 const ClinicalResults: React.FC<ClinicalResultsProps> = ({ results, onBack, onNewAssessment }) => {
   const getSeverityColor = (severity: string) => {
+    // Handle undefined, null, or empty severity values
+    if (!severity || typeof severity !== 'string') {
+      return 'text-gray-400'
+    }
+    
     switch (severity.toLowerCase()) {
       case 'minimal':
       case 'low':
@@ -36,6 +41,11 @@ const ClinicalResults: React.FC<ClinicalResultsProps> = ({ results, onBack, onNe
   }
 
   const getSeverityIcon = (severity: string) => {
+    // Handle undefined, null, or empty severity values
+    if (!severity || typeof severity !== 'string') {
+      return <Brain className="w-6 h-6 text-gray-400" />
+    }
+    
     switch (severity.toLowerCase()) {
       case 'minimal':
       case 'low':
@@ -54,6 +64,11 @@ const ClinicalResults: React.FC<ClinicalResultsProps> = ({ results, onBack, onNe
   }
 
   const getAssessmentIcon = (type: string) => {
+    // Handle undefined, null, or empty type values
+    if (!type || typeof type !== 'string') {
+      return <Brain className="w-8 h-8 text-gray-400" />
+    }
+    
     switch (type.toLowerCase()) {
       case 'phq-9':
         return <Heart className="w-8 h-8 text-red-400" />
@@ -73,36 +88,41 @@ const ClinicalResults: React.FC<ClinicalResultsProps> = ({ results, onBack, onNe
   const getRecommendations = (severity: string, type: string) => {
     const recommendations = []
     
-    switch (severity.toLowerCase()) {
-      case 'minimal':
-      case 'low':
-        recommendations.push("Continue monitoring your mental health regularly")
-        recommendations.push("Maintain healthy lifestyle habits")
-        break
-      case 'mild':
-        recommendations.push("Consider implementing stress management techniques")
-        recommendations.push("Monitor symptoms and consider follow-up assessment")
-        break
-      case 'moderate':
-        recommendations.push("Consider seeking professional consultation")
-        recommendations.push("Implement evidence-based self-help strategies")
-        break
-      case 'moderately_severe':
-      case 'severe':
-      case 'high':
-        recommendations.push("Professional consultation is strongly recommended")
-        recommendations.push("Consider medication and therapy options")
-        recommendations.push("Develop a comprehensive treatment plan")
-        break
+    // Handle undefined, null, or empty severity values
+    if (severity && typeof severity === 'string') {
+      switch (severity.toLowerCase()) {
+        case 'minimal':
+        case 'low':
+          recommendations.push("Continue monitoring your mental health regularly")
+          recommendations.push("Maintain healthy lifestyle habits")
+          break
+        case 'mild':
+          recommendations.push("Consider implementing stress management techniques")
+          recommendations.push("Monitor symptoms and consider follow-up assessment")
+          break
+        case 'moderate':
+          recommendations.push("Consider seeking professional consultation")
+          recommendations.push("Implement evidence-based self-help strategies")
+          break
+        case 'moderately_severe':
+        case 'severe':
+        case 'high':
+          recommendations.push("Professional consultation is strongly recommended")
+          recommendations.push("Consider medication and therapy options")
+          recommendations.push("Develop a comprehensive treatment plan")
+          break
+      }
     }
 
     // Add type-specific recommendations
-    if (type.toLowerCase().includes('phq')) {
-      recommendations.push("Focus on mood regulation and positive activities")
-    } else if (type.toLowerCase().includes('gad')) {
-      recommendations.push("Practice relaxation techniques and mindfulness")
-    } else if (type.toLowerCase().includes('pss')) {
-      recommendations.push("Develop stress management and coping strategies")
+    if (type && typeof type === 'string') {
+      if (type.toLowerCase().includes('phq')) {
+        recommendations.push("Focus on mood regulation and positive activities")
+      } else if (type.toLowerCase().includes('gad')) {
+        recommendations.push("Practice relaxation techniques and mindfulness")
+      } else if (type.toLowerCase().includes('pss')) {
+        recommendations.push("Develop stress management and coping strategies")
+      }
     }
 
     return recommendations

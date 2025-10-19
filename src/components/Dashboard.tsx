@@ -398,11 +398,17 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         index === self.findIndex((a: any) => a.id === assessment.id)
       )
       
-      // Add category to distinguish between types
+      // Add category to distinguish between types and ensure required fields exist
       const clinicalWithCategory = uniqueClinicalAssessments.map((assessment: any) => ({
         ...assessment,
         category: 'clinical',
-        type: 'Clinical Assessment'
+        type: 'Clinical Assessment',
+        // Ensure required fields have fallback values
+        severity_level: assessment.severity_level || 'unknown',
+        total_score: assessment.total_score || 0,
+        max_score: assessment.max_score || 0,
+        assessment_name: assessment.assessment_name || 'Unknown Assessment',
+        interpretation: assessment.interpretation || 'No interpretation available'
       }))
       
       const botWithCategory = botData.assessments?.map((assessment: any) => ({
@@ -411,10 +417,16 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         type: 'Bot Assessment',
         id: `bot_${assessment.id}`, // Ensure unique IDs
         created_at: assessment.created_at,
-        assessment_summary: assessment.assessment_summary,
-        mental_conditions: assessment.mental_conditions,
-        severity_levels: assessment.severity_levels,
-        is_critical: assessment.is_critical
+        assessment_summary: assessment.assessment_summary || 'No summary available',
+        mental_conditions: assessment.mental_conditions || [],
+        severity_levels: assessment.severity_levels || [],
+        is_critical: assessment.is_critical || false,
+        // Add fallback values for bot assessments
+        severity_level: assessment.severity_level || 'unknown',
+        total_score: assessment.total_score || 0,
+        max_score: assessment.max_score || 0,
+        assessment_name: assessment.assessment_name || 'Bot Assessment',
+        interpretation: assessment.interpretation || 'No interpretation available'
       })) || []
       
       // Combine both types
@@ -440,6 +452,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   }
 
   const getSeverityColor = (severity: string) => {
+    // Handle undefined, null, or empty severity values
+    if (!severity || typeof severity !== 'string') {
+      return 'bg-gray-500/20 text-gray-300 border-gray-500/30'
+    }
+    
     const level = severity.toLowerCase()
     if (level === 'severe' || level === 'high') {
       return 'bg-red-500/20 text-red-300 border-red-500/30'
@@ -676,7 +693,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                           <div className="col-span-2">
                             <div className="flex justify-center">
                               <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getSeverityColor(assessment.severity_level)}`}>
-                                {assessment.severity_level.replace('_', ' ').toUpperCase()}
+                                {assessment.severity_level ? assessment.severity_level.replace('_', ' ').toUpperCase() : 'UNKNOWN'}
                               </span>
                             </div>
                           </div>
@@ -800,7 +817,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                                       <div className="flex justify-between items-center mb-2">
                                         <span className="text-gray-800/70">Overall Severity:</span>
                                         <span className={`px-2 py-1 rounded text-xs font-medium border ${getSeverityColor(assessment.severity_level)}`}>
-                                          {assessment.severity_level.replace('_', ' ').toUpperCase()}
+                                          {assessment.severity_level ? assessment.severity_level.replace('_', ' ').toUpperCase() : 'UNKNOWN'}
                                         </span>
                                       </div>
                                     </div>
@@ -882,7 +899,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                       {/* Severity and Action */}
                       <div className="flex items-center justify-between">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getSeverityColor(assessment.severity_level)}`}>
-                          {assessment.severity_level.replace('_', ' ').toUpperCase()}
+                          {assessment.severity_level ? assessment.severity_level.replace('_', ' ').toUpperCase() : 'UNKNOWN'}
                         </span>
                         <button
                           onClick={() => toggleRowExpansion(assessment.id)}
@@ -939,7 +956,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                               <div className="flex justify-between items-center">
                                 <span className="text-gray-800/70 text-sm">Severity:</span>
                                 <span className={`px-2 py-1 rounded text-xs font-medium border ${getSeverityColor(assessment.severity_level)}`}>
-                                  {assessment.severity_level.replace('_', ' ').toUpperCase()}
+                                  {assessment.severity_level ? assessment.severity_level.replace('_', ' ').toUpperCase() : 'UNKNOWN'}
                                 </span>
                               </div>
                             </div>

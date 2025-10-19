@@ -108,6 +108,11 @@ const EmployeeDetail: React.FC<EmployeeDetailProps> = ({ employee, onBack, onSta
   }
 
   const getSeverityColor = (severity: string) => {
+    // Handle undefined, null, or empty severity values
+    if (!severity || typeof severity !== 'string') {
+      return 'bg-gray-600 text-black border-gray-600'
+    }
+    
     const level = severity.toLowerCase()
     if (level === 'severe' || level === 'high') {
       return 'bg-red-600 text-black border-red-600'

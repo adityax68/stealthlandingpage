@@ -135,7 +135,104 @@ const AssessmentDetailsModal: React.FC<AssessmentDetailsModalProps> = ({ isOpen,
                     <p className="text-blue-800 text-sm">{assessment.assessment_summary}</p>
                   </div>
                   
-                  {assessment.mental_conditions && Array.isArray(assessment.mental_conditions) && assessment.mental_conditions.length > 0 && (
+                  {/* Full Assessment Data */}
+                  {assessment.assessment_data && (
+                    <div className="space-y-4">
+                      {/* Mental Conditions with Full Details */}
+                      {assessment.assessment_data.mental_conditions && Array.isArray(assessment.assessment_data.mental_conditions) && assessment.assessment_data.mental_conditions.length > 0 && (
+                        <div className="p-4 bg-gray-50 rounded-lg">
+                          <h4 className="font-semibold text-gray-800 mb-3">Detected Conditions</h4>
+                          <div className="space-y-3">
+                            {assessment.assessment_data.mental_conditions.map((condition: any, index: number) => (
+                              <div key={index} className="p-3 bg-white rounded-lg border border-gray-200">
+                                <div className="flex justify-between items-start mb-2">
+                                  <h5 className="font-medium text-gray-900">{condition.condition}</h5>
+                                  <div className="flex space-x-2">
+                                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                      condition.severity === 'Severe' ? 'bg-red-100 text-red-800' :
+                                      condition.severity === 'Moderate' ? 'bg-yellow-100 text-yellow-800' :
+                                      'bg-green-100 text-green-800'
+                                    }`}>
+                                      {condition.severity}
+                                    </span>
+                                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                      condition.confidence === 'High' ? 'bg-blue-100 text-blue-800' :
+                                      condition.confidence === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                                      'bg-gray-100 text-gray-800'
+                                    }`}>
+                                      {condition.confidence} Confidence
+                                    </span>
+                                  </div>
+                                </div>
+                                <p className="text-sm text-gray-600">{condition.evidence}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Severity Levels */}
+                      {assessment.assessment_data.severity_levels && (
+                        <div className="p-4 bg-gray-50 rounded-lg">
+                          <h4 className="font-semibold text-gray-800 mb-3">Severity Analysis</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-600">Overall Severity:</span>
+                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                assessment.assessment_data.severity_levels.overall_severity === 'Severe' ? 'bg-red-100 text-red-800' :
+                                assessment.assessment_data.severity_levels.overall_severity === 'Moderate' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-green-100 text-green-800'
+                              }`}>
+                                {assessment.assessment_data.severity_levels.overall_severity}
+                              </span>
+                            </div>
+                            
+                            {assessment.assessment_data.severity_levels.risk_factors && assessment.assessment_data.severity_levels.risk_factors.length > 0 && (
+                              <div className="mt-3">
+                                <h5 className="font-medium text-gray-700 mb-2">Risk Factors:</h5>
+                                <ul className="list-disc list-inside space-y-1">
+                                  {assessment.assessment_data.severity_levels.risk_factors.map((factor: string, index: number) => (
+                                    <li key={index} className="text-sm text-gray-600">{factor}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                            
+                            {assessment.assessment_data.severity_levels.protective_factors && assessment.assessment_data.severity_levels.protective_factors.length > 0 && (
+                              <div className="mt-3">
+                                <h5 className="font-medium text-gray-700 mb-2">Protective Factors:</h5>
+                                <ul className="list-disc list-inside space-y-1">
+                                  {assessment.assessment_data.severity_levels.protective_factors.map((factor: string, index: number) => (
+                                    <li key={index} className="text-sm text-gray-600">{factor}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Critical Status with Reason */}
+                      <div className="p-4 bg-gray-50 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-gray-600">Critical Status:</span>
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            assessment.is_critical ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                          }`}>
+                            {assessment.is_critical ? 'Critical' : 'Non-Critical'}
+                          </span>
+                        </div>
+                        {assessment.assessment_data.critical_reason && (
+                          <p className="text-sm text-gray-600 mt-2">
+                            <strong>Reason:</strong> {assessment.assessment_data.critical_reason}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Fallback for old data format */}
+                  {!assessment.assessment_data && assessment.mental_conditions && Array.isArray(assessment.mental_conditions) && assessment.mental_conditions.length > 0 && (
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <h4 className="font-semibold text-gray-800 mb-3">Detected Conditions</h4>
                       <div className="space-y-2">
@@ -154,17 +251,6 @@ const AssessmentDetailsModal: React.FC<AssessmentDetailsModalProps> = ({ isOpen,
                       </div>
                     </div>
                   )}
-                  
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Critical Status:</span>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        assessment.is_critical ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-                      }`}>
-                        {assessment.is_critical ? 'Critical' : 'Non-Critical'}
-                      </span>
-                    </div>
-                  </div>
                 </div>
               ) : (
                 // Clinical Assessment Results
@@ -208,6 +294,35 @@ const AssessmentDetailsModal: React.FC<AssessmentDetailsModalProps> = ({ isOpen,
             <p className="text-gray-700 leading-relaxed">
               {assessment.category === 'bot' ? assessment.assessment_summary : assessment.interpretation}
             </p>
+            
+            {/* Show additional metadata for bot assessments */}
+            {assessment.category === 'bot' && assessment.assessment_data && (
+              <div className="mt-4 pt-4 border-t border-primary-start/20">
+                <h5 className="font-semibold text-gray-800 mb-2">Additional Assessment Details</h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium text-gray-600">Session ID:</span>
+                    <span className="ml-2 text-gray-800">{assessment.session_identifier}</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-600">Assessment ID:</span>
+                    <span className="ml-2 text-gray-800">{assessment.id}</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-600">Generated:</span>
+                    <span className="ml-2 text-gray-800">
+                      {new Date(assessment.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-600">Data Completeness:</span>
+                    <span className="ml-2 text-gray-800">
+                      {assessment.assessment_data ? 'Full Metadata Available' : 'Basic Data Only'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

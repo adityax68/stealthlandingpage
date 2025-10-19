@@ -22,6 +22,7 @@ export const API_ENDPOINTS = {
   CLINICAL_ASSESSMENTS: `${API_BASE_URL}/api/v1/clinical/my-assessments`,
   UNIFIED_ASSESSMENTS: `${API_BASE_URL}/api/v1/clinical/unified-assessments`,
   COMPREHENSIVE_ASSESSMENT: `${API_BASE_URL}/api/v1/clinical/comprehensive-assessment`,
+  BOT_ASSESSMENTS: `${API_BASE_URL}/api/v1/assessment/history`,
   QUESTIONS: `${API_BASE_URL}/api/v1/clinical/questions`,
   // Additional endpoints
   QUESTIONS_PHQ9: `${API_BASE_URL}/api/v1/clinical/questions/phq9`,

@@ -19,6 +19,7 @@ interface Message {
 }
 
 const SessionChatBot: React.FC<SessionChatBotProps> = ({ 
+  isAuthenticated,
   moodData, 
   onMoodDataClear 
 }) => {
@@ -45,6 +46,7 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
   const [showAssessmentModal, setShowAssessmentModal] = useState(false);
   const [assessmentData, setAssessmentData] = useState<any>(null);
   const [isGeneratingAssessment, setIsGeneratingAssessment] = useState(false);
+  const [assessmentGenerated, setAssessmentGenerated] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -168,7 +170,11 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
     setIsGeneratingAssessment(true);
     try {
       // Get user email from logged-in user
-      const userEmail = localStorage.getItem('userEmail') || 'anonymous@example.com';
+      const userData = localStorage.getItem('user');
+      if (!userData) {
+        throw new Error('User not logged in. Please log in to generate assessment.');
+      }
+      const userEmail = JSON.parse(userData).email;
       
       const response = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/assessment/generate`, {
         method: 'POST',
@@ -188,10 +194,15 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
       const data = await response.json();
       setAssessmentData(data.assessment_data);
       setShowAssessmentModal(true);
+      setAssessmentGenerated(true); // Mark assessment as generated
       
     } catch (error) {
       console.error('Failed to generate assessment:', error);
-      alert('Failed to generate assessment. Please try again.');
+      if (error instanceof Error && error.message.includes('not logged in')) {
+        alert('Please log in to generate assessment.');
+      } else {
+        alert('Failed to generate assessment. Please try again.');
+      }
     } finally {
       setIsGeneratingAssessment(false);
     }
@@ -206,57 +217,52 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
       setShowAssessmentModal(false);
       setAssessmentData(null);
       setIsGeneratingAssessment(false);
+      setAssessmentGenerated(false); // Reset assessment generated flag
       
       // Clear localStorage
       localStorage.removeItem('sessionId');
       localStorage.removeItem('chatHistory');
       
       // Generate new session ID
-      const newSessionId = sessionChatService.generateNewSessionId();
+      sessionChatService.generateNewSessionId();
       
       // Get current user email and access code
-      const userEmail = localStorage.getItem('userEmail') || 'anonymous@example.com';
-      const currentAccessCode = localStorage.getItem('accessCode') || '';
+      const userData = localStorage.getItem('user');
+      if (!userData) {
+        console.error('User not logged in. Cannot start new session.');
+        return;
+      }
+      const userEmail = JSON.parse(userData).email;
+      
+      // Get access code from UI state (what user has entered and validated)
+      const currentAccessCode = accessCode.trim();
       
       // Auto-link access code to new session if available
       if (currentAccessCode && userEmail !== 'anonymous@example.com') {
         try {
-          // Step 1: Validate access code to get subscription token
-          const validateResponse = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/access-code`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              access_code: currentAccessCode
-            })
-          });
+          // Step 1: Validate access code using service
+          const validateData = await sessionChatService.validateAccessCode(currentAccessCode);
           
-          if (validateResponse.ok) {
-            const validateData = await validateResponse.json();
+          if (validateData.success && validateData.subscription_token) {
+            // Step 2: Link session to subscription using service
+            await sessionChatService.linkSessionToSubscription(validateData.subscription_token);
             
-            // Step 2: Link session to subscription
-            const linkResponse = await fetch(`${API_ENDPOINTS.BASE_URL}/api/v1/session-chat/link-session`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                session_identifier: newSessionId,
-                subscription_token: validateData.subscription_token
-              })
+            // Update usage info with new subscription
+            setUsageInfo({
+              messages_used: 0,
+              message_limit: validateData.message_limit || null,
+              plan_type: validateData.plan_type || 'loading',
+              can_send: true
             });
+            console.log('✅ Access code auto-linked to new session');
             
-            if (linkResponse.ok) {
-              // Update usage info with new subscription
-              setUsageInfo({
-                messages_used: 0,
-                message_limit: validateData.message_limit,
-                plan_type: validateData.plan_type,
-                can_send: true
-              });
-              console.log('✅ Access code auto-linked to new session');
-            }
+            // Trigger greeting after successful linking
+            setTimeout(() => {
+              if (!hasSentGreeting && messages.length === 0) {
+                setHasSentGreeting(true);
+                sendGreetingMessage();
+              }
+            }, 100);
           }
         } catch (error) {
           console.error('Failed to auto-link access code:', error);
@@ -266,6 +272,7 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
       
       // Reset usage info if no access code
       if (!currentAccessCode) {
+        console.warn('No access code available for new session');
         setUsageInfo({
           messages_used: 0,
           message_limit: null,
@@ -795,13 +802,20 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
                     You've reached the assessment limit. Generate your mental health assessment to continue.
                   </p>
                   <div className="flex gap-3 justify-center">
-                    <button
-                      onClick={generateAssessment}
-                      disabled={isGeneratingAssessment}
-                      className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                    >
-                      {isGeneratingAssessment ? 'Generating Assessment...' : 'Generate Assessment'}
-                    </button>
+                    {!assessmentGenerated && isAuthenticated && (
+                      <button
+                        onClick={generateAssessment}
+                        disabled={isGeneratingAssessment}
+                        className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                      >
+                        {isGeneratingAssessment ? 'Generating Assessment...' : 'Generate Assessment'}
+                      </button>
+                    )}
+                    {!assessmentGenerated && !isAuthenticated && (
+                      <p className="text-red-600 text-sm">
+                        Please log in to generate assessment
+                      </p>
+                    )}
                     <button
                       onClick={startNewSession}
                       className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
@@ -973,16 +987,10 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-4">
-                  <button
-                    onClick={startNewSession}
-                    className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                  >
-                    Start New Session
-                  </button>
+                <div className="flex justify-center pt-4">
                   <button
                     onClick={() => setShowAssessmentModal(false)}
-                    className="flex-1 bg-gray-200 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                    className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                   >
                     Close
                   </button>

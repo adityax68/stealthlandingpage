@@ -34,6 +34,7 @@ import EmployeeSupport from './EmployeeSupport'
 import EmployeeRequestModal from './EmployeeRequestModal'
 import { useEmployeeModal } from '../contexts/EmployeeModalContext'
 import { useToast } from '../contexts/ToastContext'
+import AssessmentDetailsModal from './AssessmentDetailsModal'
 
 interface DashboardProps {
   onLogout: () => void
@@ -49,6 +50,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+  
+  // Assessment modal state
+  const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false)
+  const [selectedAssessment, setSelectedAssessment] = useState<any>(null)
   
   // Settings menu state
   const [isRequestingAccess, setIsRequestingAccess] = useState(false)
@@ -452,6 +457,16 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
     setExpandedRows(newExpandedRows)
   }
 
+  const openAssessmentModal = (assessment: any) => {
+    setSelectedAssessment(assessment)
+    setIsAssessmentModalOpen(true)
+  }
+
+  const closeAssessmentModal = () => {
+    setIsAssessmentModalOpen(false)
+    setSelectedAssessment(null)
+  }
+
   const getSeverityColor = (severity: string) => {
     // Handle undefined, null, or empty severity values
     if (!severity || typeof severity !== 'string') {
@@ -703,142 +718,16 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                           <div className="col-span-2">
                             <div className="flex justify-center space-x-2">
                               <button
-                                onClick={() => toggleRowExpansion(assessment.id)}
+                                onClick={() => openAssessmentModal(assessment)}
                                 className="px-3 py-1 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800/80 hover:bg-primary-start/20 transition-all duration-200 text-xs"
                               >
-                                {expandedRows.has(assessment.id) ? 'Hide' : 'View'} Details
+                                View Details
                               </button>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Expanded Details */}
-                      {expandedRows.has(assessment.id) && (
-                        <div className="bg-white/5 border-t border-primary-start/20 px-6 py-4">
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            {/* Assessment Details */}
-                            <div className="space-y-4">
-                              <h4 className="text-lg font-semibold text-gray-800 mb-3">Assessment Details</h4>
-                              <div className="space-y-3">
-                                <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-                                  <span className="text-gray-800/70">Assessment Type:</span>
-                                  <span className="text-gray-800 font-medium">
-                                    {assessment.category === 'bot' ? 'Bot Assessment' : assessment.assessment_name}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-                                  <span className="text-gray-800/70">Completion Date:</span>
-                                  <span className="text-gray-800 font-medium">
-                                    {new Date(assessment.created_at).toLocaleDateString('en-US', {
-                                      weekday: 'long',
-                                      year: 'numeric',
-                                      month: 'long',
-                                      day: 'numeric'
-                                    })}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-                                  <span className="text-gray-800/70">Completion Time:</span>
-                                  <span className="text-gray-800 font-medium">
-                                    {new Date(assessment.created_at).toLocaleTimeString()}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Score Breakdown or Bot Assessment Results */}
-                            <div className="space-y-4">
-                              <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                                {assessment.category === 'bot' ? 'Assessment Results' : 'Score Breakdown'}
-                              </h4>
-                              <div className="space-y-3">
-                                {assessment.category === 'bot' ? (
-                                  // Bot Assessment Results
-                                  <>
-                                    <div className="p-3 bg-white/5 rounded-lg">
-                                      <div className="flex justify-between items-center mb-2">
-                                        <span className="text-gray-800/70">Assessment Summary:</span>
-                                      </div>
-                                      <p className="text-gray-800 text-sm">{assessment.assessment_summary}</p>
-                                    </div>
-                                    
-                                    {assessment.mental_conditions && Array.isArray(assessment.mental_conditions) && assessment.mental_conditions.length > 0 && (
-                                      <div className="p-3 bg-white/5 rounded-lg">
-                                        <div className="flex justify-between items-center mb-2">
-                                          <span className="text-gray-800/70">Detected Conditions:</span>
-                                        </div>
-                                        <div className="space-y-2">
-                                          {assessment.mental_conditions.map((condition: any, index: number) => (
-                                            <div key={index} className="flex justify-between items-center">
-                                              <span className="text-gray-800 text-sm">{condition.condition}</span>
-                                              <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                condition.severity === 'Severe' ? 'bg-red-100 text-red-800' :
-                                                condition.severity === 'Moderate' ? 'bg-yellow-100 text-yellow-800' :
-                                                'bg-green-100 text-green-800'
-                                              }`}>
-                                                {condition.severity}
-                                              </span>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    )}
-                                    
-                                    <div className="p-3 bg-white/5 rounded-lg">
-                                      <div className="flex justify-between items-center mb-2">
-                                        <span className="text-gray-800/70">Critical Status:</span>
-                                        <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                          assessment.is_critical ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-                                        }`}>
-                                          {assessment.is_critical ? 'Critical' : 'Non-Critical'}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </>
-                                ) : (
-                                  // Clinical Assessment Results
-                                  <>
-                                    <div className="p-3 bg-white/5 rounded-lg">
-                                      <div className="flex justify-between items-center mb-2">
-                                        <span className="text-gray-800/70">Total Score:</span>
-                                        <span className="text-xl font-bold gradient-text">
-                                          {assessment.total_score}/{assessment.max_score}
-                                        </span>
-                                      </div>
-                                      <div className="w-full bg-primary-start/10 rounded-full h-2">
-                                        <div 
-                                          className="bg-gradient-to-r from-primary-start to-primary-end h-2 rounded-full transition-all duration-500"
-                                          style={{ width: `${(assessment.total_score / assessment.max_score) * 100}%` }}
-                                        ></div>
-                                      </div>
-                                    </div>
-                                    
-                                    <div className="p-3 bg-white/5 rounded-lg">
-                                      <div className="flex justify-between items-center mb-2">
-                                        <span className="text-gray-800/70">Overall Severity:</span>
-                                        <span className={`px-2 py-1 rounded text-xs font-medium border ${getSeverityColor(assessment.severity_level)}`}>
-                                          {assessment.severity_level ? assessment.severity_level.replace('_', ' ').toUpperCase() : 'UNKNOWN'}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Interpretation or Bot Assessment Summary */}
-                          <div className="mt-6 p-4 bg-gradient-to-r from-primary-start/10 to-primary-end/10 rounded-lg border border-primary-start/20">
-                            <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                              {assessment.category === 'bot' ? 'Assessment Summary' : 'Interpretation'}
-                            </h4>
-                            <p className="text-gray-800/80 leading-relaxed">
-                              {assessment.category === 'bot' ? assessment.assessment_summary : assessment.interpretation}
-                            </p>
-                          </div>
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -903,74 +792,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                           {assessment.severity_level ? assessment.severity_level.replace('_', ' ').toUpperCase() : 'UNKNOWN'}
                         </span>
                         <button
-                          onClick={() => toggleRowExpansion(assessment.id)}
+                          onClick={() => openAssessmentModal(assessment)}
                           className="px-3 py-1 bg-primary-start/10 border border-white/20 rounded-lg text-gray-800/80 hover:bg-primary-start/20 transition-all duration-200 text-xs"
                         >
-                          {expandedRows.has(assessment.id) ? 'Hide' : 'View'} Details
+                          View Details
                         </button>
                       </div>
                     </div>
 
-                    {/* Expanded Details - Mobile */}
-                    {expandedRows.has(assessment.id) && (
-                      <div className="bg-white/5 border-t border-primary-start/20 p-4">
-                        <div className="space-y-4">
-                          {/* Assessment Details */}
-                          <div>
-                            <h4 className="text-base font-semibold text-gray-800 mb-3">Assessment Details</h4>
-                            <div className="space-y-2">
-                              <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-sm">
-                                <span className="text-gray-800/70">Type:</span>
-                                <span className="text-gray-800 font-medium">{assessment.assessment_name}</span>
-                              </div>
-                              <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-sm">
-                                <span className="text-gray-800/70">Date:</span>
-                                <span className="text-gray-800 font-medium">
-                                  {new Date(assessment.created_at).toLocaleDateString()}
-                                </span>
-                              </div>
-                              <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-sm">
-                                <span className="text-gray-800/70">Time:</span>
-                                <span className="text-gray-800 font-medium">
-                                  {new Date(assessment.created_at).toLocaleTimeString()}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Score Breakdown */}
-                          <div>
-                            <h4 className="text-base font-semibold text-gray-800 mb-3">Score Breakdown</h4>
-                            <div className="p-3 bg-white/5 rounded-lg">
-                              <div className="flex justify-between items-center mb-2">
-                                <span className="text-gray-800/70 text-sm">Total Score:</span>
-                                <span className="text-lg font-bold gradient-text">
-                                  {assessment.total_score}/{assessment.max_score}
-                                </span>
-                              </div>
-                              <div className="w-full bg-primary-start/10 rounded-full h-2 mb-2">
-                                <div 
-                                  className="bg-gradient-to-r from-primary-start to-primary-end h-2 rounded-full transition-all duration-500"
-                                  style={{ width: `${(assessment.total_score / assessment.max_score) * 100}%` }}
-                                ></div>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <span className="text-gray-800/70 text-sm">Severity:</span>
-                                <span className={`px-2 py-1 rounded text-xs font-medium border ${getSeverityColor(assessment.severity_level)}`}>
-                                  {assessment.severity_level ? assessment.severity_level.replace('_', ' ').toUpperCase() : 'UNKNOWN'}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Interpretation */}
-                          <div className="p-3 bg-gradient-to-r from-primary-start/10 to-primary-end/10 rounded-lg border border-primary-start/20">
-                            <h4 className="text-base font-semibold text-gray-800 mb-2">Interpretation</h4>
-                            <p className="text-gray-800/80 text-sm leading-relaxed">{assessment.interpretation}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
@@ -1499,6 +1328,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
           user.role = newRole
         }
       }} />
+      
+      {/* Assessment Details Modal */}
+      <AssessmentDetailsModal 
+        isOpen={isAssessmentModalOpen}
+        onClose={closeAssessmentModal}
+        assessment={selectedAssessment}
+      />
     </div>
   )
 }

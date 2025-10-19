@@ -408,7 +408,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
         total_score: assessment.total_score || 0,
         max_score: assessment.max_score || 0,
         assessment_name: assessment.assessment_name || 'Unknown Assessment',
-        interpretation: assessment.interpretation || 'No interpretation available'
+        interpretation: assessment.interpretation || 'No interpretation available',
+        mental_conditions: assessment.mental_conditions || []
       }))
       
       const botWithCategory = botData.assessments?.map((assessment: any) => ({
@@ -762,7 +763,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                                       <p className="text-gray-800 text-sm">{assessment.assessment_summary}</p>
                                     </div>
                                     
-                                    {assessment.mental_conditions && assessment.mental_conditions.length > 0 && (
+                                    {assessment.mental_conditions && Array.isArray(assessment.mental_conditions) && assessment.mental_conditions.length > 0 && (
                                       <div className="p-3 bg-white/5 rounded-lg">
                                         <div className="flex justify-between items-center mb-2">
                                           <span className="text-gray-800/70">Detected Conditions:</span>

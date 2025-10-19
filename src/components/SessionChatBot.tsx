@@ -905,7 +905,7 @@ const SessionChatBot: React.FC<SessionChatBotProps> = ({
                 </div>
 
                 {/* Mental Conditions */}
-                {assessmentData.mental_conditions && assessmentData.mental_conditions.length > 0 && (
+                {assessmentData.mental_conditions && Array.isArray(assessmentData.mental_conditions) && assessmentData.mental_conditions.length > 0 && (
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-3">Detected Conditions</h3>
                     <div className="space-y-3">

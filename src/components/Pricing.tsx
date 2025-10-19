@@ -18,9 +18,9 @@ const Pricing: React.FC = () => {
       id: 'basic',
       name: 'Basic Plan',
       price: '$5',
-      messages: '10 messages',
+      messages: '15 messages',
       description: 'Perfect for regular users',
-      features: ['10 messages total', 'Mental health support', 'Anonymous chat'],
+      features: ['15 messages total', 'Mental health support', 'Anonymous chat'],
       icon: Shield,
       color: 'from-blue-500 to-blue-600',
       cardGradient: 'from-blue-500/40 via-blue-600/30 to-blue-500/20'

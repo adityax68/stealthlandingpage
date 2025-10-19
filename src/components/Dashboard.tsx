@@ -1175,7 +1175,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                   </button>
                 </div>
                 <p className="text-xs text-gray-500">
-                  Use this code in the chatbot to get 10 free messages!
+                  Use this code in the chatbot to get 15 free messages!
                 </p>
               </div>
             )}
@@ -1343,7 +1343,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, user }) => {
                       </button>
                     </div>
                     <p className="text-xs text-gray-500">
-                      Use this code in the chatbot to get 10 free messages!
+                      Use this code in the chatbot to get 15 free messages!
                     </p>
                   </div>
                 )}

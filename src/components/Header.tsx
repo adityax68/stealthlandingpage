@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Menu, X, User } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -8,17 +8,29 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'About', href: '#home' },
     { label: 'Features', href: '#features' },
-    { label: 'Researches', href: '/researches' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'Contact', href: '#footer' }
+    { label: 'FAQ', href: '#faq' }
   ]
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const handleLinkClick = (href: string) => {
     setIsMenuOpen(false)
@@ -26,23 +38,19 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
     // Handle direct navigation to home page
     if (href === '/') {
       navigate('/')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
     
     // If we're not on the home page and trying to navigate to sections, go to home first
-    if (location.pathname !== '/' && (href === '#home' || href === '#features' || href === '#pricing' || href === '#footer')) {
+    if (location.pathname !== '/' && (href === '#features' || href === '#faq')) {
       navigate('/')
       // Wait for navigation to complete, then scroll to the section
       setTimeout(() => {
         if (href === '#features') {
           document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-        } else if (href === '#pricing') {
-          document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
-        } else if (href === '#footer') {
-          document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })
-        } else if (href === '#home') {
-          // Scroll to the top of the page
-          window.scrollTo({ top: 0, behavior: 'smooth' })
+        } else if (href === '#faq') {
+          document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })
         }
       }, 100)
       return
@@ -51,15 +59,8 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
     // Handle navigation when already on the home page
     if (href === '#features') {
       document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-    } else if (href === '#pricing') {
-      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
-    } else if (href === '#footer') {
-      document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })
-    } else if (href === '/researches') {
-      navigate('/researches')
-    } else if (href === '#home') {
-      // Scroll to the top of the page
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (href === '#faq') {
+      document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
@@ -68,8 +69,15 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
 
 
 
+  // Determine if we should show transparent header (only on home page when not scrolled and on desktop)
+  const isTransparent = location.pathname === '/' && !isScrolled
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-primary-start/20">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isTransparent 
+        ? 'bg-white md:bg-transparent border-b border-primary-start/10 md:border-transparent' 
+        : 'bg-white/90 backdrop-blur-xl border-b border-primary-start/20 shadow-sm'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}

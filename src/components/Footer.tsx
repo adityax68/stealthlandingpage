@@ -1,16 +1,31 @@
 import React from 'react'
-import { Mail, HelpCircle, Twitter, Facebook, Instagram, Linkedin } from 'lucide-react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Mail, Linkedin } from 'lucide-react'
 
 const Footer: React.FC = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const handleLinkClick = (href: string) => {
+    // If we're not on the home page, navigate to home first then scroll
+    if (location.pathname !== '/') {
+      navigate('/')
+      // Wait for navigation to complete, then scroll to the section
+      setTimeout(() => {
+        if (href === '#features') {
+          document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+        } else if (href === '#faq') {
+          document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 100)
+      return
+    }
+
+    // If already on home page, just scroll
     if (href === '#features') {
       document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      // Scroll to the Launch Status section in the hero
-      const heroSection = document.querySelector('section')
-      if (heroSection) {
-        heroSection.scrollIntoView({ behavior: 'smooth' })
-      }
+    } else if (href === '#faq') {
+      document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
@@ -37,19 +52,9 @@ const Footer: React.FC = () => {
               and personalized solutions for stress, anxiety, and depression.
             </p>
             <div className="flex space-x-3 md:space-x-4">
-              <a href="#" className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary-start/20 to-primary-end/20 hover:from-primary-start/40 hover:to-primary-end/40 border border-white/20 rounded-lg md:rounded-xl flex items-center justify-center text-white hover:text-primary-start transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary-start/20">
-                <Twitter size={16} className="md:w-5 md:h-5" />
-              </a>
-              <a href="#" className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 hover:from-secondary-start/40 hover:to-secondary-end/40 border border-white/20 rounded-lg md:rounded-xl flex items-center justify-center text-white hover:text-secondary-start transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-secondary-start/20">
-                <Facebook size={16} className="md:w-5 md:h-5" />
-              </a>
-              <a href="#" className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-accent-start/20 to-accent-end/20 hover:from-accent-start/40 hover:to-accent-end/40 border border-white/20 rounded-lg md:rounded-xl flex items-center justify-center text-white hover:text-accent-start transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-accent-start/20">
-                <Instagram size={16} className="md:w-5 md:h-5" />
-              </a>
-              <a href="#" className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 hover:from-blue-400/40 hover:to-cyan-400/40 border border-white/20 rounded-lg md:rounded-xl flex items-center justify-center text-white hover:text-blue-400 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-400/20">
+              <a href="https://www.linkedin.com/company/mindacuity-ai/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 hover:from-blue-400/40 hover:to-cyan-400/40 border border-white/20 rounded-lg md:rounded-xl flex items-center justify-center text-gray-700 hover:text-blue-500 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-400/20">
                 <Linkedin size={16} className="md:w-5 md:h-5" />
               </a>
-
             </div>
           </div>
 
@@ -57,11 +62,9 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-base md:text-lg font-semibold text-gray-800 mb-4 md:mb-6">Quick Links</h4>
             <ul className="space-y-2 md:space-y-3">
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Home</a></li>
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">About</a></li>
               <li><a href="#features" onClick={(e) => { e.preventDefault(); handleLinkClick('#features'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Features</a></li>
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Products</a></li>
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">Contact</a></li>
+              <li><a href="#faq" onClick={(e) => { e.preventDefault(); handleLinkClick('#faq'); }} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer">FAQ</a></li>
+              <li><button onClick={() => navigate('/privacy-policy')} className="text-gray-600 hover:text-gray-800 transition-colors duration-300 hover:translate-x-1 inline-block text-sm md:text-base cursor-pointer text-left">Privacy Policy</button></li>
             </ul>
           </div>
 
@@ -69,20 +72,13 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-base md:text-lg font-semibold text-gray-800 mb-4 md:mb-6">Contact Info</h4>
             <ul className="space-y-3 md:space-y-4">
-              <li className="flex items-center space-x-2 md:space-x-3">
-                <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-primary-start/20 to-primary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
+              <li className="flex items-start space-x-2 md:space-x-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-primary-start/20 to-primary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Mail size={12} className="md:w-4 md:h-4 text-primary-start" />
                 </div>
-                <a href="mailto:contact@mindacuity.ai" className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm md:text-base cursor-pointer">contact@mindacuity.ai</a>
+                <a href="mailto:business@thymositsolution.com" className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm md:text-base cursor-pointer">business@thymositsolution.com</a>
               </li>
-              <li className="flex items-center space-x-2 md:space-x-3">
-                <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 rounded-md md:rounded-lg flex items-center justify-center flex-shrink-0">
-                  <HelpCircle size={12} className="md:w-4 md:h-4 text-secondary-start" />
-                </div>
-                <a href="mailto:support@mindacuity.ai" className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm md:text-base cursor-pointer">support@mindacuity.ai</a>
-              </li>
-
-
+             
             </ul>
           </div>
         </div>
@@ -107,10 +103,8 @@ const Footer: React.FC = () => {
 
         {/* Copyright */}
         <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-white/10 text-center">
-          <p className="text-white/50 text-xs md:text-sm">
-            © 2025 Mind Acuity. All rights reserved. | 
-            <a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 ml-1 md:ml-2 cursor-pointer">Privacy Policy</a> | 
-            <a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="text-white/70 hover:text-white transition-colors duration-300 ml-1 md:ml-2 cursor-pointer">Terms of Service</a>
+          <p className="text-gray-600 text-xs md:text-sm">
+            © 2025 MindAcuity (Thymos IT Solution Pvt. Ltd.). All rights reserved.
           </p>
         </div>
       </div>

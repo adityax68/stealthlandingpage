@@ -13,9 +13,16 @@ const Hero: React.FC = () => {
   const [isGlowing, setIsGlowing] = useState(false)
   const [ripples, setRipples] = useState<Ripple[]>([])
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(0)
   const heroRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const rippleId = useRef(0)
+
+  const appScreenshots = [
+    '/app1.png',
+    '/app2.png',
+    '/app3.png'
+  ]
 
   useEffect(() => {
     // Start glow animation immediately
@@ -34,6 +41,15 @@ const Hero: React.FC = () => {
       videoRef.current.play().catch(console.error)
     }
   }, [isVideoLoaded])
+
+  // Auto-slide carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % appScreenshots.length)
+    }, 3000) // Change slide every 3 seconds
+
+    return () => clearInterval(interval)
+  }, [appScreenshots.length])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!heroRef.current) return
@@ -139,131 +155,109 @@ const Hero: React.FC = () => {
       ))}
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ zIndex: 10 }}>
-        <div className="mb-8 md:mb-12">
-          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold mb-6 md:mb-8">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 md:mb-6">
             <span className="block text-gray-800 rubik-pixels-regular">Mind Acuity</span>
           </h1>
           
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto mb-12 md:mb-16 leading-relaxed px-4">
-            Advanced AI-powered assessment and personalized solutions for stress, anxiety, and depression. 
-            Experience the future of mental health care.
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 md:mb-10 leading-relaxed px-4">
+            AI-powered mental health solutions for stress, anxiety, and depression.
           </p>
         </div>
 
-        {/* Enhanced Launch Status Animation */}
-        <div className="mb-12 md:mb-16 relative px-4">
-          {/* Background Glow Effect */}
-          <div className={`absolute inset-0 bg-gradient-to-r from-primary-start/10 via-secondary-start/10 to-accent-start/10 rounded-2xl md:rounded-3xl blur-3xl transition-all duration-1000 ${
-            isGlowing ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
-          }`}></div>
-          
-          {/* Main Container */}
-          <div className="relative bg-gradient-to-br from-white/90 via-white/70 to-white/50 backdrop-blur-xl border border-primary-start/20 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 shadow-2xl">
-            {/* Subtle Border Animation */}
-            <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        {/* Two Column Layout */}
+        <div className="mb-8 md:mb-12 relative px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
             
-            {/* Android Logo Animation */}
-            <div className="flex justify-center items-center">
-              <div className="relative group">
-                {/* Animated Background Glow */}
-                <div className={`absolute -inset-4 bg-gradient-to-r from-primary-start/30 via-secondary-start/30 to-accent-start/30 blur-3xl transition-all duration-1000 ${
-                  isGlowing ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
-                }`}></div>
-                
-                {/* Lottie Animation */}
-                <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 transform group-hover:scale-105 transition-all duration-500">
-                  <Lottie 
-                    animationData={androidLogo}
-                    loop={true}
-                    className="w-full h-full"
-                  />
-                </div>
-                
-                {/* Pulsing Border Effect */}
-                <div className="absolute -inset-2 bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                
-                {/* Floating Particles Effect */}
-                <div className="absolute inset-0 pointer-events-none">
-                  <div className="absolute top-0 left-1/4 w-1 h-1 bg-primary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '0s' }}></div>
-                  <div className="absolute top-1/4 right-1/4 w-1 h-1 bg-secondary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '1s' }}></div>
-                  <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-accent-start rounded-full animate-ping opacity-60" style={{ animationDelay: '2s' }}></div>
-                  <div className="absolute bottom-0 right-1/3 w-1 h-1 bg-primary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '0.5s' }}></div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Subtitle */}
-            <div className={`mt-4 md:mt-6 transition-all duration-1000 delay-1000 ${
-              isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
-            }`}>
-              <p className="text-gray-600 text-base sm:text-lg md:text-xl font-light px-2">
-                Experience the future of mental health technology
-              </p>
-            </div>
-            
-            {/* Progress Indicator */}
-            <div className={`mt-6 md:mt-8 transition-all duration-1000 delay-1500 ${
-              isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
-            }`}>
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-2 h-2 bg-primary-start rounded-full animate-pulse"></div>
-                <div className="w-2 h-2 bg-secondary-start rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-accent-start rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-              </div>
-            </div>
-
-            {/* Download Android App Button */}
-            <div className={`mt-8 md:mt-10 transition-all duration-1000 delay-2000 ${
-              isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
-            }`}>
-              <a
-                href="https://drive.google.com/uc?export=download&id=1Jqy0n_DoypBtU4l_Ip4Rpjqm7k43sw0x"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary-start/25 flex items-center space-x-3 mx-auto w-fit"
-              >
-                <div className="relative z-10 flex items-center space-x-3">
-                  <Smartphone className="w-6 h-6 animate-pulse" />
-                  <span className="flex items-center space-x-2">
-                    <span>Download Android App</span>
-                    <Download className="w-5 h-5" />
-                  </span>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-              </a>
+            {/* Left Column: Android Logo and Download Button */}
+            <div className="relative order-2 lg:order-1">
               
-              {/* Additional Info Text */}
-              <p className="text-gray-500 text-sm mt-3 flex items-center justify-center space-x-2">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span>Latest version • Compatible with Android 7.0+</span>
-              </p>
+              {/* Android Logo Animation */}
+              <div className="flex justify-center items-center mb-6 lg:mb-8">
+                <div className="relative group">
+                  {/* Animated Background Glow */}
+                  <div className={`absolute -inset-4 bg-gradient-to-r from-primary-start/30 via-secondary-start/30 to-accent-start/30 blur-3xl transition-all duration-1000 ${
+                    isGlowing ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
+                  }`}></div>
+                  
+                  {/* Lottie Animation */}
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40 transform group-hover:scale-105 transition-all duration-500">
+                    <Lottie 
+                      animationData={androidLogo}
+                      loop={true}
+                      className="w-full h-full"
+                    />
+                  </div>
+                  
+                  {/* Pulsing Border Effect */}
+                  <div className="absolute -inset-2 bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                  
+                  {/* Floating Particles Effect */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-0 left-1/4 w-1 h-1 bg-primary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '0s' }}></div>
+                    <div className="absolute top-1/4 right-1/4 w-1 h-1 bg-secondary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '1s' }}></div>
+                    <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-accent-start rounded-full animate-ping opacity-60" style={{ animationDelay: '2s' }}></div>
+                    <div className="absolute bottom-0 right-1/3 w-1 h-1 bg-primary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '0.5s' }}></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Download Android App Button */}
+              <div className={`transition-all duration-1000 delay-1000 ${
+                isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+              }`}>
+                <a
+                  href="https://drive.google.com/uc?export=download&id=1Jqy0n_DoypBtU4l_Ip4Rpjqm7k43sw0x"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary-start/25 flex items-center space-x-3 mx-auto w-fit"
+                >
+                  <div className="relative z-10 flex items-center space-x-3">
+                    <Smartphone className="w-6 h-6 animate-pulse" />
+                    <span className="flex items-center space-x-2">
+                      <span>Download Android App</span>
+                      <Download className="w-5 h-5" />
+                    </span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </a>
+                
+               
+              </div>
             </div>
 
-          </div>
-        </div>
+            {/* Right Column: Image Carousel */}
+            <div className={`relative order-1 lg:order-2 transition-all duration-1000 delay-500 ${
+              isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+            }`}>
+              <div className="relative max-w-sm mx-auto lg:ml-auto lg:mr-8">
+                {/* Carousel Container */}
+                <div className="relative overflow-hidden aspect-[9/19]">
+                  {/* Carousel Images */}
+                  <div className="relative w-full h-full">
+                    {appScreenshots.map((screenshot, index) => (
+                      <div
+                        key={index}
+                        className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                          index === currentSlide
+                            ? 'opacity-100 translate-x-0'
+                            : index < currentSlide
+                            ? 'opacity-0 -translate-x-full'
+                            : 'opacity-0 translate-x-full'
+                        }`}
+                      >
+                        <img
+                          src={screenshot}
+                          alt={`App screenshot ${index + 1}`}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        {/* Floating Stats with Enhanced Animations */}
-        <div className="mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto px-4">
-          <div className="text-center group hover:scale-105 transition-transform duration-300">
-            <div className="relative">
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse">99%</div>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-start/20 to-primary-end/20 blur-xl rounded-full animate-float"></div>
-            </div>
-            <div className="text-gray-600 text-sm sm:text-lg">Accuracy Rate</div>
-          </div>
-          <div className="text-center group hover:scale-105 transition-transform duration-300">
-            <div className="relative">
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse" style={{ animationDelay: '0.5s' }}>24/7</div>
-              <div className="absolute inset-0 bg-gradient-to-r from-secondary-start/20 to-secondary-end/20 blur-xl rounded-full animate-float-delayed"></div>
-            </div>
-            <div className="text-gray-600 text-sm sm:text-lg">Available Support</div>
-          </div>
-          <div className="text-center group hover:scale-105 transition-transform duration-300">
-            <div className="relative">
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-2 animate-glow-pulse" style={{ animationDelay: '1s' }}>10K+</div>
-              <div className="absolute inset-0 bg-gradient-to-r from-accent-start/20 to-accent-end/20 blur-xl rounded-full animate-float-slow"></div>
-            </div>
-            <div className="text-gray-600 text-sm sm:text-lg">Users Helped</div>
           </div>
         </div>
       </div>

@@ -48,61 +48,44 @@ const Features: React.FC = () => {
   ]
 
   return (
-    <section className="py-12 md:py-20 relative overflow-hidden" id="features">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6">
-            <span className="block gradient-text">Why Choose</span>
-            <span className="block gradient-text">Mind Acuity?</span>
+    <section className="py-8 md:py-12 relative overflow-hidden" id="features">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 md:mb-10">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+            <span className="gradient-text">Why Choose Mind Acuity?</span>
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+          <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto px-4">
             Experience the next generation of mental health technology designed to understand, 
             support, and empower your emotional well-being.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
           {features.map((feature) => {
             const IconComponent = feature.icon
             return (
               <div 
                 key={feature.title}
-                className="group relative transform transition-all duration-500 hover:scale-105 hover:-translate-y-2"
+                className="group relative transform transition-all duration-300 hover:scale-105"
               >
-                {/* Shimmer Border Effect */}
-                <div className="absolute inset-0 rounded-2xl md:rounded-3xl p-[2px] bg-gradient-to-r from-primary-start via-secondary-start to-accent-start opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="w-full h-full rounded-2xl md:rounded-3xl bg-gradient-to-r from-primary-start via-secondary-start to-accent-start animate-pulse"></div>
-                </div>
-                
-                {/* Hover Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl blur-xl scale-110 group-hover:scale-100"
-                     style={{ background: `linear-gradient(135deg, ${feature.cardGradient})` }}>
-                </div>
+                {/* Purplish Glow Effect on Hover */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-300"></div>
                 
                 {/* Main Card Content */}
-                <div className="relative bg-gradient-to-br from-primary-start/20 via-primary-end/15 to-primary-start/10 backdrop-blur-xl border border-primary-start/30 rounded-2xl md:rounded-3xl p-5 md:p-6 h-full shadow-2xl group-hover:shadow-3xl group-hover:shadow-primary-start/20 transition-all duration-500">
-                  <div className="space-y-3 md:space-y-4">
-                    <div className={`w-10 h-10 md:w-14 md:h-14 bg-gradient-to-r ${feature.gradient} rounded-xl md:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-2xl group-hover:shadow-white/20 relative overflow-hidden`}>
-                      {/* 3D Icon Container */}
-                      <div className="relative z-10">
-                        <IconComponent 
-                          size={20} 
-                          className="md:w-7 md:h-7 text-white drop-shadow-lg group-hover:drop-shadow-2xl transition-all duration-300 group-hover:scale-110" 
-                        />
-                      </div>
-                      
-                      {/* 3D Depth Effect */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl md:rounded-2xl transform rotate-12 scale-110 opacity-60 group-hover:opacity-80 transition-all duration-300"></div>
-                      
-                      {/* Bottom Shadow for 3D Effect */}
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/30 rounded-b-xl md:rounded-b-2xl transform scale-x-90 group-hover:scale-x-100 transition-transform duration-300"></div>
+                <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-purple-300 rounded-xl p-4 md:p-5 h-full shadow-sm hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
+                  <div className="space-y-2 md:space-y-3">
+                    <div className={`w-10 h-10 bg-gradient-to-r ${feature.gradient} rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-sm`}>
+                      <IconComponent 
+                        size={20} 
+                        className="text-white" 
+                      />
                     </div>
                     
-                    <h3 className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary-end group-hover:to-primary-start transition-all duration-300">
+                    <h3 className="text-base md:text-lg font-semibold text-gray-800">
                       {feature.title}
                     </h3>
                     
-                    <p className="text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300 text-sm md:text-base">
+                    <p className="text-gray-600 leading-relaxed text-sm">
                       {feature.description}
                     </p>
                   </div>

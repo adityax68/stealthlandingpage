@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { ChevronLeft, ChevronRight, ExternalLink, BookOpen } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
 
@@ -29,34 +29,62 @@ const ResearchesPage: React.FC = () => {
   const [total, setTotal] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
   const perPage = 9 // 3x3 grid
 
-  useEffect(() => {
-    loadResearches()
-  }, [currentPage])
-
-  const loadResearches = async () => {
+  const loadResearches = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`${API_ENDPOINTS.RESEARCHES}?page=${currentPage}&per_page=${perPage}`)
+      const response = await fetch(`${API_ENDPOINTS.RESEARCHES}?page=${currentPage}&per_page=${perPage}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      
+      console.log('📡 Research API Response:', response.status, response.statusText)
+      
+      // Handle 405 specifically
+      if (response.status === 405) {
+        console.error('❌ 405 Error: The backend endpoint does not support GET requests')
+        throw new Error('Research feature is currently unavailable. Please check back later.')
+      }
       
       if (!response.ok) {
-        throw new Error(`Failed to load researches: ${response.status}`)
+        const errorText = await response.text().catch(() => 'Unknown error')
+        console.error('API Error:', errorText)
+        throw new Error(`Failed to load researches: ${response.status} - ${response.statusText}`)
       }
       
       const data: ResearchListResponse = await response.json()
-      setResearches(data.researches)
-      setTotalPages(data.total_pages)
-      setTotal(data.total)
+      
+      // Handle empty results gracefully
+      if (!data.researches || data.researches.length === 0) {
+        setResearches([])
+        setTotalPages(0)
+        setTotal(0)
+      } else {
+        setResearches(data.researches)
+        setTotalPages(data.total_pages || 1)
+        setTotal(data.total || 0)
+      }
     } catch (err) {
       console.error('Error loading researches:', err)
       setError(err instanceof Error ? err.message : 'Failed to load researches')
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentPage, perPage])
+
+  useEffect(() => {
+    loadResearches()
+  }, [loadResearches])
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -142,10 +170,14 @@ const ResearchesPage: React.FC = () => {
                       onError={(e) => {
                         const target = e.target as HTMLImageElement
                         target.style.display = 'none'
-                        target.nextElementSibling?.classList.remove('hidden')
+                        const fallback = target.nextElementSibling
+                        if (fallback) {
+                          fallback.classList.remove('hidden')
+                          fallback.classList.add('flex')
+                        }
                       }}
                     />
-                    <div className="hidden absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary-start/20 to-primary-end/20">
+                    <div className="hidden absolute inset-0 items-center justify-center bg-gradient-to-br from-primary-start/20 to-primary-end/20">
                       <BookOpen className="w-12 h-12 text-gray-500" />
                     </div>
                   </div>

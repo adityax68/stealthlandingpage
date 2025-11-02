@@ -30,56 +30,53 @@ const Pricing: React.FC = () => {
 
 
   return (
-    <section className="py-12 md:py-20 relative overflow-hidden" id="pricing">
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-40 h-40 md:w-80 md:h-80 bg-gradient-to-br from-primary-start/20 to-primary-end/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute -bottom-20 -left-20 w-40 h-40 md:w-80 md:h-80 bg-gradient-to-br from-secondary-start/20 to-secondary-end/20 rounded-full blur-3xl animate-float-delayed"></div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="py-8 md:py-12 relative overflow-hidden bg-gray-50/50" id="pricing">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6">
-            <span className="block gradient-text">Choose Your</span>
-            <span className="block gradient-text">Perfect Plan</span>
+        <div className="text-center mb-8 md:mb-10">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+            <span className="gradient-text">Choose Your Perfect Plan</span>
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+          <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto px-4">
             Select the plan that best fits your mental health journey. 
             All plans include our advanced AI-powered assessment and support.
           </p>
         </div>
 
-
         {/* Plan Selection */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-5 md:gap-6 max-w-3xl mx-auto">
           {plans.map((plan) => {
             const Icon = plan.icon
             
             return (
               <div
                 key={plan.id}
-                className="relative p-8 border-2 rounded-3xl transition-all duration-300 group border-primary-start/30 bg-gradient-to-br from-primary-start/15 to-primary-end/10 backdrop-blur-xl"
+                className="relative group"
               >
-                <div className="text-center">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${plan.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-8 h-8 text-white" />
+                {/* Purplish Glow Effect on Hover */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-300"></div>
+                
+                <div className="relative bg-white border border-gray-200 hover:border-purple-300 rounded-xl p-5 md:p-6 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
+                  <div className="text-center">
+                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${plan.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-gray-800 mb-3">{plan.name}</h3>
-                  <p className="text-gray-700 mb-6">{plan.description}</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">{plan.name}</h3>
+                  <p className="text-sm text-gray-600 mb-4">{plan.description}</p>
                   
-                  <div className="text-4xl font-bold text-gray-800 mb-2">{plan.price}</div>
-                  <div className="text-gray-600 mb-8">{plan.messages}</div>
+                  <div className="text-3xl font-bold text-gray-800 mb-1">{plan.price}</div>
+                  <div className="text-sm text-gray-500 mb-5">{plan.messages}</div>
                   
-                  <ul className="space-y-3 text-left">
+                  <ul className="space-y-2 text-left">
                     {plan.features.map((feature, index) => (
-                      <li key={index} className="flex items-center text-gray-700">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                      <li key={index} className="flex items-center text-sm text-gray-700">
+                        <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
                   </ul>
+                  </div>
                 </div>
               </div>
             )

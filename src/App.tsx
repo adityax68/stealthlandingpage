@@ -4,6 +4,7 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import Features from './components/Features'
 import Pricing from './components/Pricing'
+import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 import VideoSplashScreen from './components/VideoSplashScreen'
 import AuthPage from './components/auth/AuthPage'
@@ -14,7 +15,8 @@ import ToastContainer from './components/ui/ToastContainer'
 import TestSelector from './components/assessment/TestSelector'
 import DynamicTestRunner from './components/assessment/DynamicTestRunner'
 import TestResults from './components/assessment/TestResults'
-import ResearchesPage from './components/ResearchesPage'
+// import ResearchesPage from './components/ResearchesPage'
+import PrivacyPolicy from './components/PrivacyPolicy'
 import ErrorBoundary from './components/ErrorBoundary'
 
 import { AuthProvider, useAuth } from './contexts/AuthContext'
@@ -159,6 +161,7 @@ function AppContent() {
               <Hero />
               <Features />
               <Pricing />
+              <FAQ />
               <Footer />
             </main>
         } />
@@ -219,10 +222,12 @@ function AppContent() {
         <Route path="/researches" element={
           <main>
             <Header isAuthenticated={isAuthenticated} />
-            <ResearchesPage />
+            {/* <ResearchesPage /> */}
             <Footer />
           </main>
         } />
+
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

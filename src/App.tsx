@@ -156,7 +156,7 @@ function AppContent() {
         <Route path="/" element={
             <main>
             <Header isAuthenticated={isAuthenticated} />
-              <Hero isAuthenticated={isAuthenticated} />
+              <Hero />
               <Features />
               <Pricing />
               <Footer />

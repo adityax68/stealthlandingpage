@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { User } from 'lucide-react'
+import { Download, Smartphone } from 'lucide-react'
+import Lottie from 'lottie-react'
+import androidLogo from '../assets/Android logo.json'
 
 interface Ripple {
   id: number
@@ -8,12 +9,7 @@ interface Ripple {
   y: number
 }
 
-interface HeroProps {
-  isAuthenticated?: boolean
-}
-
-const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
-  const navigate = useNavigate()
+const Hero: React.FC = () => {
   const [isGlowing, setIsGlowing] = useState(false)
   const [ripples, setRipples] = useState<Ripple[]>([])
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
@@ -166,47 +162,25 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
             {/* Subtle Border Animation */}
             <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             
-            {/* Launch Text - Multi-line Layout */}
+            {/* Android Logo Animation */}
             <div className="flex justify-center items-center">
-              <div className="relative group text-center">
-                {/* Main Text with Enhanced Styling */}
-                <div className="relative">
-                  {/* Line 1: "Launched" - Large */}
-                  <div className="relative">
-                    <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent drop-shadow-2xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
-                      Launched
-                    </span>
-                  </div>
-                  
-                  {/* Line 2: "on" - Smaller */}
-                  <div className="relative mt-1">
-                    <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-medium tracking-wide bg-gradient-to-r from-primary-start/80 via-secondary-start/80 to-accent-start/80 bg-clip-text text-transparent drop-shadow-xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
-                      on
-                    </span>
-                  </div>
-                  
-                  {/* Line 3: "2nd October" - Same size as Launched */}
-                  <div className="relative mt-2">
-                    <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider bg-gradient-to-r from-primary-start via-secondary-start to-accent-start bg-clip-text text-transparent drop-shadow-2xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
-                      2nd October
-                    </span>
-                  </div>
-                  
-                  {/* Line 4: "2025" - Smaller */}
-                  <div className="relative mt-1">
-                    <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium tracking-wide bg-gradient-to-r from-primary-start/80 via-secondary-start/80 to-accent-start/80 bg-clip-text text-transparent drop-shadow-xl transform group-hover:scale-105 transition-all duration-500 block" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
-                      2025
-                    </span>
-                  </div>
-                  
-                  {/* Animated Background Glow */}
-                  <div className={`absolute -inset-4 bg-gradient-to-r from-primary-start/30 via-secondary-start/30 to-accent-start/30 blur-3xl transition-all duration-1000 ${
-                    isGlowing ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
-                  }`}></div>
-                  
-                  {/* Pulsing Border Effect */}
-                  <div className="absolute -inset-2 bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+              <div className="relative group">
+                {/* Animated Background Glow */}
+                <div className={`absolute -inset-4 bg-gradient-to-r from-primary-start/30 via-secondary-start/30 to-accent-start/30 blur-3xl transition-all duration-1000 ${
+                  isGlowing ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
+                }`}></div>
+                
+                {/* Lottie Animation */}
+                <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 transform group-hover:scale-105 transition-all duration-500">
+                  <Lottie 
+                    animationData={androidLogo}
+                    loop={true}
+                    className="w-full h-full"
+                  />
                 </div>
+                
+                {/* Pulsing Border Effect */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-primary-start/20 via-secondary-start/20 to-accent-start/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                 
                 {/* Floating Particles Effect */}
                 <div className="absolute inset-0 pointer-events-none">
@@ -215,7 +189,6 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
                   <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-accent-start rounded-full animate-ping opacity-60" style={{ animationDelay: '2s' }}></div>
                   <div className="absolute bottom-0 right-1/3 w-1 h-1 bg-primary-start rounded-full animate-ping opacity-60" style={{ animationDelay: '0.5s' }}></div>
                 </div>
-                
               </div>
             </div>
             
@@ -239,23 +212,32 @@ const Hero: React.FC<HeroProps> = ({ isAuthenticated = false }) => {
               </div>
             </div>
 
-            {/* Sign In Button - Only show when not authenticated */}
-            {!isAuthenticated && (
-              <div className={`mt-8 md:mt-10 transition-all duration-1000 delay-2000 ${
-                isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
-              }`}>
-                <button
-                  onClick={() => navigate('/auth')}
-                  className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary-start/25 flex items-center space-x-3 mx-auto"
-                >
-                  <div className="relative z-10 flex items-center space-x-3">
-                    <User className="w-6 h-6" />
-                    <span>Sign Up to Get Started</span>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                </button>
-              </div>
-            )}
+            {/* Download Android App Button */}
+            <div className={`mt-8 md:mt-10 transition-all duration-1000 delay-2000 ${
+              isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+            }`}>
+              <a
+                href="https://drive.google.com/uc?export=download&id=1Jqy0n_DoypBtU4l_Ip4Rpjqm7k43sw0x"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary-start/25 flex items-center space-x-3 mx-auto w-fit"
+              >
+                <div className="relative z-10 flex items-center space-x-3">
+                  <Smartphone className="w-6 h-6 animate-pulse" />
+                  <span className="flex items-center space-x-2">
+                    <span>Download Android App</span>
+                    <Download className="w-5 h-5" />
+                  </span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              </a>
+              
+              {/* Additional Info Text */}
+              <p className="text-gray-500 text-sm mt-3 flex items-center justify-center space-x-2">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span>Latest version • Compatible with Android 7.0+</span>
+              </p>
+            </div>
 
           </div>
         </div>

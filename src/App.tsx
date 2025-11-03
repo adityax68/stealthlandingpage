@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocat
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Features from './components/Features'
-import Pricing from './components/Pricing'
+// import Pricing from './components/Pricing'
 import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 import VideoSplashScreen from './components/VideoSplashScreen'
@@ -160,7 +160,7 @@ function AppContent() {
             <Header isAuthenticated={isAuthenticated} />
               <Hero />
               <Features />
-              <Pricing />
+              {/* <Pricing /> */}
               <FAQ />
               <Footer />
             </main>

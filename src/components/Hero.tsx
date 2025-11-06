@@ -207,7 +207,7 @@ const Hero: React.FC = () => {
                 isGlowing ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
               }`}>
                 <a
-                  href="https://drive.google.com/uc?export=download&id=1Zu79q-9pqktc85xcnUQWSrRFJREQCMoJ"
+                  href="https://drive.google.com/file/d/1o-56-bMhiIw5kpAFp2TIltvDfG_oxyl5/view?usp=drive_link"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative overflow-hidden bg-gradient-to-r from-primary-start to-primary-end hover:from-primary-start/90 hover:to-primary-end/90 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-primary-start/25 flex items-center space-x-3 mx-auto w-fit"
